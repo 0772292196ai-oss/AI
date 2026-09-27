@@ -326,6 +326,117 @@
     .who { max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
     .hero { padding-top: 40px; }
   }
+
+  /* ================= שדרוג עיצוב ================= */
+  body {
+    background:
+      radial-gradient(1000px 500px at 85% -15%, rgba(47,124,246,.32), transparent 70%),
+      radial-gradient(800px 420px at 0% 5%, rgba(124,77,255,.18), transparent 70%),
+      radial-gradient(700px 500px at 50% 110%, rgba(25,180,255,.10), transparent 70%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  body::before { /* רשת נקודות עדינה ברקע */
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  }
+  .topbar { background: rgba(10,18,34,.72); box-shadow: 0 1px 0 rgba(255,255,255,.03), 0 10px 30px -20px rgba(0,0,0,.8); }
+  .logo .mark { box-shadow: 0 6px 16px -6px rgba(47,124,246,.8); }
+
+  /* ראש הדף */
+  .hero { padding: 72px 20px 56px; }
+  .hero-kicker {
+    display: inline-block; margin-bottom: 18px; padding: 6px 14px; border-radius: 20px;
+    font-weight: 700; font-size: .9rem; color: #cdb8ff;
+    background: rgba(124,77,255,.14); border: 1px solid rgba(124,77,255,.35);
+  }
+  .hero h1 { font-size: clamp(2.3rem, 6vw, 3.8rem); letter-spacing: -.5px; }
+  .hero h1 span { background: linear-gradient(90deg, #7cc4ff, var(--accent-2), #9b7bff); -webkit-background-clip: text; background-clip: text; }
+  .hero-cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .cta-main, .cta-alt {
+    font-weight: 800; font-size: 1.05rem; padding: 13px 26px; border-radius: 12px; text-decoration: none;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .cta-main {
+    color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 12px 28px -10px rgba(47,124,246,.8);
+  }
+  .cta-alt { color: var(--ink); background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+  .cta-main:hover, .cta-alt:hover { transform: translateY(-2px); }
+  .cta-alt:hover { background: rgba(255,255,255,.08); }
+  .hero-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; margin-top: 22px; color: var(--muted); font-size: .92rem; }
+  .hero-badges span { white-space: nowrap; }
+
+  /* כרטיסים */
+  .products { scroll-margin-top: 80px; }
+  .bar { padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 22px; font-weight: 700; }
+  .card {
+    background: linear-gradient(180deg, #14223c, var(--card));
+    border-radius: 18px; box-shadow: 0 10px 30px -18px rgba(0,0,0,.8);
+  }
+  .card:hover { transform: translateY(-6px); border-color: rgba(25,180,255,.55); box-shadow: 0 24px 50px -20px rgba(47,124,246,.6); }
+  .card .art { position: relative; overflow: hidden; }
+  .card .art img { transition: transform .5s ease; }
+  .card:hover .art img { transform: scale(1.06); }
+  .card .art::after { /* מעבר רך מהתמונה לגוף הכרטיס */
+    content: ""; position: absolute; inset: auto 0 0 0; height: 40%;
+    background: linear-gradient(to top, rgba(20,34,60,.9), transparent); pointer-events: none;
+  }
+  .card h2 { font-size: 1.3rem; }
+  .ver { background: rgba(25,180,255,.12); color: #8fd6ff; border: 1px solid rgba(25,180,255,.25); }
+  .meta span {
+    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px;
+  }
+  .meta { flex-wrap: wrap; gap: 8px; }
+  .btn { border-radius: 12px; transition: transform .12s, filter .15s, background .15s; }
+  .btn:not(.alt) { box-shadow: 0 10px 22px -12px rgba(47,124,246,.9); }
+  .btn:active { transform: scale(.98); }
+  .search { background: rgba(255,255,255,.04); }
+
+  /* איך זה עובד */
+  .steps h2 { font-size: 1.8rem; margin-bottom: 28px; }
+  .step {
+    position: relative; background: linear-gradient(180deg, #14223c, var(--card)); border-radius: 18px; padding: 26px 20px;
+    transition: transform .2s, border-color .2s;
+  }
+  .step:hover { transform: translateY(-4px); border-color: #34508a; }
+  .step .n { width: 50px; height: 50px; font-size: 1.35rem; box-shadow: 0 10px 22px -10px rgba(47,124,246,.9); }
+
+  /* דף הפרטים */
+  .app-box {
+    background: linear-gradient(180deg, #14223c, var(--card)); border-radius: 20px; padding: 28px;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,.9);
+  }
+  .app-icon { width: 88px; height: 88px; border-radius: 20px; box-shadow: 0 12px 26px -12px rgba(0,0,0,.9); }
+  .app-top h1 { font-size: 1.8rem; }
+  .panel { border-radius: 14px; background: rgba(8,14,26,.55); }
+  .chips span { border-radius: 20px; padding: 4px 12px; }
+
+  .my-rate button.small-btn { font-size: .95rem; color: var(--ink); padding: 8px 16px; border: 1px solid var(--line); }
+  .my-rate button.small-btn:hover { background: var(--card2); }
+
+  /* כותרת תחתונה */
+  footer { display: grid; gap: 10px; padding: 34px 20px 90px; background: rgba(0,0,0,.18); }
+  .foot-brand { font-size: 1.2rem; font-weight: 800; color: var(--ink); }
+  .foot-brand b { color: var(--accent-2); }
+  .foot-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 22px; }
+  .foot-links a { text-decoration: none; color: var(--muted); font-weight: 600; }
+  .foot-links a:hover { color: var(--ink); }
+  .foot-small { font-size: .82rem; opacity: .7; }
+
+  /* כניסה רכה של הכרטיסים */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero > *, .card, .step { animation: rise .6s ease backwards; }
+    .card:nth-child(2) { animation-delay: .08s; }
+    .step:nth-child(2) { animation-delay: .08s; } .step:nth-child(3) { animation-delay: .16s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  }
+  @media (max-width: 760px) {
+    .hero { padding: 44px 16px 36px; }
+    .cta-main, .cta-alt { flex: 1; min-width: 150px; text-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -388,8 +499,16 @@
   </div>
 
   <section class="hero" id="top">
+    <div class="hero-kicker">✨ חדש באתר: עוזר AI שעונה על כל שאלה</div>
     <h1>תוכנות למחשב, <span>על רמה</span></h1>
     <p>תוכנות פשוטות ושימושיות בעברית, להורדה והתקנה ב-Windows. בחרו תוכנה, הורידו, ויש שאלה – פתחו צ'אט.</p>
+    <div class="hero-cta">
+      <a href="#download" class="cta-main">⬇ לכל התוכנות</a>
+      <button type="button" class="cta-alt" onclick="document.getElementById('aiFab').click()">🤖 שאלו את העוזר</button>
+    </div>
+    <div class="hero-badges">
+      <span>✔ בחינם</span><span>✔ בעברית</span><span>✔ ל-Windows 10 ו-11</span><span>✔ תמיכה בצ'אט</span>
+    </div>
   </section>
 
   <main class="products" id="download">
@@ -499,7 +618,15 @@
     </div>
   </section>
 
-  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 35</footer>
+  <footer>
+    <div class="foot-brand">תוכנות <b>על רמה</b></div>
+    <div class="foot-links">
+      <a href="#download">כל התוכנות</a>
+      <a href="#" onclick="document.getElementById('aiFab').click();return false">🤖 העוזר החכם</a>
+      <a href="#" onclick="openHelp(event)">💬 צ'אט עם הצוות</a>
+    </div>
+    <div class="foot-small">תוכנות פשוטות ושימושיות בעברית · גרסת אתר 36</div>
+  </footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -983,7 +1110,7 @@
   const IN_ASD = !!PAGE;
   if (IN_ASD) {
     $("backLink").href = "./";
-    document.querySelectorAll('.logo, .nav a[href^="#"]').forEach(a => {
+    document.querySelectorAll('.logo, .nav a[href^="#"], .foot-links a[href="#download"]').forEach(a => {
       if (a.id !== "navHelp") a.href = "./" + a.getAttribute("href");
     });
   }
