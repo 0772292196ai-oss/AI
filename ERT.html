@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>תוכנות על רמה – תוכנות למחשב בחינם</title>
+<title>תוכנה בקליק – תוכנות למחשב בחינם</title>
 <!-- תיאור לגוגל ותצוגה מקדימה כששולחים את הקישור בוואטסאפ -->
 <meta name="description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם: תוכנת אוטובוסים שעובדת בלי אינטרנט, קולית להקראה והקלדה קולית ועוד. הורדה והתקנה ב-Windows.">
 <meta name="theme-color" content="#0a1222">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="תוכנות על רמה">
-<meta property="og:title" content="תוכנות על רמה – תוכנות למחשב בחינם">
+<meta property="og:site_name" content="תוכנה בקליק">
+<meta property="og:title" content="תוכנה בקליק – תוכנות למחשב בחינם">
 <meta property="og:description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם. הורדה והתקנה ב-Windows.">
 <meta property="og:image" content="https://0772292196ai-oss.github.io/AI/logo.jpg">
 <meta property="og:locale" content="he_IL">
@@ -458,6 +458,16 @@
   .review img { max-width: 100%; max-height: 160px; border-radius: 10px; display: block; margin: 8px 0; }
   .admin-count { background: #ff4d3d; color: #fff; border-radius: 10px; padding: 0 7px; font-size: .78rem; margin-inline-start: 4px; }
   .empty-note { text-align: center; color: var(--muted); padding: 18px 0; }
+  .report-link { margin-inline-start: auto; background: none; border: none; color: var(--muted); font-size: .88rem; text-decoration: underline; }
+  .report-link:hover { color: #ff7a6b; }
+  select {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--ink); padding: 11px 13px;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--paper);
+  }
+  .review.rep { border-color: rgba(255,122,107,.35); }
+  .block-btn { background: #b91c1c !important; border: none !important; color: #fff !important; }
+  #adminOverlay .tabs { flex-wrap: wrap; }
+  #adminOverlay .tabs button { font-size: .95rem; padding: 10px 6px; }
   .card .art .ph-icon { font-size: 4rem; }
   @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
 
@@ -493,7 +503,7 @@
                referrerpolicy="no-referrer" onerror="if(!this.dataset.b){this.dataset.b=1;this.src='logo.jpg'}else{this.nextElementSibling.style.display='';this.remove()}">
           <svg style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M12 7v5M9.5 9.5 12 12l2.5-2.5"/></svg>
         </span>
-        <span>תוכנות <b>על רמה</b></span>
+        <span>תוכנה <b>בקליק</b></span>
       </a>
       <nav class="nav">
         <a href="#top" class="on">בית</a>
@@ -546,7 +556,7 @@
 
   <section class="hero" id="top">
     <div class="hero-kicker">✨ חדש באתר: עוזר AI שעונה על כל שאלה</div>
-    <h1>תוכנות למחשב, <span>על רמה</span></h1>
+    <h1>תוכנות למחשב, <span>בקליק אחד</span></h1>
     <p>תוכנות פשוטות ושימושיות בעברית, להורדה והתקנה ב-Windows. בחרו תוכנה, הורידו, ויש שאלה – פתחו צ'אט.</p>
     <div class="hero-cta">
       <a href="#download" class="cta-main">⬇ לכל התוכנות</a>
@@ -622,7 +632,7 @@
         <div class="app-icon" id="apIcon"></div>
         <div>
           <h1 id="apName"></h1>
-          <div class="by">מאת תוכנות על רמה</div>
+          <div class="by">מאת תוכנה בקליק</div>
           <div class="chips">
             <span>גרסה <b id="apVer"></b></span>
             <span>⬇ <b id="apDl">–</b> הורדות</span>
@@ -656,6 +666,7 @@
         <span>שתפו את התוכנה:</span>
         <a class="small-btn alt" id="shareWa" target="_blank" rel="noopener">🟢 וואטסאפ</a>
         <button type="button" class="small-btn alt" id="shareCopy">🔗 העתקת קישור</button>
+        <button type="button" class="report-link" id="apReport">🚩 דיווח על התוכנה</button>
       </div>
       <p class="app-note" id="apNote"></p>
 
@@ -665,14 +676,14 @@
   </section>
 
   <footer>
-    <div class="foot-brand">תוכנות <b>על רמה</b></div>
+    <div class="foot-brand">תוכנה <b>בקליק</b></div>
     <div class="foot-links">
       <a href="#download">כל התוכנות</a>
       <a href="#" onclick="document.getElementById('aiFab').click();return false">🤖 העוזר החכם</a>
       <a href="#" onclick="openHelp(event)">💬 צ'אט עם הצוות</a>
       <a href="#" onclick="openDev(event)">🧑‍💻 העלו תוכנה משלכם</a>
     </div>
-    <div class="foot-small">תוכנות פשוטות ושימושיות בעברית · גרסת אתר 37</div>
+    <div class="foot-small">תוכנות פשוטות ושימושיות בעברית</div>
   </footer>
   <div class="toast hidden" id="toast"></div>
 
@@ -690,6 +701,34 @@
     </div>
   </div>
 
+  <!-- ===== דיווח על תוכנה ===== -->
+  <div class="overlay hidden" id="reportOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>🚩 דיווח על תוכנה</h2>
+        <button type="button" class="x-btn" data-close="reportOverlay">✕</button>
+      </div>
+      <p class="dev-intro">מצאתם בעיה בתוכנה <b id="repApp"></b>? ספרו לנו והצוות יבדוק. הדיווח נשלח רק לצוות.</p>
+      <div class="field">
+        <label for="repReason">מה הבעיה?</label>
+        <select id="repReason">
+          <option value="virus">🦠 וירוס או תוכנה זדונית</option>
+          <option value="content">🚫 תוכן לא ראוי</option>
+          <option value="fake">🎭 מטעה – לא עושה מה שכתוב</option>
+          <option value="broken">🔧 לא עובדת / קישור שבור</option>
+          <option value="copyright">©️ הפרת זכויות יוצרים</option>
+          <option value="other">❓ אחר</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="repText">פרטים <span class="hint">מה קרה? כמה שיותר פרטים יעזרו לנו לבדוק</span></label>
+        <textarea id="repText" rows="4" maxlength="1000"></textarea>
+      </div>
+      <button type="button" class="primary-btn" id="repSend">שליחת הדיווח</button>
+      <p class="msg" id="repMsg"></p>
+    </div>
+  </div>
+
   <!-- ===== לוח ניהול (רק למנהל) ===== -->
   <div class="overlay hidden" id="adminOverlay">
     <div class="modal wide">
@@ -700,6 +739,8 @@
       <div class="tabs">
         <button type="button" class="on" data-atab="pending">ממתינות לאישור</button>
         <button type="button" data-atab="approved">מאושרות</button>
+        <button type="button" data-atab="reports">🚩 דיווחים <span class="admin-count hidden" id="reportCount"></span></button>
+        <button type="button" data-atab="blocked">⛔ חסומים</button>
       </div>
       <div id="adminBody"></div>
     </div>
@@ -1186,7 +1227,7 @@
     fillList($("apChanges"), APP.changes);
     $("apChangesPanel").classList.toggle("hidden", !APP.changes.length);
     fillList($("apReqs"), APP.reqs);
-    document.querySelector(".by").textContent = "מאת " + (APP.dev || "תוכנות על רמה");
+    document.querySelector(".by").textContent = "מאת " + (APP.dev || "תוכנה בקליק");
   }
   fillDetails();
 
@@ -1208,7 +1249,7 @@
     $("steps").classList.toggle("hidden", onApp);
     if (onApp) {
       window.scrollTo(0, 0); loadAppStats();
-      document.title = APP.name + " – תוכנות על רמה";
+      document.title = APP.name + " – תוכנה בקליק";
     } else if (typeof loadCardStats === "function" && cardStatsReady) loadCardStats();
   }
   window.addEventListener("hashchange", route);
@@ -1340,7 +1381,8 @@
       changesTitle: "מה אפשר לעשות", changes: d.features || [],
       reqs: d.reqs && d.reqs.length ? d.reqs : ["Windows 10 או 11"],
       note: "ההורדה היא קובץ התקנה. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
-      downloadsBefore: 0, stats: "d_" + id, ratings: "ratings_" + id, page: "?app=" + id, status: d.status
+      downloadsBefore: 0, stats: "d_" + id, ratings: "ratings_" + id, page: "?app=" + id, status: d.status,
+      id, owner: d.owner || ""
     };
   }
 
@@ -1353,7 +1395,7 @@
       APP = dynToApp(DYN_ID, d.data());
       ALL_APPS["D_" + DYN_ID] = APP;
       fillDetails(); updateShare(); loadAppStats(); renderDemo();
-      document.title = APP.name + " – תוכנות על רמה";
+      document.title = APP.name + " – תוכנה בקליק";
       if (APP.status !== "approved")
         $("apDesc").textContent = "⏳ התוכנה ממתינה לאישור – רק המפתח והמנהל רואים את הדף הזה.\n\n" + APP.desc;
     } catch (e) {
@@ -1411,7 +1453,7 @@
   let myDev = null; // פרטי המפתח המחובר (אם נרשם)
   async function renderDev() {
     const body = $("devBody");
-    const intro = '<p class="dev-intro">פיתחתם תוכנה ל-Windows? העלו אותה ל<b>תוכנות על רמה</b> ותגיעו לגולשים שלנו. ' +
+    const intro = '<p class="dev-intro">פיתחתם תוכנה ל-Windows? העלו אותה ל<b>תוכנה בקליק</b> ותגיעו לגולשים שלנו. ' +
       'כל תוכנה נבדקת ומאושרת על ידי הצוות לפני שהיא מתפרסמת, ומקבלת כרטיס בגלריה, דף פרטים, דירוג ומונה הורדות.</p>';
     if (!me) {
       body.innerHTML = intro + '<button type="button" class="primary-btn" id="devLogin">התחברות / הרשמה כדי להמשיך</button>';
@@ -1512,7 +1554,7 @@
       await db.collection("apps").doc(id).set({
         name, version, short, desc: v("fDesc"), download, image, size: v("fSize"),
         features: toLines(v("fFeat")), reqs: toLines(v("fReqs")),
-        owner: me.uid, devName: myDev.name, ownerEmail: me.email || "",
+        owner: me.uid, devName: myDev.name, // המייל של המפתח נשמר רק אצלו (developers), לא בתוכנה הציבורית
         status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       ["fName", "fVer", "fShort", "fDesc", "fDl", "fImg", "fSize", "fFeat", "fReqs"].forEach(i => $(i).value = "");
@@ -1539,9 +1581,17 @@
     renderAdmin();
   });
 
+  // המייל של מפתח (שמור רק במסמך הפרטי שלו – המנהל יכול לקרוא)
+  async function devEmail(uid) {
+    try { const d = await db.collection("developers").doc(uid).get(); return d.exists ? d.data().email || "" : ""; }
+    catch (e) { return ""; }
+  }
+
   async function renderAdmin() {
     const body = $("adminBody");
     body.innerHTML = '<p class="empty-note">טוען...</p>';
+    if (adminTab === "reports") return renderReports(body);
+    if (adminTab === "blocked") return renderBlocked(body);
     let snap;
     try { snap = await db.collection("apps").where("status", "==", adminTab).get(); }
     catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
@@ -1553,7 +1603,8 @@
         body.appendChild(appRow(doc.id, d, [
           ["👁", "small-btn alt", () => window.open("./?app=" + doc.id, "_blank")],
           ["⏸ הסתרה", "small-btn alt", () => setStatus(doc.id, "pending")],
-          ["🗑", "small-btn alt del-btn", () => deleteApp(doc.id, d.name, renderAdmin)]
+          ["🗑", "small-btn alt del-btn", () => deleteApp(doc.id, d.name, renderAdmin)],
+          ["⛔ חסימה", "small-btn block-btn", () => blockDeveloper(d.owner, d.devName, "חסימה מלוח הניהול (תוכנה: " + d.name + ")")]
         ]));
         return;
       }
@@ -1564,9 +1615,12 @@
         '<p class="f"></p><p>⬇ קישור הורדה (בדקו אותו לפני אישור!): <a target="_blank" rel="noopener"></a></p>' +
         '<div class="acts"><button type="button" class="small-btn ok-btn">✔ אישור ופרסום</button>' +
         '<button type="button" class="small-btn alt" data-v>👁 תצוגה מקדימה</button>' +
-        '<button type="button" class="small-btn alt del-btn">🗑 מחיקה</button></div>';
+        '<button type="button" class="small-btn alt del-btn">🗑 מחיקה</button>' +
+        '<button type="button" class="small-btn block-btn" data-b>⛔ מחיקה וחסימת המפתח</button></div>';
       r.querySelector("h3").textContent = d.name + " · v" + d.version;
-      r.querySelector(".who").textContent = "🧑‍💻 " + d.devName + " · " + d.ownerEmail + (d.size ? " · 📦 " + d.size : "");
+      r.querySelector(".who").textContent = "🧑‍💻 " + d.devName + (d.size ? " · 📦 " + d.size : "");
+      devEmail(d.owner).then(m => { if (m) r.querySelector(".who").textContent += " · " + m; });
+      r.querySelector("[data-b]").onclick = () => blockDeveloper(d.owner, d.devName, "תוכנה שנדחתה: " + d.name);
       const img = httpsUrl(d.image);
       if (img) { const im = r.querySelector("img"); im.src = img; im.classList.remove("hidden"); }
       r.querySelector(".s").textContent = d.short;
@@ -1588,14 +1642,162 @@
     } catch (e) { alert("הפעולה נכשלה: " + (e.code || e.message)); }
   }
 
+  /* ----- דיווחים וחסימות ----- */
+  const REASONS = { virus: "🦠 וירוס / תוכנה זדונית", content: "🚫 תוכן לא ראוי", fake: "🎭 מטעה",
+                    broken: "🔧 לא עובדת / קישור שבור", copyright: "©️ זכויות יוצרים", other: "❓ אחר" };
+  const fmtDate = ts => ts && ts.toDate ? ts.toDate().toLocaleString("he-IL", { day: "numeric", month: "numeric", year: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+
+  // כפתור הדיווח בדף התוכנה
+  $("apReport").onclick = () => {
+    if (!me) {
+      $("overlay").classList.remove("hidden");
+      $("tabLogin").click();
+      $("authMsg").textContent = "כדי לדווח על תוכנה צריך להתחבר";
+      return;
+    }
+    $("repApp").textContent = APP.name;
+    $("repText").value = ""; $("repMsg").textContent = ""; $("repMsg").style.color = "";
+    $("repSend").disabled = false;
+    $("reportOverlay").classList.remove("hidden");
+  };
+  $("repSend").onclick = async () => {
+    const text = $("repText").value.trim();
+    if (text.length < 5) return $("repMsg").textContent = "כתבו כמה מילים על הבעיה";
+    $("repSend").disabled = true;
+    try {
+      await db.collection("reports").add({
+        appKey: DYN_ID ? "D_" + DYN_ID : (PAGE || "ASD").toUpperCase(), appId: DYN_ID || "", appName: APP.name,
+        owner: APP.owner || "", reason: $("repReason").value, text,
+        reporter: me.uid, reporterName: me.displayName || "", reporterEmail: me.email || "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      $("repMsg").style.color = "#4ade80";
+      $("repMsg").textContent = "✔ תודה! הדיווח נשלח לצוות לבדיקה.";
+      setTimeout(() => $("reportOverlay").classList.add("hidden"), 2200);
+    } catch (e) {
+      $("repSend").disabled = false;
+      $("repMsg").textContent = e.code === "permission-denied" ? "לא ניתן לשלוח דיווח מהחשבון הזה." : "השליחה נכשלה, נסו שוב.";
+    }
+  };
+
+  // לשונית הדיווחים בלוח הניהול
+  async function renderReports(body) {
+    let snap;
+    try { snap = await db.collection("reports").orderBy("createdAt", "desc").get(); }
+    catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
+    if (snap.empty) { body.innerHTML = '<p class="empty-note">אין דיווחים פתוחים 🎉</p>'; return; }
+    body.innerHTML = "";
+    snap.forEach(doc => {
+      const d = doc.data(), dyn = !!d.appId;
+      const r = document.createElement("div");
+      r.className = "review rep";
+      r.innerHTML = '<h3></h3><small class="hint who"></small><p class="t"></p><div class="acts">' +
+        '<button type="button" class="small-btn alt" data-v>👁 לדף התוכנה</button>' +
+        '<button type="button" class="small-btn alt" data-x>✔ הדיווח לא נכון – סגירה</button>' +
+        (dyn ? '<button type="button" class="small-btn alt del-btn" data-d>🗑 מחיקת התוכנה</button>' +
+               '<button type="button" class="small-btn block-btn" data-b>⛔ מחיקה וחסימת המפתח</button>' : "") +
+        "</div>";
+      r.querySelector("h3").textContent = (REASONS[d.reason] || d.reason) + " · " + d.appName;
+      r.querySelector(".who").textContent = "דווח על ידי " + (d.reporterName || "") + " " + (d.reporterEmail || "") + " · " + fmtDate(d.createdAt);
+      r.querySelector(".t").textContent = d.text;
+      r.querySelector("[data-v]").onclick = () => window.open(dyn ? "./?app=" + d.appId : "./" + (d.appKey || "ASD") + ".html", "_blank");
+      const close = async () => { await db.collection("reports").doc(doc.id).delete(); renderAdmin(); };
+      r.querySelector("[data-x]").onclick = () => close().catch(e => alert(e.code));
+      if (dyn) {
+        r.querySelector("[data-d]").onclick = async () => {
+          if (!confirm("למחוק את \"" + d.appName + "\"?")) return;
+          try { await db.collection("apps").doc(d.appId).delete(); } catch (e) {}
+          close();
+        };
+        r.querySelector("[data-b]").onclick = async () => {
+          if (await blockDeveloper(d.owner, d.appName, "דיווח: " + (REASONS[d.reason] || d.reason) + " – " + d.text.slice(0, 200))) close();
+        };
+      }
+      body.appendChild(r);
+    });
+  }
+
+  // חסימת מפתח: חוסמים את החשבון ואת המייל, ומוחקים את כל התוכנות שלו
+  async function blockDeveloper(uid, label, reason) {
+    if (!uid) { alert("לא נמצא החשבון של המפתח"); return false; }
+    if (me && uid === me.uid) { alert("אי אפשר לחסום את עצמך 🙂"); return false; }
+    if (!confirm("לחסום את המפתח של \"" + label + "\"?\n\n• כל התוכנות שלו יימחקו מהאתר\n• החשבון והמייל שלו ייחסמו – לא יוכל להעלות, לכתוב, לדרג או להירשם שוב כמפתח")) return false;
+    try {
+      const email = (await devEmail(uid)).toLowerCase();
+      const now = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection("blocked").doc(uid).set({ email, reason, label, at: now });
+      if (email) await db.collection("blocked_emails").doc(email).set({ uid, at: now });
+      const apps = await db.collection("apps").where("owner", "==", uid).get();
+      await Promise.all(apps.docs.map(a => a.ref.delete()));
+      toast("⛔ המפתח נחסם ו-" + apps.size + " תוכנות שלו נמחקו"); setTimeout(() => toast(""), 3500);
+      renderAdmin();
+      return true;
+    } catch (e) { alert("החסימה נכשלה: " + (e.code || e.message)); return false; }
+  }
+
+  // לשונית החסומים: אפשר לבטל חסימה
+  async function renderBlocked(body) {
+    let snap;
+    try { snap = await db.collection("blocked").get(); }
+    catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
+    if (snap.empty) { body.innerHTML = '<p class="empty-note">אין חשבונות חסומים</p>'; return; }
+    body.innerHTML = "";
+    snap.forEach(doc => {
+      const d = doc.data();
+      const row = document.createElement("div");
+      row.className = "app-row";
+      row.innerHTML = '<div class="ph">⛔</div><div class="info"><b></b><small></small></div><div class="acts"><button type="button" class="small-btn alt">ביטול חסימה</button></div>';
+      row.querySelector("b").textContent = (d.email || doc.id) + (d.label ? " · " + d.label : "");
+      row.querySelector("small").textContent = fmtDate(d.at) + " · " + (d.reason || "");
+      row.querySelector("button").onclick = async () => {
+        if (!confirm("לבטל את החסימה של " + (d.email || "החשבון") + "?")) return;
+        try {
+          await db.collection("blocked").doc(doc.id).delete();
+          if (d.email) await db.collection("blocked_emails").doc(d.email).delete();
+          renderAdmin();
+        } catch (e) { alert("הפעולה נכשלה: " + (e.code || e.message)); }
+      };
+      body.appendChild(row);
+    });
+  }
+
+  // משתמש חסום: מודיעים לו ומנתקים
+  async function checkBlocked(user) {
+    if (!user || isAdmin) return;
+    try {
+      const d = await db.collection("blocked").doc(user.uid).get();
+      let blocked = d.exists;
+      if (!blocked && user.email) {
+        const e = await db.collection("blocked_emails").doc(user.email.toLowerCase()).get();
+        blocked = e.exists;
+      }
+      if (blocked) {
+        alert("⛔ החשבון הזה נחסם בגלל הפרה של כללי האתר.\nאם לדעתך זו טעות, אפשר לפנות אלינו במייל.");
+        auth.signOut();
+      }
+    } catch (e) {}
+  }
+
   // נקרא בכל התחברות/התנתקות
+  let stopReports = null, pendingN = 0, reportsN = 0;
+  function showAdminCount() {
+    const n = pendingN + reportsN;
+    $("adminCount").textContent = n;
+    $("adminCount").classList.toggle("hidden", !n);
+    $("reportCount").textContent = reportsN;
+    $("reportCount").classList.toggle("hidden", !reportsN);
+  }
   function devAuthChanged(user) {
     $("navAdmin").classList.toggle("hidden", !(user && isAdmin));
     if (stopPending) { stopPending(); stopPending = null; }
-    if (user && isAdmin) { // מספר התוכנות שממתינות – נקודה אדומה ליד "ניהול"
+    if (stopReports) { stopReports(); stopReports = null; }
+    checkBlocked(user);
+    if (user && isAdmin) { // מספר התוכנות שממתינות + דיווחים – נקודה אדומה ליד "ניהול"
       stopPending = db.collection("apps").where("status", "==", "pending").onSnapshot(q => {
-        $("adminCount").textContent = q.size;
-        $("adminCount").classList.toggle("hidden", q.empty);
+        pendingN = q.size; showAdminCount();
+      }, () => {});
+      stopReports = db.collection("reports").onSnapshot(q => {
+        reportsN = q.size; showAdminCount();
       }, () => {});
     }
     if (!$("devOverlay").classList.contains("hidden")) renderDev();
@@ -1650,7 +1852,7 @@
   // ↓ המדריך שהעוזר לומד ממנו. מוסיפים כאן שאלה ותשובה – והעוזר ידע לענות עליה ↓
   const SITE_FAQ = [
     ["מי אתה / מי פיתח אותך / מה אתה",
-     "אני העוזר החכם של האתר 'תוכנות על רמה'. אני עונה על שאלות על האתר ועל התוכנות שבו. האתר והתוכנות נבנו על ידי צוות תוכנות על רמה."],
+     "אני העוזר החכם של האתר 'תוכנה בקליק'. אני עונה על שאלות על האתר ועל התוכנות שבו. האתר והתוכנות נבנו על ידי צוות תוכנה בקליק."],
     ["איך פותחים צ'אט עם הצוות",
      "1. לוחצים 'התחברות' (או 'הרשמה' אם אין חשבון) בפס העליון מצד שמאל. 2. מתחברים עם 'המשך עם Google', או עם אימייל וסיסמה. 3. אחרי ההתחברות מופיע עיגול כחול עם 💬 בפינה השמאלית התחתונה – לוחצים עליו. 4. כותבים הודעה ולוחצים 'שליחה' (או Enter). אפשר לפתוח את הצ'אט גם מ'עזרה וצ'אט' בתפריט העליון, או מהכפתור 'שאלה? פתחו צ'אט' בכרטיס של כל תוכנה. הצוות עונה בהקדם, ומקבלים התראה במייל כשיש תשובה."],
     ["איך נרשמים / מתחברים",
@@ -1673,7 +1875,7 @@
 
   const SITE_BASE = "https://0772292196ai-oss.github.io/AI/";
   const aiSystem = () => [
-    "אתה העוזר החכם של האתר 'תוכנות על רמה' – אתר של תוכנות למחשב בעברית, להורדה והתקנה ב-Windows.",
+    "אתה העוזר החכם של האתר 'תוכנה בקליק' – אתר של תוכנות למחשב בעברית, להורדה והתקנה ב-Windows.",
     "ענה תמיד בעברית, בצורה ברורה, בטוחה וידידותית. אם יש שלבים – כתוב אותם כרשימה ממוספרת קצרה. כתוב טקסט רגיל בלי Markdown (בלי כוכביות ובלי #).",
     "למטה יש מדריך מלא של האתר ושל התוכנות. כשהתשובה נמצאת במדריך – ענה ממנו ישירות ובביטחון, עם השלבים המדויקים. אל תאמר 'אין לי מידע' כשהמידע כתוב במדריך.",
     "הבן שאלות גם כשיש בהן שגיאות כתיב (למשל 'צאט' = צ'אט, 'להוריד' = הורדה, 'הוטובוסים' = אוטובוסים).",
@@ -1731,7 +1933,7 @@
     $("aiFab").classList.add("hidden");
     $("aiBox").classList.remove("hidden");
     if (!$("aiMsgs").children.length)
-      aiAdd("them", "שלום! 👋 אני העוזר החכם של תוכנות על רמה.\nאפשר לשאול אותי על התוכנות באתר – מה הן עושות, איך מתקינים, מה צריך במחשב ועוד.");
+      aiAdd("them", "שלום! 👋 אני העוזר החכם של תוכנה בקליק.\nאפשר לשאול אותי על התוכנות באתר – מה הן עושות, איך מתקינים, מה צריך במחשב ועוד.");
     $("aiInput").focus();
   };
   $("aiClose").onclick = () => { $("aiBox").classList.add("hidden"); $("aiFab").classList.remove("hidden"); };
