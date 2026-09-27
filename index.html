@@ -363,7 +363,7 @@
             <span>📶 עובד אופליין</span>
           </div>
           <a class="btn" href="https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-">⬇ הורדה והתקנה</a>
-          <a class="btn alt" href="ASD/">ℹ פרטים נוספים</a>
+          <a class="btn alt" href="ASD.html">ℹ פרטים נוספים</a>
           <button type="button" class="btn alt" id="cardHelp">💬 שאלה? פתחו צ'אט</button>
         </div>
       </article>
@@ -838,12 +838,12 @@
   fillList($("apReqs"), APP.reqs);
 
   // מעבר בין הגלריה לדף הפרטים לפי הכתובת (#app)
-  // אותו קובץ משמש לשני הדפים: בתיקייה ASD הוא נפתח ישר כדף הפרטים
-  const IN_ASD = /\/ASD\/(index\.html)?$/i.test(location.pathname);
+  // אותו קובץ משמש לשני הדפים: בשם ASD.html הוא נפתח ישר כדף הפרטים
+  const IN_ASD = /\/ASD\.html$/i.test(location.pathname);
   if (IN_ASD) {
-    $("backLink").href = "../";
+    $("backLink").href = "./";
     document.querySelectorAll('.logo, .nav a[href^="#"]').forEach(a => {
-      if (a.id !== "navHelp") a.href = "../" + a.getAttribute("href");
+      if (a.id !== "navHelp") a.href = "./" + a.getAttribute("href");
     });
   }
 
@@ -859,7 +859,7 @@
 
   // לחיצה בכל מקום בכרטיס פותחת את הדף (חוץ מהכפתורים)
   document.querySelector(".card").addEventListener("click", e => {
-    if (!e.target.closest("a, button")) location.href = "ASD/";
+    if (!e.target.closest("a, button")) location.href = "ASD.html";
   });
 
   // מונה הורדות
