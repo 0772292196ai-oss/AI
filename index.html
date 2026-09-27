@@ -269,6 +269,23 @@
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
   }
 
+  /* ===== עוזר AI ===== */
+  .ai-fab {
+    position: fixed; bottom: 22px; right: 22px; z-index: 15;
+    display: flex; align-items: center; gap: 8px; border: none; border-radius: 31px;
+    padding: 0 20px 0 16px; height: 56px; font-weight: 800; font-size: 1rem; color: #fff;
+    background: linear-gradient(135deg, #7c4dff, #b06bff);
+    box-shadow: 0 10px 26px -6px rgba(124,77,255,.7); transition: transform .15s;
+  }
+  .ai-fab span { font-size: 1.5rem; }
+  .ai-fab:hover { transform: scale(1.05); }
+  .ai-box { left: auto; right: 22px; }
+  .ai-box .chat-head { background: linear-gradient(135deg, #7c4dff, #b06bff); }
+  .ai-box .bubble.me { background: #7c4dff; }
+  .ai-box .chat-send button { background: linear-gradient(135deg, #7c4dff, #b06bff); }
+  .ai-note { font-size: .75rem; color: var(--muted); text-align: center; padding: 4px 10px 0; background: var(--card); }
+  .ai-typing { opacity: .7; font-style: italic; }
+
   @media (max-width: 760px) {
     .nav { display: none; }
     .topbar .inner { justify-content: space-between; }
@@ -429,11 +446,29 @@
     </div>
   </section>
 
-  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 27</footer>
+  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 28</footer>
   <div class="toast hidden" id="toast"></div>
 
 
 
+
+  <!-- ===== עוזר AI – שואלים שאלות על התוכנות ===== -->
+  <button type="button" class="ai-fab" id="aiFab" title="שאלו את העוזר החכם"><span>🤖</span>שאלו את העוזר</button>
+  <div class="chat-box ai-box hidden" id="aiBox">
+    <div class="chat-head">
+      <span>🤖 עוזר חכם</span>
+      <span class="head-btns">
+        <button type="button" id="aiBig" title="הגדלה / הקטנה">⛶</button>
+        <button type="button" id="aiClose" title="סגירה">✕</button>
+      </span>
+    </div>
+    <div class="chat-msgs" id="aiMsgs"></div>
+    <div class="ai-note">תשובות העוזר נוצרות אוטומטית ועלולות לטעות. לשאלות חשובות – פתחו צ'אט 💬</div>
+    <div class="chat-send">
+      <textarea id="aiInput" placeholder="שאלו על התוכנות..."></textarea>
+      <button type="button" id="aiSend">שליחה</button>
+    </div>
+  </div>
 
   <!-- ===== צ'אט ===== -->
   <button type="button" class="chat-fab hidden" id="chatFab" title="צ'אט">💬<span class="dot hidden" id="chatDot"></span></button>
@@ -965,6 +1000,86 @@
       box.appendChild(s);
     }
   }
+
+  /* ===== עוזר AI: עונה על שאלות לפי המידע על התוכנות (שירות חינמי, בלי מפתח) ===== */
+  const AI_URL = "https://text.pollinations.ai/openai";
+  const AI_SYSTEM = [
+    "אתה העוזר החכם של האתר 'תוכנות על רמה' – אתר של תוכנות למחשב בעברית, להורדה והתקנה ב-Windows.",
+    "ענה תמיד בעברית, בצורה קצרה, ברורה וידידותית (עד 5 משפטים, אפשר רשימה קצרה). כתוב טקסט רגיל בלי Markdown (בלי כוכביות ובלי #).",
+    "אם שואלים איך עושים משהו בתוכנה ואין כאן הוראות מפורטות – אמור מה התוכנה יודעת לעשות, ואל תמציא שמות של כפתורים או תפריטים.",
+    "ענה רק על סמך המידע שלמטה. אל תמציא פרטים, מחירים, גרסאות או יכולות שלא כתובים כאן.",
+    "אם אין לך את המידע, או שהשאלה לא קשורה לאתר ולתוכנות – אמור זאת בנימוס והצע לפתוח את הצ'אט עם צוות האתר (כפתור 💬 בפינה, אחרי התחברות).",
+    "",
+    "על האתר: מורידים תוכנה בכפתור 'הורדה והתקנה' בכרטיס שלה. לכל תוכנה יש דף פרטים (כפתור 'פרטים נוספים') עם דירוג בכוכבים. כדי לדרג או לפתוח צ'אט עם הצוות צריך להתחבר (עם Google או אימייל וסיסמה). בצ'אט אפשר גם לצרף קבצים ותמונות.",
+    "",
+    "התוכנות באתר:",
+    ...Object.entries(APPS).map(([key, a]) => [
+      "### " + a.name + " (גרסה " + a.version + ", דף הפרטים: " + key + ".html)",
+      a.desc,
+      (a.changesTitle || "מה חדש בגרסה") + ": " + a.changes.join("; "),
+      "דרישות ומגבלות: " + a.reqs.join("; "),
+      "התקנה: " + a.note
+    ].join("\n"))
+  ].join("\n");
+  const aiHistory = [];
+
+  function aiAdd(who, text, cls) {
+    const div = document.createElement("div");
+    div.className = "bubble " + who + (cls ? " " + cls : "");
+    div.textContent = text;
+    $("aiMsgs").appendChild(div);
+    $("aiMsgs").scrollTop = $("aiMsgs").scrollHeight;
+    return div;
+  }
+
+  $("aiFab").onclick = () => {
+    $("aiFab").classList.add("hidden");
+    $("aiBox").classList.remove("hidden");
+    if (!$("aiMsgs").children.length)
+      aiAdd("them", "שלום! 👋 אני העוזר החכם של תוכנות על רמה.\nאפשר לשאול אותי על התוכנות באתר – מה הן עושות, איך מתקינים, מה צריך במחשב ועוד.");
+    $("aiInput").focus();
+  };
+  $("aiClose").onclick = () => { $("aiBox").classList.add("hidden"); $("aiFab").classList.remove("hidden"); };
+  $("aiBig").onclick = () => $("aiBox").classList.toggle("big");
+
+  let aiBusy = false;
+  async function aiAsk() {
+    const q = $("aiInput").value.trim();
+    if (!q || aiBusy) return;
+    aiBusy = true;
+    $("aiInput").value = "";
+    aiAdd("me", q);
+    aiHistory.push({ role: "user", content: q.slice(0, 1000) });
+    const wait = aiAdd("them", "חושב...", "ai-typing");
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 45000);
+    try {
+      const res = await fetch(AI_URL, {
+        method: "POST", signal: ctrl.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "openai", messages: [{ role: "system", content: AI_SYSTEM }, ...aiHistory.slice(-10)] })
+      });
+      if (!res.ok) throw new Error(res.status);
+      const j = await res.json();
+      const a = String((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "")
+        .replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#+\s*/gm, "").trim(); // בלי סימני Markdown
+      if (!a) throw new Error("empty");
+      wait.textContent = a;
+      wait.classList.remove("ai-typing");
+      aiHistory.push({ role: "assistant", content: a });
+    } catch (e) {
+      aiHistory.pop();
+      wait.textContent = "העוזר לא זמין כרגע 😕 נסו שוב בעוד רגע, או שאלו אותנו בצ'אט 💬";
+      wait.classList.remove("ai-typing");
+    }
+    clearTimeout(timer);
+    aiBusy = false;
+    $("aiMsgs").scrollTop = $("aiMsgs").scrollHeight;
+  }
+  $("aiSend").onclick = aiAsk;
+  $("aiInput").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); aiAsk(); }
+  });
 
   $("chatAttach").onclick = () => $("chatFile").click();
   $("chatFile").onchange = async () => {
