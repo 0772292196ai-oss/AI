@@ -305,6 +305,10 @@
   .card-stats { display: flex; gap: 14px; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
   .card-stats .stars { color: var(--gold); letter-spacing: 1px; }
   .demo-btn { margin-top: 10px; background: linear-gradient(135deg, #ff7a18, #ffb347); }
+  .store-btn { margin-top: 10px; background: linear-gradient(135deg, #7c4dff, #b06bff) !important; }
+  .store-steps { color: var(--muted); line-height: 1.9; padding-inline-start: 22px; margin: 0 0 16px; }
+  .store-steps b { color: var(--ink); }
+  .store-dl { display: block; text-align: center; text-decoration: none; }
   .demo-btn:disabled { background: var(--card2); color: var(--muted); cursor: default; filter: none; }
   .share-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; color: var(--muted); }
   .share-row a { text-decoration: none; }
@@ -661,6 +665,7 @@
         <a class="btn dl-link" id="apDownload">⬇ הורדה והתקנה</a>
         <button type="button" class="btn alt" id="apHelp">💬 שאלה? פתחו צ'אט</button>
       </div>
+      <button type="button" class="btn store-btn" id="apStore">⚡ התקנה דרך חנות "תוכנה בקליק"</button>
       <button type="button" class="btn demo-btn hidden" id="apDemo"></button>
       <div class="share-row">
         <span>שתפו את התוכנה:</span>
@@ -698,6 +703,24 @@
         <button type="button" class="x-btn" data-close="devOverlay">✕</button>
       </div>
       <div id="devBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== התקנה דרך חנות "תוכנה בקליק" (התוכנה למחשב) ===== -->
+  <div class="overlay hidden" id="storeOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>⚡ התקנה דרך "תוכנה בקליק"</h2>
+        <button type="button" class="x-btn" data-close="storeOverlay">✕</button>
+      </div>
+      <p class="dev-intro">"תוכנה בקליק" היא חנות קטנה למחשב (קובץ אחד, בלי התקנה): מתקינים ממנה כל תוכנה מהאתר בלחיצה, ומסירים תוכנות מהמחשב.</p>
+      <ol class="store-steps">
+        <li>מורידים את החנות בכפתור למטה (פעם אחת בלבד).</li>
+        <li>פותחים את הקובץ <b>תוכנה בקליק.exe</b>. אם מופיע חלון כחול: "מידע נוסף" ← "הפעל בכל זאת".</li>
+        <li>מוצאים ברשימה את <b id="storeAppName"></b> ולוחצים <b>⬇ התקנה</b>.</li>
+      </ol>
+      <a class="primary-btn store-dl" id="storeDl" target="_blank" rel="noopener">⬇ הורדת החנות "תוכנה בקליק"</a>
+      <p class="msg hidden" id="storeSoon">החנות תהיה זמינה להורדה בקרוב. בינתיים אפשר להשתמש בכפתור "הורדה והתקנה" הרגיל.</p>
     </div>
   </div>
 
@@ -1440,6 +1463,18 @@
     loadCardStats();
   }
   loadDynCards();
+
+  // ----- התקנה דרך חנות "תוכנה בקליק" -----
+  // ↓ כאן מדביקים את קישור ההורדה של החנות (מ-Google Drive). כל עוד ריק – מוצגת הודעת "בקרוב" ↓
+  const STORE_URL = "";
+  $("apStore").onclick = () => {
+    $("storeAppName").textContent = APP.name;
+    const url = httpsUrl(STORE_URL);
+    $("storeDl").classList.toggle("hidden", !url);
+    $("storeSoon").classList.toggle("hidden", !!url);
+    if (url) $("storeDl").href = url;
+    $("storeOverlay").classList.remove("hidden");
+  };
 
   // ----- חלון המפתחים -----
   function openDev(e) {
