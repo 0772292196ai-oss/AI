@@ -870,6 +870,26 @@
           <button type="button" class="btn alt" id="cardHelp2">💬 שאלה? פתחו צ'אט</button>
         </div>
       </article>
+
+      <!-- ===== תוכנה 3: ספר טלפונים ===== -->
+      <article class="card" id="telCard">
+        <div class="art" style="background:linear-gradient(135deg,#10b981,#22d3ee)">
+          <span style="font-size:6rem;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35))">📒</span>
+        </div>
+        <div class="body">
+          <h2>ספר טלפונים 2026-27 <span class="ver">v1.0.0</span></h2>
+          <p>כל ספר הטלפונים ישר במחשב, בלי אינטרנט: יותר מ-8,000 מספרים, עם חיפוש מהיר לפי שם, רחוב, עיר או מספר.</p>
+          <div class="meta">
+            <span>🖥 Windows</span>
+            <span>📶 בלי אינטרנט</span>
+            <span>📦 1.7MB</span>
+          </div>
+          <div class="card-stats" data-app="TEL"></div>
+          <a class="btn" href="https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA">⬇ הורדה</a>
+          <a class="btn alt" href="TEL.html">ℹ פרטים נוספים</a>
+          <button type="button" class="btn alt" id="cardHelp3">💬 שאלה? פתחו צ'אט</button>
+        </div>
+      </article>
     </div>
   </main>
 
@@ -1685,9 +1705,8 @@
       howto: "מקלידים או מדביקים טקסט בתיבה (או פותחים קובץ txt), בוחרים קול – הילה (אישה) או אברי (גבר) – ומהירות, ולוחצים הקראה או F5. כדי להקריא רק חלק – מסמנים אותו ואז מקריאים. אפשר להשהות, להמשיך, ולעצור ב-Esc. כדי לקבל קובץ שמע – בוחרים שמירה כ-MP3. להקלדה קולית לוחצים F6 (או כפתור ההקלדה הקולית), מדברים בעברית, ואומרים בקול 'פסיק', 'נקודה', 'סימן שאלה', 'סימן קריאה', 'נקודתיים', 'שורה חדשה' או 'פסקה חדשה' לפיסוק. פס קטן מראה שהמיקרופון קולט. 'העתק הכל' מעתיק את הטקסט להדבקה בוואטסאפ, במייל או ב-Word. A+ ו-A− מגדילים ומקטינים את הגופן. הטקסט נשמר לבד כשסוגרים את התוכנה. חשוב: קולית לא מקליטה את הקול של המשתמש – קובץ ה-MP3 הוא של ההקראה (הקול של הילה או אברי מקריא את הטקסט), וההקלדה הקולית רק הופכת דיבור לטקסט ולא שומרת הקלטה. מי שרוצה MP3 של הדברים שלו יכול להקליד אותם בהקלדה קולית ואז לשמור את ההקראה כ-MP3. אם ההקראה או ההקלדה לא עובדות – לבדוק שיש חיבור לאינטרנט, ולהקלדה קולית שהמיקרופון מחובר ומאושר ב-Windows.",
       stats: "ert", ratings: "ratings_ert"
     },
-    // ספר טלפונים – עדיין מוסתר: יש לו דף (TEL.html) אבל הוא לא בגלריה, לא בחיפוש ולא אצל העוזר
+    // ספר טלפונים (אפשר להסתיר שוב מהעוזר ומכפתור החנות עם hidden: true – את הכרטיס מוחקים מהגלריה ב-HTML)
     TEL: {
-      hidden: true,
       name: "ספר טלפונים 2026-27",
       icon: '<div style="width:100%;height:100%;display:grid;place-items:center;font-size:2.6rem;background:linear-gradient(135deg,#10b981,#22d3ee)">📒</div>',
       tag: "📶 בלי אינטרנט · 1.7MB",
@@ -1792,6 +1811,9 @@
   $("ertCard").addEventListener("click", e => {
     if (!e.target.closest("a, button")) location.href = "ERT.html";
   });
+  $("telCard").addEventListener("click", e => {
+    if (!e.target.closest("a, button")) location.href = "TEL.html";
+  });
 
   // מונה הורדות – לכל תוכנה מונה משלה
   const countDownload = app => db.collection("stats").doc(app.stats)
@@ -1799,6 +1821,7 @@
     .then(() => { if (app === APP) loadAppStats(); }).catch(() => {});
   document.querySelector('#busCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ASD));
   document.querySelector('#ertCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ERT));
+  document.querySelector('#telCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.TEL));
   $("apDownload").addEventListener("click", () => countDownload(APP));
 
   // בכרטיסים בדף הראשי: דירוג ממוצע ומספר הורדות של כל תוכנה
@@ -2645,6 +2668,7 @@
   document.getElementById("navHelp").onclick = openHelp;
   document.getElementById("cardHelp").onclick = openHelp;
   document.getElementById("cardHelp2").onclick = openHelp;
+  document.getElementById("cardHelp3").onclick = openHelp;
   document.getElementById("apHelp").onclick = openHelp;
 </script>
 <script>

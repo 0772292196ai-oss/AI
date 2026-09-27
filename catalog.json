@@ -16,5 +16,14 @@
     "download": "https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq",
     "page": "ERT.html",
     "image": "https://vocalremover.org/img/splitter/player_en.png"
+  },
+  {
+    "key": "TEL",
+    "name": "ספר טלפונים 2026-27",
+    "version": "1.0.0",
+    "desc": "כל ספר הטלפונים ישר במחשב, בלי אינטרנט: יותר מ-8,000 מספרים, עם חיפוש מהיר לפי שם, רחוב, עיר או מספר.",
+    "download": "https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA",
+    "page": "TEL.html",
+    "stats": "tel"
   }
 ]
