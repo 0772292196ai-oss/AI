@@ -417,6 +417,50 @@
   .my-rate button.small-btn { font-size: .95rem; color: var(--ink); padding: 8px 16px; border: 1px solid var(--line); }
   .my-rate button.small-btn:hover { background: var(--card2); }
 
+  /* אזור מפתחים ולוח ניהול */
+  .modal.wide { max-width: 640px; max-height: calc(100vh - 32px); overflow-y: auto; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .modal-head h2 { margin: 0; font-size: 1.3rem; }
+  .x-btn { background: none; border: none; color: var(--muted); font-size: 1.3rem; padding: 4px 8px; border-radius: 8px; }
+  .x-btn:hover { background: var(--card2); color: var(--ink); }
+  .dev-intro { color: var(--muted); line-height: 1.65; margin: 0 0 16px; }
+  .dev-intro b { color: var(--ink); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .hint { display: block; font-weight: 400; color: var(--muted); font-size: .82rem; margin-top: 2px; }
+  .check { display: flex; gap: 8px; align-items: flex-start; font-weight: 400; color: var(--muted); margin: 6px 0 14px; }
+  .check input { width: auto; margin-top: 4px; }
+  .primary-btn {
+    width: 100%; font-weight: 700; font-size: 1.05rem; color: #fff; border: none; border-radius: 10px; padding: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  .primary-btn:disabled { opacity: .6; cursor: default; }
+  .section-title { margin: 22px 0 10px; font-size: 1.05rem; display: flex; justify-content: space-between; align-items: center; }
+  .app-row {
+    display: flex; gap: 12px; align-items: center; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .app-row img, .app-row .ph { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex: none; background: var(--card2); display: grid; place-items: center; font-size: 1.4rem; }
+  .app-row .info { flex: 1; min-width: 0; }
+  .app-row .info b { display: block; }
+  .app-row .info small { color: var(--muted); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-row .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .status { font-size: .78rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .status.pending { background: rgba(245,184,46,.15); color: var(--gold); }
+  .status.approved { background: rgba(46,204,113,.15); color: #4ade80; }
+  .ok-btn { background: #16a34a !important; border: none !important; color: #fff !important; }
+  .del-btn { color: #ff7a6b !important; border: 1px solid rgba(255,122,107,.4) !important; }
+  .review { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .review h3 { margin: 0 0 4px; }
+  .review p { color: var(--muted); margin: 6px 0; line-height: 1.55; white-space: pre-wrap; }
+  .review a { color: var(--accent-2); word-break: break-all; }
+  .review .acts { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .review img { max-width: 100%; max-height: 160px; border-radius: 10px; display: block; margin: 8px 0; }
+  .admin-count { background: #ff4d3d; color: #fff; border-radius: 10px; padding: 0 7px; font-size: .78rem; margin-inline-start: 4px; }
+  .empty-note { text-align: center; color: var(--muted); padding: 18px 0; }
+  .card .art .ph-icon { font-size: 4rem; }
+  @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
   /* כותרת תחתונה */
   footer { display: grid; gap: 10px; padding: 34px 20px 90px; background: rgba(0,0,0,.18); }
   .foot-brand { font-size: 1.2rem; font-weight: 800; color: var(--ink); }
@@ -453,8 +497,10 @@
       </a>
       <nav class="nav">
         <a href="#top" class="on">בית</a>
-        <a href="#download">הורדת התוכנה</a>
+        <a href="#download">תוכנות</a>
         <a href="#" id="navHelp">עזרה וצ'אט</a>
+        <a href="#" id="navDev">🧑‍💻 למפתחים</a>
+        <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
       <div class="auth">
         <span class="who hidden" id="who"></span>
@@ -624,13 +670,40 @@
       <a href="#download">כל התוכנות</a>
       <a href="#" onclick="document.getElementById('aiFab').click();return false">🤖 העוזר החכם</a>
       <a href="#" onclick="openHelp(event)">💬 צ'אט עם הצוות</a>
+      <a href="#" onclick="openDev(event)">🧑‍💻 העלו תוכנה משלכם</a>
     </div>
-    <div class="foot-small">תוכנות פשוטות ושימושיות בעברית · גרסת אתר 36</div>
+    <div class="foot-small">תוכנות פשוטות ושימושיות בעברית · גרסת אתר 37</div>
   </footer>
   <div class="toast hidden" id="toast"></div>
 
 
 
+
+  <!-- ===== אזור המפתחים: הרשמה כמפתח והעלאת תוכנות לאישור ===== -->
+  <div class="overlay hidden" id="devOverlay">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h2>🧑‍💻 אזור המפתחים</h2>
+        <button type="button" class="x-btn" data-close="devOverlay">✕</button>
+      </div>
+      <div id="devBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== לוח ניהול (רק למנהל) ===== -->
+  <div class="overlay hidden" id="adminOverlay">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h2>🛡️ ניהול תוכנות</h2>
+        <button type="button" class="x-btn" data-close="adminOverlay">✕</button>
+      </div>
+      <div class="tabs">
+        <button type="button" class="on" data-atab="pending">ממתינות לאישור</button>
+        <button type="button" data-atab="approved">מאושרות</button>
+      </div>
+      <div id="adminBody"></div>
+    </div>
+  </div>
 
   <!-- ===== עוזר AI – שואלים שאלות על התוכנות ===== -->
   <button type="button" class="ai-fab" id="aiFab" title="שאלו את העוזר החכם"><span>🤖</span>שאלו את העוזר</button>
@@ -758,7 +831,7 @@
       $("logout").classList.add("hidden");
     }
   }
-  auth.onAuthStateChanged(user => { updateBar(user); startChat(user); authReady = true; checkHash(); if (onDetailsPage()) { loadAppStats(); renderDemo(); } });
+  auth.onAuthStateChanged(user => { updateBar(user); startChat(user); authReady = true; checkHash(); if (onDetailsPage()) { loadAppStats(); renderDemo(); } devAuthChanged(user); });
 
   /* ===== צ'אט: משתמשים כותבים, המנהל רואה ועונה ===== */
   const ADMIN_EMAIL = "yosefdayan2018@gmail.com"; // המייל של בעל האתר
@@ -1090,28 +1163,40 @@
 
   // איזה דף פתוח: ASD.html / ERT.html, או הדף הראשי (שם #app = אוטובוסים)
   const PAGE = (location.pathname.match(/\/(ASD|ERT)\.html$/i) || [])[1];
-  const APP = APPS[(PAGE || "ASD").toUpperCase()];
+  // תוכנה של מפתח (אושרה בלוח הניהול) נפתחת בכתובת ?app=מזהה
+  const DYN_ID = (new URLSearchParams(location.search).get("app") || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  APPS.ASD.page = "ASD.html"; APPS.ERT.page = "ERT.html";
+  const ALL_APPS = Object.assign({}, APPS); // + תוכנות של מפתחים, נטענות מ-Firebase
+  let APP = DYN_ID
+    ? { name: "טוען...", icon: "", tag: "", version: "", desc: "", note: "", download: "#", changes: [], reqs: [],
+        downloadsBefore: 0, stats: "d_" + DYN_ID, ratings: "ratings_" + DYN_ID, page: "?app=" + DYN_ID }
+    : APPS[(PAGE || "ASD").toUpperCase()];
 
-  $("apName").textContent = APP.name;
-  $("apIcon").innerHTML = APP.icon;
-  $("apTag").textContent = APP.tag;
-  $("apVer").textContent = APP.version;
-  $("apChangesTitle").textContent = APP.changesTitle || "מה חדש בגרסה " + APP.version;
-  $("apDesc").textContent = APP.desc;
-  $("apNote").textContent = APP.note;
-  $("apDownload").href = APP.download;
   const fillList = (el, items) => { el.innerHTML = ""; items.forEach(t => { const li = document.createElement("li"); li.textContent = t; el.appendChild(li); }); };
-  fillList($("apChanges"), APP.changes);
-  $("apChangesPanel").classList.toggle("hidden", !APP.changes.length);
-  fillList($("apReqs"), APP.reqs);
+  function fillDetails() {
+    $("apName").textContent = APP.name;
+    $("apIcon").innerHTML = APP.icon;
+    $("apTag").textContent = APP.tag;
+    $("apTag").classList.toggle("hidden", !APP.tag);
+    $("apVer").textContent = APP.version;
+    $("apChangesTitle").textContent = APP.changesTitle || "מה חדש בגרסה " + APP.version;
+    $("apDesc").textContent = APP.desc;
+    $("apNote").textContent = APP.note;
+    $("apDownload").href = APP.download;
+    fillList($("apChanges"), APP.changes);
+    $("apChangesPanel").classList.toggle("hidden", !APP.changes.length);
+    fillList($("apReqs"), APP.reqs);
+    document.querySelector(".by").textContent = "מאת " + (APP.dev || "תוכנות על רמה");
+  }
+  fillDetails();
 
   // מעבר בין הגלריה לדף הפרטים לפי הכתובת (#app)
   // אותו קובץ משמש לכל הדפים: בשם ASD.html / ERT.html הוא נפתח ישר כדף הפרטים
-  const IN_ASD = !!PAGE;
+  const IN_ASD = !!PAGE || !!DYN_ID;
   if (IN_ASD) {
     $("backLink").href = "./";
     document.querySelectorAll('.logo, .nav a[href^="#"], .foot-links a[href="#download"]').forEach(a => {
-      if (a.id !== "navHelp") a.href = "./" + a.getAttribute("href");
+      if (!a.id) a.href = "./" + a.getAttribute("href"); // קישורים עם id (צ'אט, מפתחים, ניהול) פותחים חלון ולא עוברים דף
     });
   }
 
@@ -1146,12 +1231,11 @@
   $("apDownload").addEventListener("click", () => countDownload(APP));
 
   // בכרטיסים בדף הראשי: דירוג ממוצע ומספר הורדות של כל תוכנה
-  let cardStatsLoaded = false;
   function loadCardStats() {
-    if (cardStatsLoaded) return;
-    cardStatsLoaded = true;
-    document.querySelectorAll(".card-stats").forEach(async box => {
-      const app = APPS[box.dataset.app];
+    document.querySelectorAll(".card-stats:not([data-done])").forEach(async box => {
+      box.dataset.done = "1";
+      const app = ALL_APPS[box.dataset.app];
+      if (!app) return;
       const parts = [];
       try {
         const snap = await db.collection(app.ratings).get();
@@ -1188,7 +1272,7 @@
   $("appCount").textContent = document.querySelectorAll("#download .card").length + " תוכנות";
 
   /* ===== ניסיון חד-פעמי של הגרסה לנייד – רק למחוברים, פעם אחת לכל חשבון ===== */
-  function onDetailsPage() { return !!PAGE || location.hash === "#app"; }
+  function onDetailsPage() { return !!PAGE || !!DYN_ID || location.hash === "#app"; }
   try { sessionStorage.removeItem("busDemoActive"); } catch (e) {} // יצאו מהניסיון – אי אפשר לחזור אליו
   const trialKey = () => "trial_" + APP.stats + "_" + me.uid;
 
@@ -1231,10 +1315,292 @@
   renderDemo();
 
   // שיתוף דף התוכנה
-  const shareUrl = "https://0772292196ai-oss.github.io/AI/" + (PAGE ? PAGE.toUpperCase() : "ASD") + ".html";
-  $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(APP.name + " – להורדה בחינם:\n" + shareUrl);
-  $("shareCopy").onclick = () => navigator.clipboard.writeText(shareUrl)
-    .then(() => { $("shareCopy").textContent = "✔ הקישור הועתק"; }, () => prompt("העתיקו את הקישור:", shareUrl));
+  const shareUrl = () => "https://0772292196ai-oss.github.io/AI/" + APP.page;
+  function updateShare() {
+    $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(APP.name + " – להורדה בחינם:\n" + shareUrl());
+  }
+  updateShare();
+  $("shareCopy").onclick = () => navigator.clipboard.writeText(shareUrl())
+    .then(() => { $("shareCopy").textContent = "✔ הקישור הועתק"; }, () => prompt("העתיקו את הקישור:", shareUrl()));
+
+  /* ================= מפתחים: הרשמה, העלאת תוכנות, ואישור של המנהל ================= */
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const httpsUrl = s => { try { const u = new URL(String(s || "").trim()); return u.protocol === "https:" ? u.href : ""; } catch (e) { return ""; } };
+  const toLines = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean).slice(0, 15);
+
+  // ממיר תוכנה של מפתח (מסמך ב-Firebase) לפורמט שהאתר מציג
+  function dynToApp(id, d) {
+    const img = httpsUrl(d.image);
+    return {
+      name: d.name || "תוכנה", dev: d.devName || "", version: d.version || "1.0",
+      short: d.short || "", desc: d.desc || d.short || "", tag: d.size ? "📦 " + d.size : "",
+      icon: img ? '<img src="' + esc(img) + '" alt="">'
+                : '<div style="width:100%;height:100%;display:grid;place-items:center;font-size:2.4rem;background:linear-gradient(135deg,#2f7cf6,#7c4dff)">🧩</div>',
+      image: img, download: httpsUrl(d.download) || "#",
+      changesTitle: "מה אפשר לעשות", changes: d.features || [],
+      reqs: d.reqs && d.reqs.length ? d.reqs : ["Windows 10 או 11"],
+      note: "ההורדה היא קובץ התקנה. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
+      downloadsBefore: 0, stats: "d_" + id, ratings: "ratings_" + id, page: "?app=" + id, status: d.status
+    };
+  }
+
+  // דף פרטים של תוכנת מפתח (?app=מזהה)
+  async function loadDynApp() {
+    if (!DYN_ID) return;
+    try {
+      const d = await db.collection("apps").doc(DYN_ID).get();
+      if (!d.exists) throw { code: "not-found" };
+      APP = dynToApp(DYN_ID, d.data());
+      ALL_APPS["D_" + DYN_ID] = APP;
+      fillDetails(); updateShare(); loadAppStats(); renderDemo();
+      document.title = APP.name + " – תוכנות על רמה";
+      if (APP.status !== "approved")
+        $("apDesc").textContent = "⏳ התוכנה ממתינה לאישור – רק המפתח והמנהל רואים את הדף הזה.\n\n" + APP.desc;
+    } catch (e) {
+      $("apName").textContent = e.code === "not-found" ? "התוכנה לא נמצאה" : me ? "אין גישה לתוכנה הזאת" : "טוען...";
+    }
+  }
+  loadDynApp();
+
+  // כרטיסים בגלריה לתוכנות מאושרות של מפתחים
+  async function loadDynCards() {
+    let snap;
+    try { snap = await db.collection("apps").where("status", "==", "approved").get(); } catch (e) { return; }
+    const grid = document.querySelector("#download .grid");
+    snap.forEach(doc => {
+      if (!/^[a-z0-9]+$/.test(doc.id)) return;
+      const key = "D_" + doc.id, a = dynToApp(doc.id, doc.data());
+      ALL_APPS[key] = a;
+      if (IN_ASD || document.querySelector('[data-app="' + key + '"]')) return;
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML =
+        '<div class="art">' + (a.image ? "<img alt=\"\">" : '<span class="ph-icon">🧩</span>') + "</div>" +
+        '<div class="body"><h2><span class="nm"></span> <span class="ver"></span></h2><p class="ds"></p>' +
+        '<div class="meta"><span>🖥 Windows</span><span class="dv"></span></div>' +
+        '<div class="card-stats" data-app="' + key + '"></div>' +
+        '<a class="btn" target="_blank" rel="noopener">⬇ הורדה והתקנה</a>' +
+        '<a class="btn alt">ℹ פרטים נוספים</a></div>';
+      if (a.image) card.querySelector(".art img").src = a.image;
+      else card.querySelector(".art").style.background = "linear-gradient(135deg,#2f7cf6,#7c4dff)";
+      card.querySelector(".nm").textContent = a.name;
+      card.querySelector(".ver").textContent = "v" + a.version;
+      card.querySelector(".ds").textContent = a.short || a.desc;
+      card.querySelector(".dv").textContent = "🧑‍💻 " + a.dev;
+      const [dl, det] = card.querySelectorAll("a.btn");
+      dl.href = a.download; dl.addEventListener("click", () => countDownload(a));
+      det.href = "./" + a.page;
+      card.addEventListener("click", e => { if (!e.target.closest("a, button")) location.href = "./" + a.page; });
+      grid.appendChild(card);
+    });
+    const n = document.querySelectorAll("#download .card").length;
+    $("appCount").textContent = n === 1 ? "תוכנה אחת" : n + " תוכנות";
+    loadCardStats();
+  }
+  loadDynCards();
+
+  // ----- חלון המפתחים -----
+  function openDev(e) {
+    if (e) e.preventDefault();
+    $("devOverlay").classList.remove("hidden");
+    renderDev();
+  }
+  $("navDev").onclick = openDev;
+  document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => $(b.dataset.close).classList.add("hidden"));
+
+  let myDev = null; // פרטי המפתח המחובר (אם נרשם)
+  async function renderDev() {
+    const body = $("devBody");
+    const intro = '<p class="dev-intro">פיתחתם תוכנה ל-Windows? העלו אותה ל<b>תוכנות על רמה</b> ותגיעו לגולשים שלנו. ' +
+      'כל תוכנה נבדקת ומאושרת על ידי הצוות לפני שהיא מתפרסמת, ומקבלת כרטיס בגלריה, דף פרטים, דירוג ומונה הורדות.</p>';
+    if (!me) {
+      body.innerHTML = intro + '<button type="button" class="primary-btn" id="devLogin">התחברות / הרשמה כדי להמשיך</button>';
+      $("devLogin").onclick = () => { $("devOverlay").classList.add("hidden"); $("openReg").click(); };
+      return;
+    }
+    body.innerHTML = '<p class="empty-note">טוען...</p>';
+    try { const d = await db.collection("developers").doc(me.uid).get(); myDev = d.exists ? d.data() : null; }
+    catch (e) { body.innerHTML = '<p class="empty-note">אזור המפתחים עוד לא הופעל (צריך לעדכן את הכללים ב-Firebase).</p>'; return; }
+
+    if (!myDev) { // הרשמה כמפתח
+      body.innerHTML = intro +
+        '<div class="field"><label for="devName">שם המפתח / הסטודיו <span class="hint">כך יופיע בכרטיס התוכנה</span></label><input id="devName" maxlength="40"></div>' +
+        '<label class="check"><input type="checkbox" id="devTerms"> אני מתחייב/ת להעלות רק תוכנות שפיתחתי או שמותר לי להפיץ, בלי וירוסים, תוכנות ריגול או תוכן פוגעני. הצוות רשאי לדחות או להסיר כל תוכנה.</label>' +
+        '<button type="button" class="primary-btn" id="devJoin">🧑‍💻 הרשמה כמפתח</button><p class="msg" id="devMsg"></p>';
+      $("devName").value = me.displayName || "";
+      $("devJoin").onclick = async () => {
+        const name = $("devName").value.trim();
+        if (name.length < 2) return $("devMsg").textContent = "צריך לכתוב שם מפתח";
+        if (!$("devTerms").checked) return $("devMsg").textContent = "צריך לאשר את התנאים";
+        try {
+          await db.collection("developers").doc(me.uid).set({ name, email: me.email || "", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          renderDev();
+        } catch (e) { $("devMsg").textContent = "ההרשמה נכשלה: " + (e.code || e.message); }
+      };
+      return;
+    }
+
+    // מפתח רשום: התוכנות שלי + העלאת תוכנה חדשה
+    body.innerHTML =
+      '<p class="dev-intro">שלום <b></b> 👋 כאן מעלים תוכנות ורואים את הסטטוס שלהן.</p>' +
+      '<div class="section-title">התוכנות שלי</div><div id="myApps"><p class="empty-note">טוען...</p></div>' +
+      '<div class="section-title">➕ העלאת תוכנה חדשה</div>' +
+      '<div class="form-grid">' +
+        '<div class="field"><label>שם התוכנה *</label><input id="fName" maxlength="40"></div>' +
+        '<div class="field"><label>גרסה *</label><input id="fVer" maxlength="15" placeholder="1.0.0" dir="ltr"></div>' +
+        '<div class="field full"><label>תיאור קצר * <span class="hint">משפט אחד שיופיע בכרטיס</span></label><input id="fShort" maxlength="140"></div>' +
+        '<div class="field full"><label>תיאור מלא</label><textarea id="fDesc" rows="3" maxlength="1200"></textarea></div>' +
+        '<div class="field full"><label>קישור הורדה * <span class="hint">קישור https לקובץ ההתקנה (למשל Google Drive עם שיתוף "כל מי שיש לו את הקישור")</span></label><input id="fDl" dir="ltr" placeholder="https://..."></div>' +
+        '<div class="field full"><label>קישור לתמונה <span class="hint">https – צילום מסך או לוגו של התוכנה (לא חובה)</span></label><input id="fImg" dir="ltr" placeholder="https://..."></div>' +
+        '<div class="field"><label>גודל הקובץ</label><input id="fSize" maxlength="15" placeholder="למשל 25MB"></div>' +
+        '<div class="field"></div>' +
+        '<div class="field full"><label>מה התוכנה יודעת לעשות <span class="hint">כל יכולת בשורה נפרדת</span></label><textarea id="fFeat" rows="3"></textarea></div>' +
+        '<div class="field full"><label>דרישות מערכת <span class="hint">כל דרישה בשורה נפרדת</span></label><textarea id="fReqs" rows="2" placeholder="Windows 10 או 11"></textarea></div>' +
+      '</div>' +
+      '<label class="check"><input type="checkbox" id="fOk"> התוכנה שלי (או שמותר לי להפיץ אותה) ואין בה וירוסים או קוד זדוני.</label>' +
+      '<button type="button" class="primary-btn" id="fSend">📤 שליחה לאישור</button><p class="msg" id="fMsg"></p>';
+    body.querySelector(".dev-intro b").textContent = myDev.name;
+    $("fSend").onclick = submitApp;
+    loadMyApps();
+  }
+
+  async function loadMyApps() {
+    const box = $("myApps");
+    try {
+      const snap = await db.collection("apps").where("owner", "==", me.uid).get();
+      if (snap.empty) { box.innerHTML = '<p class="empty-note">עוד לא העליתם תוכנות.</p>'; return; }
+      box.innerHTML = "";
+      snap.forEach(doc => box.appendChild(appRow(doc.id, doc.data(), [
+        ["👁 צפייה", "small-btn alt", () => window.open("./" + dynToApp(doc.id, doc.data()).page, "_self")],
+        ["🗑", "small-btn alt del-btn", () => deleteApp(doc.id, doc.data().name, loadMyApps)]
+      ])));
+    } catch (e) { box.innerHTML = '<p class="empty-note">שגיאה בטעינה: ' + esc(e.code) + "</p>"; }
+  }
+
+  // שורה ברשימה: תמונה, שם, סטטוס וכפתורים
+  function appRow(id, d, actions) {
+    const row = document.createElement("div");
+    row.className = "app-row";
+    const img = httpsUrl(d.image);
+    row.innerHTML = (img ? '<img alt="">' : '<div class="ph">🧩</div>') +
+      '<div class="info"><b></b><small></small></div>' +
+      '<span class="status ' + (d.status === "approved" ? "approved" : "pending") + '">' + (d.status === "approved" ? "✔ מפורסמת" : "⏳ ממתינה לאישור") + "</span>" +
+      '<div class="acts"></div>';
+    if (img) row.querySelector("img").src = img;
+    row.querySelector("b").textContent = d.name + " · v" + (d.version || "");
+    row.querySelector("small").textContent = (d.devName ? d.devName + " · " : "") + (d.short || "");
+    actions.forEach(([label, cls, fn]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = cls; b.textContent = label; b.onclick = fn;
+      row.querySelector(".acts").appendChild(b);
+    });
+    return row;
+  }
+
+  async function submitApp() {
+    const v = id => $(id).value.trim();
+    const msg = t => $("fMsg").textContent = t;
+    const name = v("fName"), version = v("fVer"), short = v("fShort");
+    const download = httpsUrl(v("fDl")), image = v("fImg") ? httpsUrl(v("fImg")) : "";
+    if (!name || !version || !short) return msg("צריך למלא שם, גרסה ותיאור קצר");
+    if (!download) return msg("קישור ההורדה צריך להתחיל ב-https://");
+    if (v("fImg") && !image) return msg("קישור התמונה צריך להתחיל ב-https://");
+    if (!$("fOk").checked) return msg("צריך לאשר שהתוכנה שלכם ושאין בה קוד זדוני");
+    const id = (Date.now().toString(36) + Math.random().toString(36).slice(2, 6)).toLowerCase();
+    $("fSend").disabled = true;
+    try {
+      await db.collection("apps").doc(id).set({
+        name, version, short, desc: v("fDesc"), download, image, size: v("fSize"),
+        features: toLines(v("fFeat")), reqs: toLines(v("fReqs")),
+        owner: me.uid, devName: myDev.name, ownerEmail: me.email || "",
+        status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      ["fName", "fVer", "fShort", "fDesc", "fDl", "fImg", "fSize", "fFeat", "fReqs"].forEach(i => $(i).value = "");
+      $("fOk").checked = false;
+      msg("✔ נשלח! התוכנה תופיע באתר אחרי שהצוות יבדוק ויאשר אותה.");
+      $("fMsg").style.color = "#4ade80";
+      loadMyApps();
+    } catch (e) { msg("השליחה נכשלה: " + (e.code || e.message)); }
+    $("fSend").disabled = false;
+  }
+
+  async function deleteApp(id, name, after) {
+    if (!confirm("למחוק את \"" + name + "\"? אי אפשר לבטל את זה.")) return;
+    try { await db.collection("apps").doc(id).delete(); after(); }
+    catch (e) { alert("המחיקה נכשלה: " + (e.code || e.message)); }
+  }
+
+  // ----- לוח ניהול למנהל: אישור או מחיקה -----
+  let adminTab = "pending", stopPending = null;
+  $("navAdmin").onclick = e => { e.preventDefault(); $("adminOverlay").classList.remove("hidden"); renderAdmin(); };
+  document.querySelectorAll("[data-atab]").forEach(b => b.onclick = () => {
+    adminTab = b.dataset.atab;
+    document.querySelectorAll("[data-atab]").forEach(x => x.classList.toggle("on", x === b));
+    renderAdmin();
+  });
+
+  async function renderAdmin() {
+    const body = $("adminBody");
+    body.innerHTML = '<p class="empty-note">טוען...</p>';
+    let snap;
+    try { snap = await db.collection("apps").where("status", "==", adminTab).get(); }
+    catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
+    if (snap.empty) { body.innerHTML = '<p class="empty-note">' + (adminTab === "pending" ? "אין תוכנות שממתינות לאישור 🎉" : "עוד אין תוכנות מאושרות של מפתחים") + "</p>"; return; }
+    body.innerHTML = "";
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (adminTab === "approved") {
+        body.appendChild(appRow(doc.id, d, [
+          ["👁", "small-btn alt", () => window.open("./?app=" + doc.id, "_blank")],
+          ["⏸ הסתרה", "small-btn alt", () => setStatus(doc.id, "pending")],
+          ["🗑", "small-btn alt del-btn", () => deleteApp(doc.id, d.name, renderAdmin)]
+        ]));
+        return;
+      }
+      // תוכנה שממתינה: כל הפרטים לבדיקה
+      const r = document.createElement("div");
+      r.className = "review";
+      r.innerHTML = '<h3></h3><small class="hint who"></small><img alt="" class="hidden"><p class="s"></p><p class="dsc"></p>' +
+        '<p class="f"></p><p>⬇ קישור הורדה (בדקו אותו לפני אישור!): <a target="_blank" rel="noopener"></a></p>' +
+        '<div class="acts"><button type="button" class="small-btn ok-btn">✔ אישור ופרסום</button>' +
+        '<button type="button" class="small-btn alt" data-v>👁 תצוגה מקדימה</button>' +
+        '<button type="button" class="small-btn alt del-btn">🗑 מחיקה</button></div>';
+      r.querySelector("h3").textContent = d.name + " · v" + d.version;
+      r.querySelector(".who").textContent = "🧑‍💻 " + d.devName + " · " + d.ownerEmail + (d.size ? " · 📦 " + d.size : "");
+      const img = httpsUrl(d.image);
+      if (img) { const im = r.querySelector("img"); im.src = img; im.classList.remove("hidden"); }
+      r.querySelector(".s").textContent = d.short;
+      r.querySelector(".dsc").textContent = d.desc || "";
+      r.querySelector(".f").textContent = (d.features || []).length ? "יכולות: " + d.features.join(" · ") : "";
+      const link = r.querySelector("a"); link.href = httpsUrl(d.download) || "#"; link.textContent = d.download;
+      r.querySelector(".ok-btn").onclick = () => setStatus(doc.id, "approved");
+      r.querySelector("[data-v]").onclick = () => window.open("./?app=" + doc.id, "_blank");
+      r.querySelector(".del-btn").onclick = () => deleteApp(doc.id, d.name, renderAdmin);
+      body.appendChild(r);
+    });
+  }
+
+  async function setStatus(id, status) {
+    try {
+      await db.collection("apps").doc(id).update({ status, reviewedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      renderAdmin();
+      if (status === "approved") { toast("✔ התוכנה פורסמה באתר"); setTimeout(() => toast(""), 3000); }
+    } catch (e) { alert("הפעולה נכשלה: " + (e.code || e.message)); }
+  }
+
+  // נקרא בכל התחברות/התנתקות
+  function devAuthChanged(user) {
+    $("navAdmin").classList.toggle("hidden", !(user && isAdmin));
+    if (stopPending) { stopPending(); stopPending = null; }
+    if (user && isAdmin) { // מספר התוכנות שממתינות – נקודה אדומה ליד "ניהול"
+      stopPending = db.collection("apps").where("status", "==", "pending").onSnapshot(q => {
+        $("adminCount").textContent = q.size;
+        $("adminCount").classList.toggle("hidden", q.empty);
+      }, () => {});
+    }
+    if (!$("devOverlay").classList.contains("hidden")) renderDev();
+    if (DYN_ID && APP.name === "טוען...") loadDynApp();
+  }
 
   // דירוג: ממוצע של כולם + הדירוג שלי
   async function loadAppStats() {
@@ -1306,7 +1672,7 @@
   // ↑ עד כאן ↑
 
   const SITE_BASE = "https://0772292196ai-oss.github.io/AI/";
-  const AI_SYSTEM = [
+  const aiSystem = () => [
     "אתה העוזר החכם של האתר 'תוכנות על רמה' – אתר של תוכנות למחשב בעברית, להורדה והתקנה ב-Windows.",
     "ענה תמיד בעברית, בצורה ברורה, בטוחה וידידותית. אם יש שלבים – כתוב אותם כרשימה ממוספרת קצרה. כתוב טקסט רגיל בלי Markdown (בלי כוכביות ובלי #).",
     "למטה יש מדריך מלא של האתר ושל התוכנות. כשהתשובה נמצאת במדריך – ענה ממנו ישירות ובביטחון, עם השלבים המדויקים. אל תאמר 'אין לי מידע' כשהמידע כתוב במדריך.",
@@ -1321,10 +1687,10 @@
     "",
     "=== התוכנות באתר ===",
     "כתובת האתר: " + SITE_BASE,
-    ...Object.entries(APPS).map(([key, a]) => [
-      "--- " + a.name + " (גרסה " + a.version + ") ---",
+    ...Object.values(ALL_APPS).map(a => [
+      "--- " + a.name + " (גרסה " + a.version + (a.dev ? ", מאת המפתח " + a.dev : "") + ") ---",
       "קישור הורדה ישיר (קובץ ההתקנה): " + a.download,
-      "דף הפרטים: " + SITE_BASE + key + ".html",
+      "דף הפרטים: " + SITE_BASE + a.page,
       a.desc,
       (a.changesTitle || "מה חדש בגרסה") + ": " + a.changes.join("; "),
       a.howto ? "איך משתמשים: " + a.howto : "",
@@ -1339,12 +1705,12 @@
     div.textContent = "";
     text.split(/(https?:\/\/[^\s<>"'()]+)/).forEach((part, i) => {
       const url = part.replace(/[.,;:!?]+$/, "");
-      const app = Object.values(APPS).find(a => a.download === url);
+      const app = Object.values(ALL_APPS).find(a => a.download === url);
       if (i % 2 && (app || url.startsWith(SITE_BASE))) {
         const a = document.createElement("a");
         a.href = url; a.target = "_blank"; a.rel = "noopener";
         a.style.cssText = "color:inherit;font-weight:700;text-decoration:underline";
-        const page = APPS[url.slice(SITE_BASE.length).replace(/\.html$/i, "").toUpperCase()];
+        const page = Object.values(ALL_APPS).find(a => SITE_BASE + a.page === url);
         a.textContent = app ? "⬇ הורדת " + app.name : page ? "📄 דף הפרטים של " + page.name : "🏠 " + url;
         if (app) a.addEventListener("click", () => countDownload(app));
         div.append(a, part.slice(url.length));
@@ -1386,7 +1752,7 @@
       const res = await fetch(AI_URL, {
         method: "POST", signal: ctrl.signal,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "openai", messages: [{ role: "system", content: AI_SYSTEM + "\n\nהגולש נמצא עכשיו " +
+        body: JSON.stringify({ model: "openai", messages: [{ role: "system", content: aiSystem() + "\n\nהגולש נמצא עכשיו " +
           (PAGE ? "בדף הפרטים של " + APP.name + " – אם השאלה לא מציינת תוכנה, כנראה שהיא על התוכנה הזאת." : "בדף הראשי של האתר.") +
           (me ? " הגולש מחובר." : " הגולש לא מחובר.") }, ...aiHistory.slice(-10)] })
       });
