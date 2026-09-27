@@ -2,6 +2,23 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script>
+/* ניסיון חד-פעמי למשתמשים מחוברים:
+   נכנסים רק דרך הכפתור בדף ASD.html (שבודק התחברות ושהחשבון עוד לא ניסה).
+   כניסה ישירה לקישור, או כניסה נוספת – חוזרים לאתר הראשי. רענון באותה לשונית מותר. */
+(function(){
+  try {
+    if (sessionStorage.getItem("busDemoActive")) return;
+    if (sessionStorage.getItem("busDemoPass")) {
+      sessionStorage.removeItem("busDemoPass");
+      sessionStorage.setItem("busDemoActive", "1");
+      return;
+    }
+  } catch (e) {}
+  location.replace("./");
+  document.write("<style>html{display:none}</style>");
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ff5a00">
 <meta name="mobile-web-app-capable" content="yes">

@@ -304,6 +304,8 @@
   .no-results { text-align: center; color: var(--muted); padding: 30px 0; margin: 0; }
   .card-stats { display: flex; gap: 14px; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
   .card-stats .stars { color: var(--gold); letter-spacing: 1px; }
+  .demo-btn { margin-top: 10px; background: linear-gradient(135deg, #ff7a18, #ffb347); }
+  .demo-btn:disabled { background: var(--card2); color: var(--muted); cursor: default; filter: none; }
   .share-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; color: var(--muted); }
   .share-row a { text-decoration: none; }
   .steps { max-width: 1120px; margin: 0 auto; padding: 0 20px 70px; }
@@ -484,6 +486,7 @@
         <a class="btn dl-link" id="apDownload">⬇ הורדה והתקנה</a>
         <button type="button" class="btn alt" id="apHelp">💬 שאלה? פתחו צ'אט</button>
       </div>
+      <button type="button" class="btn demo-btn hidden" id="apDemo"></button>
       <div class="share-row">
         <span>שתפו את התוכנה:</span>
         <a class="small-btn alt" id="shareWa" target="_blank" rel="noopener">🟢 וואטסאפ</a>
@@ -496,7 +499,7 @@
     </div>
   </section>
 
-  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 34</footer>
+  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 35</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -628,7 +631,7 @@
       $("logout").classList.add("hidden");
     }
   }
-  auth.onAuthStateChanged(user => { updateBar(user); startChat(user); authReady = true; checkHash(); if (location.hash === "#app") loadAppStats(); });
+  auth.onAuthStateChanged(user => { updateBar(user); startChat(user); authReady = true; checkHash(); if (onDetailsPage()) { loadAppStats(); renderDemo(); } });
 
   /* ===== צ'אט: משתמשים כותבים, המנהל רואה ועונה ===== */
   const ADMIN_EMAIL = "yosefdayan2018@gmail.com"; // המייל של בעל האתר
@@ -920,7 +923,8 @@
       ],
       note: "ההורדה היא קובץ התקנה ל-Windows. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
       reqs: ["Windows 10 או 11", "כ-200MB מקום פנוי בדיסק", "לא צריך חיבור לאינטרנט אחרי ההתקנה"],
-      howto: "מתקינים פעם אחת, ואחר כך התוכנה עובדת גם בלי אינטרנט. מחפשים מספר קו או שם של תחנה, ורואים את מסלול הקו ואת כל התחנות שלו.",
+      howto: "מתקינים פעם אחת, ואחר כך התוכנה עובדת גם בלי אינטרנט. מחפשים מספר קו או שם של תחנה, ורואים את מסלול הקו ואת כל התחנות שלו. אפשר גם לנסות פעם אחת את הגרסה לנייד ישר מהדפדפן – בכפתור 'נסו את הגרסה לנייד' בדף הפרטים, למשתמשים מחוברים בלבד.",
+      demo: "אוטובוסים-נייד_4.html", // ניסיון חד-פעמי למחוברים (הקובץ ב-GitHub ליד index.html)
       stats: "app", ratings: "ratings"
     },
     ERT: {
@@ -1055,6 +1059,49 @@
     $("appCount").textContent = shown === 1 ? "תוכנה אחת" : shown + " תוכנות";
   });
   $("appCount").textContent = document.querySelectorAll("#download .card").length + " תוכנות";
+
+  /* ===== ניסיון חד-פעמי של הגרסה לנייד – רק למחוברים, פעם אחת לכל חשבון ===== */
+  function onDetailsPage() { return !!PAGE || location.hash === "#app"; }
+  try { sessionStorage.removeItem("busDemoActive"); } catch (e) {} // יצאו מהניסיון – אי אפשר לחזור אליו
+  const trialKey = () => "trial_" + APP.stats + "_" + me.uid;
+
+  async function demoUsed() {
+    try {
+      const d = await db.collection("trials").doc(me.uid).get();
+      return !!(d.exists && d.data()[APP.stats]);
+    } catch (e) { // אם עוד אין כללים ב-Firebase – בודקים בדפדפן
+      try { return !!localStorage.getItem(trialKey()); } catch (e2) { return false; }
+    }
+  }
+
+  async function renderDemo() {
+    const b = $("apDemo");
+    b.classList.toggle("hidden", !APP.demo);
+    if (!APP.demo) return;
+    b.disabled = false;
+    if (!me) { b.textContent = "▶ נסו את הגרסה לנייד – התחברו כדי לנסות"; return; }
+    b.textContent = "▶ נסו פעם אחת את הגרסה לנייד";
+    if (await demoUsed()) { b.textContent = "✔ כבר ניסית את הגרסה לנייד"; b.disabled = true; }
+  }
+
+  $("apDemo").onclick = async () => {
+    if (!me) {
+      $("overlay").classList.remove("hidden");
+      $("tabLogin").click();
+      $("authMsg").textContent = "כדי לנסות את הגרסה לנייד צריך להתחבר";
+      return;
+    }
+    if (await demoUsed()) return renderDemo();
+    if (!confirm("אפשר לנסות את הגרסה לנייד פעם אחת בלבד.\nאחרי שתצאו ממנה, לא תוכלו להיכנס אליה שוב.\nלהמשיך?")) return;
+    try {
+      await db.collection("trials").doc(me.uid).set({ [APP.stats]: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    } catch (e) {
+      if (e.code !== "permission-denied") return alert("משהו השתבש, נסו שוב.");
+    }
+    try { localStorage.setItem(trialKey(), String(Date.now())); sessionStorage.setItem("busDemoPass", "1"); } catch (e) {}
+    location.href = APP.demo;
+  };
+  renderDemo();
 
   // שיתוף דף התוכנה
   const shareUrl = "https://0772292196ai-oss.github.io/AI/" + (PAGE ? PAGE.toUpperCase() : "ASD") + ".html";
