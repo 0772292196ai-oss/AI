@@ -15,7 +15,7 @@
 <meta property="og:locale" content="he_IL">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232f7cf6'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='5' width='16' height='10' rx='1.5'/%3E%3Cpath d='M9 19h6M12 15v4M12 7.5v4M10 9.8l2 2 2-2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a1222;
@@ -527,9 +527,229 @@
     .hero { padding: 44px 16px 36px; }
     .cta-main, .cta-alt { flex: 1; min-width: 150px; text-align: center; }
   }
+
+  /* ╔══════════════════════════════════════════════════════════════╗
+     ║  עיצוב 3.0 – מחליף את כל המראה של האתר (זכוכית, זוהר, תנועה)  ║
+     ╚══════════════════════════════════════════════════════════════╝ */
+  :root {
+    --bg: #05070f; --paper: #0a0f1d; --card: #0d1426; --card2: #141d35;
+    --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.14);
+    --ink: #f2f5ff; --muted: #9aa6c4;
+    --accent: #4f7cff; --accent-2: #22d3ee; --violet: #a855f7; --pink: #ec4899;
+    --glass: rgba(255,255,255,.035); --glass2: rgba(255,255,255,.06);
+    --grad: linear-gradient(120deg, #4f7cff 0%, #a855f7 50%, #22d3ee 100%);
+    --r: 22px;
+  }
+  ::selection { background: rgba(168,85,247,.45); color: #fff; }
+  html { scrollbar-color: #2a3558 transparent; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #232d4b; border-radius: 10px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: #33416b; }
+  body {
+    font-family: "Assistant", "Heebo", Arial, sans-serif; background: var(--bg); padding-top: 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .logo, .foot-brand, .cta-main, .btn { font-family: "Heebo", "Assistant", Arial, sans-serif; }
+
+  /* רקע: "זוהר צפוני" שזז לאט + רשת עדינה */
+  .aurora { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  .aurora i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; will-change: transform; }
+  .aurora i:nth-child(1) { width: 620px; height: 620px; background: #3b5bff; top: -220px; right: -120px; animation: float1 22s ease-in-out infinite; }
+  .aurora i:nth-child(2) { width: 520px; height: 520px; background: #8b3dff; top: 18%; left: -200px; opacity: .38; animation: float2 26s ease-in-out infinite; }
+  .aurora i:nth-child(3) { width: 460px; height: 460px; background: #06b6d4; bottom: -220px; right: 22%; opacity: .28; animation: float3 30s ease-in-out infinite; }
+  @keyframes float1 { 50% { transform: translate(-120px, 80px) scale(1.12); } }
+  @keyframes float2 { 50% { transform: translate(140px, -60px) scale(.9); } }
+  @keyframes float3 { 50% { transform: translate(-90px, -120px) scale(1.15); } }
+  body::before {
+    z-index: -1; background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 30%, transparent 100%);
+  }
+
+  /* פס עליון צף מזכוכית */
+  .topbar {
+    top: 14px; right: 14px; left: 14px; height: 66px; max-width: 1240px; margin: 0 auto;
+    background: rgba(10,14,28,.55); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--line); border-radius: 20px;
+    box-shadow: 0 20px 50px -24px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .topbar .inner { max-width: none; padding: 0 14px 0 18px; gap: 18px; }
+  .logo { font-size: 1.4rem; letter-spacing: -.3px; }
+  .logo .mark { width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 8px 24px -6px rgba(79,124,255,.9); }
+  .logo b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nav { gap: 2px; }
+  .nav a { padding: 9px 14px; border: none; border-radius: 12px; font-size: .98rem; transition: background .2s, color .2s; }
+  .nav a:hover { background: var(--glass2); color: var(--ink); }
+  .nav a.on { color: #fff; background: linear-gradient(135deg, rgba(79,124,255,.35), rgba(168,85,247,.28)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  .small-btn { border-radius: 12px; padding: 9px 18px; transition: background .2s, transform .15s, box-shadow .2s; }
+  .small-btn.primary { background: var(--grad); background-size: 200% 100%; box-shadow: 0 8px 22px -10px rgba(168,85,247,.9); }
+  .small-btn.primary:hover { background-position: 100% 0; filter: none; transform: translateY(-1px); }
+  .small-btn.alt { background: var(--glass); border-color: var(--line2); }
+
+  /* ראש הדף */
+  .hero { padding: 90px 20px 70px; position: relative; }
+  .hero-kicker {
+    display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px 7px 14px; color: #e6dcff;
+    background: linear-gradient(var(--card), var(--card)) padding-box, var(--grad) border-box; border: 1px solid transparent;
+    box-shadow: 0 0 30px -8px rgba(168,85,247,.7);
+  }
+  .hero-kicker::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.2); animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(52,211,153,0); } }
+  .hero h1 { font-size: clamp(2.6rem, 7.4vw, 5.2rem); font-weight: 900; letter-spacing: -2px; line-height: 1.05; margin-bottom: 20px; }
+  .hero h1 span {
+    background: linear-gradient(90deg, #7aa2ff, #c084fc, #22d3ee, #7aa2ff); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 8s linear infinite;
+    filter: drop-shadow(0 8px 40px rgba(168,85,247,.35));
+  }
+  @keyframes shine { to { background-position: 300% 0; } }
+  .hero p { font-size: 1.25rem; max-width: 640px; color: #b3bdd8; }
+  .hero-cta { margin-top: 34px; gap: 14px; }
+  .cta-main, .cta-alt { padding: 15px 30px; border-radius: 16px; font-size: 1.08rem; position: relative; overflow: hidden; }
+  .cta-main { background: var(--grad); background-size: 200% 100%; box-shadow: 0 16px 40px -14px rgba(120,90,255,.95), inset 0 1px 0 rgba(255,255,255,.25); }
+  .cta-main::after, .btn:not(.alt)::after { /* ברק שעובר על הכפתור */
+    content: ""; position: absolute; inset: 0; transform: translateX(120%);
+    background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+    transition: transform .7s ease;
+  }
+  .cta-main:hover::after, .btn:not(.alt):hover::after { transform: translateX(-120%); }
+  .cta-main:hover { background-position: 100% 0; }
+  .cta-alt { background: var(--glass); border: 1px solid var(--line2); backdrop-filter: blur(10px); }
+  .cta-alt:hover { background: var(--glass2); border-color: rgba(255,255,255,.22); }
+  .cta-store { background: rgba(168,85,247,.12) !important; border-color: rgba(168,85,247,.45) !important; }
+  .hero-badges { margin-top: 30px; gap: 10px; }
+  .hero-badges span { background: var(--glass); border: 1px solid var(--line); padding: 6px 14px; border-radius: 30px; color: #c3cbe3; }
+
+  /* סרגל חיפוש */
+  .products { max-width: 1240px; }
+  .bar { border: none; padding: 0; margin-bottom: 26px; font-family: "Heebo", sans-serif; font-size: 1.15rem; color: var(--ink); }
+  .search {
+    width: min(360px, 60%); padding: 12px 20px; border-radius: 16px; font-size: 1rem; color: var(--ink);
+    background: var(--glass); border: 1px solid var(--line2); outline: none; transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .search:focus { border-color: rgba(168,85,247,.6); background: var(--glass2); box-shadow: 0 0 0 4px rgba(168,85,247,.15); }
+
+  /* כרטיסי תוכנה – זכוכית, מסגרת בצבע מעבר, אור שעוקב אחרי העכבר */
+  .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 26px; }
+  .card {
+    position: relative; border-radius: var(--r); padding: 10px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 30px 60px -35px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.06);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .35s;
+  }
+  .card::before { /* אור שעוקב אחרי העכבר */
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgba(168,85,247,.16), transparent 60%);
+  }
+  .card:hover::before { opacity: 1; }
+  .card:hover { transform: translateY(-8px); border-color: rgba(168,85,247,.45); box-shadow: 0 40px 80px -30px rgba(90,70,255,.55), inset 0 1px 0 rgba(255,255,255,.1); }
+  .card .art { border-radius: 16px; aspect-ratio: 16 / 10; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .card .art::after { height: 55%; background: linear-gradient(to top, rgba(8,12,24,.75), transparent); }
+  .card:hover .art img { transform: scale(1.08); }
+  .card .body { padding: 18px 10px 8px; gap: 10px; }
+  .card h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.3px; }
+  .card p { color: #a9b3cf; font-size: 1.02rem; }
+  .ver { background: rgba(34,211,238,.1); color: #7fe7f7; border: 1px solid rgba(34,211,238,.28); border-radius: 30px; padding: 3px 10px; font-family: "Assistant", sans-serif; }
+  .meta span { background: var(--glass); border-color: var(--line); padding: 4px 12px; }
+  .card-stats { font-weight: 600; }
+  .btn { border-radius: 14px; padding: 13px; font-size: 1.05rem; position: relative; overflow: hidden; }
+  .btn:not(.alt) { background: var(--grad); background-size: 200% 100%; box-shadow: 0 14px 30px -14px rgba(110,90,255,1), inset 0 1px 0 rgba(255,255,255,.25); }
+  .btn:not(.alt):hover { background-position: 100% 0; filter: none; }
+  .btn.alt { background: var(--glass); border: 1px solid var(--line); }
+  .btn.alt:hover { background: var(--glass2); border-color: var(--line2); }
+
+  /* איך זה עובד */
+  .steps { max-width: 1240px; }
+  .steps h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -1px; }
+  .steps-grid { gap: 20px; }
+  .step {
+    border-radius: var(--r); padding: 34px 24px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)); backdrop-filter: blur(12px);
+  }
+  .step:hover { border-color: rgba(34,211,238,.4); }
+  .step .n {
+    width: 58px; height: 58px; border-radius: 18px; font-size: 1.5rem; background: var(--grad);
+    box-shadow: 0 14px 34px -12px rgba(120,90,255,.95), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .step h3 { font-size: 1.25rem; margin-top: 6px; }
+
+  /* דף פרטי התוכנה */
+  .app-page { max-width: 860px; }
+  .back { background: var(--glass); border: 1px solid var(--line); padding: 8px 16px; border-radius: 12px; }
+  .app-box {
+    border-radius: 26px; padding: 32px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.015)); backdrop-filter: blur(16px);
+  }
+  .app-icon { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 18px 40px -14px rgba(120,90,255,.9); }
+  .app-top h1 { font-size: 2.1rem; font-weight: 900; letter-spacing: -.8px; }
+  .panel { background: rgba(0,0,0,.25); border-color: var(--line); border-radius: 18px; }
+  .chips span { background: var(--glass); border-color: var(--line); }
+
+  /* חלונות קופצים, טפסים וצ'אט – באותו סגנון */
+  .overlay { background: rgba(3,5,12,.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .modal {
+    border-radius: 24px !important; border: 1px solid var(--line2) !important;
+    background: linear-gradient(180deg, #10182e, #0b1122) !important;
+    box-shadow: 0 40px 90px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(168,85,247,.08) !important;
+    animation: pop .25s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes pop { from { opacity: 0; transform: scale(.95) translateY(8px); } }
+  .field input, .field textarea, textarea, select, input[type="email"], input[type="password"], input[type="text"] { border-radius: 12px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: rgba(168,85,247,.6) !important; box-shadow: 0 0 0 4px rgba(168,85,247,.15); }
+  #authSubmit, .primary-btn { border-radius: 14px !important; background: var(--grad) !important; }
+  .chat-box, .ai-box { border-radius: 24px !important; border: 1px solid var(--line2) !important; box-shadow: 0 40px 90px -30px rgba(0,0,0,.95) !important; overflow: hidden; }
+  .chat-head { background: var(--grad) !important; }
+  .chat-fab { background: var(--grad) !important; box-shadow: 0 16px 40px -12px rgba(120,90,255,.95) !important; }
+  .bubble { border-radius: 18px; }
+  .bubble.me { background: linear-gradient(135deg, #4f7cff, #7c5cff); box-shadow: 0 8px 20px -12px rgba(79,124,255,.9); }
+  .bubble.them { background: var(--card2); border-color: var(--line); }
+
+  /* כותרת תחתונה */
+  footer { position: relative; background: rgba(255,255,255,.02); border-top: 1px solid var(--line); padding: 46px 20px 100px; }
+  footer::before { content: ""; position: absolute; top: -1px; left: 15%; right: 15%; height: 1px; background: var(--grad); opacity: .8; }
+  .foot-brand { font-size: 1.5rem; font-weight: 900; }
+  .foot-brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* חנות למחשב */
+  .store-how { border-radius: 26px; background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)); border-color: var(--line); }
+  .store-hero h1 { font-weight: 900; letter-spacing: -1.5px; }
+
+  /* כמה מחוברים עכשיו */
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-size: .88rem; font-weight: 700;
+    color: #c6f6de; background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.32); padding: 6px 13px; border-radius: 30px;
+  }
+  .live-pill i, .ap-live::before, .card-live::before {
+    content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34d399;
+    box-shadow: 0 0 0 3px rgba(52,211,153,.2); animation: pulse 2s infinite;
+  }
+  .live-pill b { font-family: "Heebo", sans-serif; }
+  .ap-live { color: #c6f6de !important; background: rgba(52,211,153,.1) !important; border-color: rgba(52,211,153,.32) !important; display: inline-flex; align-items: center; gap: 7px; }
+  .card-live { display: inline-flex; align-items: center; gap: 7px; color: #6ee7b7; font-size: .9rem; font-weight: 700; }
+  @media (max-width: 760px) { .live-pill .lbl { display: none; } .live-pill { padding: 5px 10px; } }
+
+  /* כניסה עם גלילה */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+    .reveal.in { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .aurora i, .hero h1 span, .hero-kicker::before { animation: none; } }
+  @media (max-width: 760px) {
+    body { padding-top: 84px; }
+    .topbar { top: 8px; right: 8px; left: 8px; height: 60px; border-radius: 16px; }
+    .hero { padding: 50px 16px 40px; }
+    .hero h1 { letter-spacing: -1px; }
+    .grid { grid-template-columns: 1fr; }
+    .search { width: 100%; }
+    .bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .aurora i { filter: blur(70px); opacity: .4; }
+  }
 </style>
 </head>
 <body>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
   <header class="topbar">
     <div class="inner">
       <a class="logo" href="#top">
@@ -550,6 +770,7 @@
         <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
       <div class="auth">
+        <span class="live-pill hidden" id="livePill" title="כמה אנשים באתר עכשיו"><i></i><b id="liveNum"></b><span class="lbl"> מחוברים עכשיו</span></span>
         <span class="who hidden" id="who"></span>
         <button class="small-btn" id="openLogin">התחברות</button>
         <button class="small-btn primary" id="openReg">הרשמה</button>
@@ -706,6 +927,7 @@
             <span>⬇ <b id="apDl">–</b> הורדות</span>
             <span>🖥 Windows</span>
             <span id="apTag"></span>
+            <span id="apLive" class="ap-live hidden"></span>
           </div>
         </div>
       </div>
@@ -2389,6 +2611,83 @@
   document.getElementById("cardHelp").onclick = openHelp;
   document.getElementById("cardHelp2").onclick = openHelp;
   document.getElementById("apHelp").onclick = openHelp;
+</script>
+<script>
+  /* ===== כמה מחוברים עכשיו: באתר כולו, ובכל תוכנה =====
+     כל גולש (גם בלי התחברות) מסמן את עצמו פעם בחצי דקה ב-presence/מזהה-אקראי, עם הדף שהוא נמצא בו. */
+  (function () {
+    const ONLINE = 75 * 1000;
+    const pageKey = () => DYN_ID ? "D_" + DYN_ID : IS_STORE ? "STORE" : PAGE ? PAGE.toUpperCase() : location.hash === "#app" ? "ASD" : "HOME";
+    let vid = "";
+    try { vid = localStorage.getItem("tcVisitor") || ""; } catch (e) {}
+    if (!/^[a-f0-9]{24}$/.test(vid)) {
+      vid = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, "0")).join("");
+      try { localStorage.setItem("tcVisitor", vid); } catch (e) {}
+    }
+    const me = db.collection("presence").doc(vid);
+    let offset = 0, per = {}, total = 0, works = true;
+
+    function beat() {
+      if (document.hidden) return;
+      me.set({ page: pageKey(), ts: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(() => me.get()).then(d => { // השעון של השרת – כדי ששעון לא מדויק במחשב לא ישבש את הספירה
+          const t = d.exists && d.data().ts; if (t) offset = t.toMillis() - Date.now();
+        }).catch(e => { if (e.code === "permission-denied") works = false; });
+    }
+
+    function count() {
+      if (document.hidden || !works) return;
+      db.collection("presence").where("ts", ">", firebase.firestore.Timestamp.fromMillis(Date.now() + offset - ONLINE)).get()
+        .then(snap => {
+          total = snap.size; per = {};
+          snap.forEach(d => { const p = d.data().page; per[p] = (per[p] || 0) + 1; });
+          render();
+        }).catch(() => { works = false; render(); });
+    }
+
+    function render() {
+      const pill = $("livePill");
+      pill.classList.toggle("hidden", !works || !total);
+      $("liveNum").textContent = total.toLocaleString("he-IL");
+      // בדף של תוכנה: כמה צופים בה עכשיו
+      const n = per[pageKey()] || 0, onApp = !$("appPage").classList.contains("hidden");
+      $("apLive").classList.toggle("hidden", !works || !onApp || !n);
+      $("apLive").textContent = n === 1 ? "רק את/ה צופה עכשיו" : n + " צופים בתוכנה עכשיו";
+      // בגלריה: על כל כרטיס
+      document.querySelectorAll("#download .card-stats[data-app]").forEach(box => {
+        const c = per[box.dataset.app] || 0;
+        let el = box.parentNode.querySelector(".card-live");
+        if (!c || !works) { if (el) el.remove(); return; }
+        if (!el) { el = document.createElement("div"); el.className = "card-live"; box.after(el); }
+        el.textContent = c + (c === 1 ? " צופה בתוכנה עכשיו" : " צופים בתוכנה עכשיו");
+      });
+    }
+
+    beat(); setTimeout(count, 1500);
+    setInterval(beat, 30 * 1000);
+    setInterval(count, 20 * 1000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) { beat(); setTimeout(count, 800); } });
+    window.addEventListener("hashchange", () => { beat(); setTimeout(count, 800); });
+    window.addEventListener("pagehide", () => { me.delete().catch(() => {}); }); // יוצאים – יורדים מהספירה מיד
+  })();
+</script><script>
+  // עיצוב 3.0: אור שעוקב אחרי העכבר על הכרטיסים + כניסה רכה כשגוללים
+  document.addEventListener("pointermove", e => {
+    const c = e.target.closest && e.target.closest(".card, .step");
+    if (!c) return;
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", (e.clientX - r.left) + "px");
+    c.style.setProperty("--my", (e.clientY - r.top) + "px");
+  });
+  (function () {
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+    const watch = () => document.querySelectorAll(".card:not(.reveal), .step:not(.reveal), .steps h2:not(.reveal), .store-how:not(.reveal)").forEach((el, i) => {
+      el.classList.add("reveal"); el.style.transitionDelay = (i % 3) * 80 + "ms"; io.observe(el);
+    });
+    watch();
+    new MutationObserver(watch).observe(document.querySelector("#download .grid"), { childList: true });
+  })();
 </script>
 </body>
 </html>
