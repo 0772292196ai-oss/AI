@@ -97,6 +97,7 @@
     background: radial-gradient(circle at 30% 25%, #3d8dff, #1846a8 70%);
   }
   .card .art svg { width: 58%; height: auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
+  .card .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .card h2 { margin: 0; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .ver { font-size: .8rem; font-weight: 600; color: var(--muted); background: var(--card2); padding: 2px 8px; border-radius: 6px; }
@@ -124,7 +125,8 @@
     width: 76px; height: 76px; flex: none; border-radius: 16px; display: grid; place-items: center;
     background: radial-gradient(circle at 30% 25%, #3d8dff, #1846a8 70%);
   }
-  .app-icon svg { width: 60%; }
+  .app-icon { overflow: hidden; }
+  .app-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .app-top h1 { margin: 0; font-size: 1.6rem; }
   .by { color: var(--muted); margin: 2px 0 8px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -344,16 +346,7 @@
     <div class="grid">
       <article class="card">
         <div class="art">
-          <svg viewBox="0 0 120 110" aria-hidden="true">
-            <rect x="14" y="6" width="92" height="80" rx="16" fill="#fff"/>
-            <rect x="24" y="16" width="72" height="34" rx="6" fill="#2f7cf6"/>
-            <rect x="24" y="56" width="72" height="6" rx="3" fill="#c9dcff"/>
-            <circle cx="36" cy="74" r="6" fill="#1846a8"/>
-            <circle cx="84" cy="74" r="6" fill="#1846a8"/>
-            <rect x="26" y="86" width="14" height="16" rx="4" fill="#fff"/>
-            <rect x="80" y="86" width="14" height="16" rx="4" fill="#fff"/>
-            <rect x="48" y="0" width="24" height="8" rx="4" fill="#fff"/>
-          </svg>
+          <img src="ASX.jpg" alt="תוכנת אוטובוסים">
         </div>
         <div class="body">
           <h2>תוכנת אוטובוסים <span class="ver">v1.0.4</span></h2>
@@ -376,14 +369,7 @@
     <div class="app-box">
       <div class="app-top">
         <div class="app-icon">
-          <svg viewBox="0 0 120 110" aria-hidden="true">
-            <rect x="14" y="6" width="92" height="80" rx="16" fill="#fff"/>
-            <rect x="24" y="16" width="72" height="34" rx="6" fill="#2f7cf6"/>
-            <circle cx="36" cy="74" r="6" fill="#1846a8"/>
-            <circle cx="84" cy="74" r="6" fill="#1846a8"/>
-            <rect x="26" y="86" width="14" height="16" rx="4" fill="#fff"/>
-            <rect x="80" y="86" width="14" height="16" rx="4" fill="#fff"/>
-          </svg>
+          <img src="ASX.jpg" alt="">
         </div>
         <div>
           <h1 id="apName"></h1>
@@ -423,7 +409,7 @@
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 14</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 15</footer>
   <div class="toast hidden" id="toast"></div>
 
 
