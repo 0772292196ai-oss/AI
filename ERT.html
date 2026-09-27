@@ -447,7 +447,7 @@
     </div>
   </section>
 
-  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 32</footer>
+  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 33</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -1030,11 +1030,14 @@
   ];
   // ↑ עד כאן ↑
 
+  const SITE_BASE = "https://0772292196ai-oss.github.io/AI/";
   const AI_SYSTEM = [
     "אתה העוזר החכם של האתר 'תוכנות על רמה' – אתר של תוכנות למחשב בעברית, להורדה והתקנה ב-Windows.",
     "ענה תמיד בעברית, בצורה ברורה, בטוחה וידידותית. אם יש שלבים – כתוב אותם כרשימה ממוספרת קצרה. כתוב טקסט רגיל בלי Markdown (בלי כוכביות ובלי #).",
     "למטה יש מדריך מלא של האתר ושל התוכנות. כשהתשובה נמצאת במדריך – ענה ממנו ישירות ובביטחון, עם השלבים המדויקים. אל תאמר 'אין לי מידע' כשהמידע כתוב במדריך.",
-    "הבן שאלות גם כשיש בהן שגיאות כתיב (למשל 'צאט' = צ'אט, 'להוריד' = הורדה).",
+    "הבן שאלות גם כשיש בהן שגיאות כתיב (למשל 'צאט' = צ'אט, 'להוריד' = הורדה, 'הוטובוסים' = אוטובוסים).",
+    "כששואלים על הורדה, קובץ התקנה או קישור – תמיד תן את קישור ההורדה הישיר המלא של התוכנה מהמדריך (שורה נפרדת), וגם את קישור דף הפרטים שלה, עם משפט קצר שמסביר כל קישור (למשל: להורדה ישירה: <קישור>). הקישורים נהיים לחיצים אצל הגולש.",
+    "כתוב בעברית טבעית ופשוטה. אל תשתמש במונחים מוזרים או מתורגמים.",
     "אל תמציא פרטים, מחירים, גרסאות, כפתורים או יכולות שלא כתובים במדריך.",
     "רק אם באמת אין במדריך תשובה, או שהשאלה לא קשורה לאתר – אמור זאת בנימוס והצע לפתוח צ'אט עם הצוות (התחברות ← עיגול 💬 בפינה השמאלית התחתונה).",
     "",
@@ -1042,8 +1045,11 @@
     ...SITE_FAQ.map(([q, a]) => "שאלה: " + q + "\nתשובה: " + a),
     "",
     "=== התוכנות באתר ===",
+    "כתובת האתר: " + SITE_BASE,
     ...Object.entries(APPS).map(([key, a]) => [
-      "--- " + a.name + " (גרסה " + a.version + ", דף הפרטים: " + key + ".html) ---",
+      "--- " + a.name + " (גרסה " + a.version + ") ---",
+      "קישור הורדה ישיר (קובץ ההתקנה): " + a.download,
+      "דף הפרטים: " + SITE_BASE + key + ".html",
       a.desc,
       (a.changesTitle || "מה חדש בגרסה") + ": " + a.changes.join("; "),
       a.howto ? "איך משתמשים: " + a.howto : "",
@@ -1052,6 +1058,24 @@
     ].filter(Boolean).join("\n"))
   ].join("\n");
   const aiHistory = [];
+
+  // תשובת העוזר: קישורים של האתר ושל ההורדות נהיים לחיצים (קישורים אחרים נשארים טקסט רגיל)
+  function aiRender(div, text) {
+    div.textContent = "";
+    text.split(/(https?:\/\/[^\s<>"'()]+)/).forEach((part, i) => {
+      const url = part.replace(/[.,;:!?]+$/, "");
+      const app = Object.values(APPS).find(a => a.download === url);
+      if (i % 2 && (app || url.startsWith(SITE_BASE))) {
+        const a = document.createElement("a");
+        a.href = url; a.target = "_blank"; a.rel = "noopener";
+        a.style.cssText = "color:inherit;font-weight:700;text-decoration:underline";
+        const page = APPS[url.slice(SITE_BASE.length).replace(/\.html$/i, "").toUpperCase()];
+        a.textContent = app ? "⬇ הורדת " + app.name : page ? "📄 דף הפרטים של " + page.name : "🏠 " + url;
+        if (app) a.addEventListener("click", () => countDownload(app));
+        div.append(a, part.slice(url.length));
+      } else div.append(part);
+    });
+  }
 
   function aiAdd(who, text, cls) {
     const div = document.createElement("div");
@@ -1094,9 +1118,10 @@
       if (!res.ok) throw new Error(res.status);
       const j = await res.json();
       const a = String((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "")
+        .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, "$1: $2") // קישור בסגנון Markdown ← טקסט + כתובת
         .replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#+\s*/gm, "").trim(); // בלי סימני Markdown
       if (!a) throw new Error("empty");
-      wait.textContent = a;
+      aiRender(wait, a);
       wait.classList.remove("ai-typing");
       aiHistory.push({ role: "assistant", content: a });
     } catch (e) {
