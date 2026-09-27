@@ -409,7 +409,7 @@
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 22</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 23</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -802,6 +802,7 @@
   const APP = {
     name: "תוכנת אוטובוסים",
     version: "1.0.4",
+    downloadsBefore: 972, // הורדות מלפני שהמונה הותקן (מ-Google Drive); מתווסף למונה
     download: "https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-",
     desc: "מידע על קווי אוטובוס ותחנות ברחבי הארץ, שעובד גם במחשב בלי אינטרנט. מחפשים קו או תחנה, ורואים את המסלול וכל התחנות – בלי חיבור לרשת.",
     changes: [
@@ -857,7 +858,7 @@
   // דירוג: ממוצע של כולם + הדירוג שלי
   async function loadAppStats() {
     db.collection("stats").doc("app").get()
-      .then(d => { $("apDl").textContent = d.exists ? (d.data().downloads || 0).toLocaleString("he-IL") : "0"; })
+      .then(d => { $("apDl").textContent = (APP.downloadsBefore + (d.exists ? d.data().downloads || 0 : 0)).toLocaleString("he-IL"); })
       .catch(() => {});
     let mine = 0;
     try {
