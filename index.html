@@ -309,6 +309,22 @@
   .store-steps { color: var(--muted); line-height: 1.9; padding-inline-start: 22px; margin: 0 0 16px; }
   .store-steps b { color: var(--ink); }
   .store-dl { display: block; text-align: center; text-decoration: none; }
+  .cta-store { border-color: rgba(124,77,255,.55) !important; background: rgba(124,77,255,.14) !important; }
+
+  /* דף החנות למחשב */
+  .store-page { max-width: 1000px; margin: 0 auto; padding: 0 20px 70px; }
+  .store-hero { text-align: center; padding: 60px 0 40px; }
+  .store-hero h1 { margin: 0 0 14px; font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1.15; }
+  .store-hero h1 span { background: linear-gradient(90deg, #b39bff, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .store-hero p { color: var(--muted); font-size: 1.15rem; line-height: 1.6; max-width: 620px; margin: 0 auto 26px; }
+  .store-big { display: inline-block; font-size: 1.2rem; padding: 16px 34px; }
+  .store-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 34px; }
+  .store-features .n { font-size: 1.5rem; }
+  .store-how { background: linear-gradient(180deg, #14223c, var(--card)); border: 1px solid var(--line); border-radius: 20px; padding: 28px; }
+  .store-how h2 { margin: 0 0 14px; }
+  .store-how .store-steps { font-size: 1.05rem; }
+  .store-note { color: var(--muted); background: rgba(8,14,26,.55); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; line-height: 1.6; }
+  .store-how .cta-main, .store-how .cta-alt { display: inline-block; margin: 4px 0 0 8px; }
   .demo-btn:disabled { background: var(--card2); color: var(--muted); cursor: default; filter: none; }
   .share-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; color: var(--muted); }
   .share-row a { text-decoration: none; }
@@ -513,6 +529,7 @@
         <a href="#top" class="on">בית</a>
         <a href="#download">תוכנות</a>
         <a href="#" id="navHelp">עזרה וצ'אט</a>
+        <a href="store.html" id="navStore">⚡ החנות למחשב</a>
         <a href="#" id="navDev">🧑‍💻 למפתחים</a>
         <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
@@ -564,6 +581,7 @@
     <p>תוכנות פשוטות ושימושיות בעברית, להורדה והתקנה ב-Windows. בחרו תוכנה, הורידו, ויש שאלה – פתחו צ'אט.</p>
     <div class="hero-cta">
       <a href="#download" class="cta-main">⬇ לכל התוכנות</a>
+      <a href="store.html" class="cta-alt cta-store">⚡ החנות למחשב</a>
       <button type="button" class="cta-alt" onclick="document.getElementById('aiFab').click()">🤖 שאלו את העוזר</button>
     </div>
     <div class="hero-badges">
@@ -617,6 +635,36 @@
       </article>
     </div>
   </main>
+
+  <!-- ===== דף החנות למחשב (store.html) ===== -->
+  <section class="store-page hidden" id="storePage">
+    <div class="store-hero">
+      <div class="hero-kicker">🆓 חינם · קובץ אחד · בלי התקנה</div>
+      <h1>החנות של <span>תוכנה בקליק</span><br>ישר במחשב שלכם</h1>
+      <p>תוכנה קטנה ל-Windows שמרכזת את כל התוכנות מהאתר: מתקינים כל תוכנה בלחיצה אחת, ומסירים תוכנות מהמחשב בקלות.</p>
+      <a class="cta-main store-download store-big" target="_blank" rel="noopener">⬇ הורדת החנות למחשב</a>
+      <div class="hero-badges"><span>✔ Windows 10 ו-11</span><span>✔ 27KB בלבד</span><span>✔ בעברית</span><span>✔ לא משנה הגדרות במחשב</span></div>
+    </div>
+
+    <div class="store-features">
+      <div class="step"><div class="n">🛒</div><h3>כל התוכנות במקום אחד</h3><p>רשימה של כל התוכנות מהאתר – וגם תוכנות חדשות של מפתחים, ברגע שהן מאושרות.</p></div>
+      <div class="step"><div class="n">⚡</div><h3>התקנה בלחיצה</h3><p>לוחצים "התקנה" – החנות מורידה את התוכנה ומפעילה את ההתקנה. בלי לחפש קישורים ובלי דפי אזהרה.</p></div>
+      <div class="step"><div class="n">🗑</div><h3>הסרת תוכנות</h3><p>כל התוכנות שמותקנות במחשב ברשימה אחת, עם חיפוש וכפתור הסרה.</p></div>
+    </div>
+
+    <div class="store-how">
+      <h2>איך מתחילים?</h2>
+      <ol class="store-steps">
+        <li>לוחצים <b>"הורדת החנות למחשב"</b>. אם Google Drive שואל – לוחצים <b>"הורד בכל זאת"</b>.</li>
+        <li>פותחים את הקובץ <b>תוכנה בקליק.exe</b> שירד (בתיקיית "הורדות").</li>
+        <li>אם מופיע חלון כחול "Windows הגן על המחשב" – לוחצים <b>"מידע נוסף"</b> ואז <b>"הפעל בכל זאת"</b>. זה קורה כי הקובץ עוד לא חתום דיגיטלית.</li>
+        <li>זהו! בוחרים תוכנה ולוחצים <b>⬇ התקנה</b>.</li>
+      </ol>
+      <p class="store-note">💡 טיפ: אפשר להעביר את הקובץ לשולחן העבודה ולפתוח אותו מתי שרוצים. הוא לא מתקין את עצמו ולא משנה הגדרות ב-Windows – כדי להיפטר ממנו פשוט מוחקים את הקובץ.</p>
+      <a class="cta-main store-download" target="_blank" rel="noopener">⬇ הורדת החנות למחשב</a>
+      <a class="cta-alt" href="./">← חזרה לכל התוכנות באתר</a>
+    </div>
+  </section>
 
   <!-- ===== איך זה עובד ===== -->
   <section class="steps" id="steps">
@@ -686,6 +734,7 @@
       <a href="#download">כל התוכנות</a>
       <a href="#" onclick="document.getElementById('aiFab').click();return false">🤖 העוזר החכם</a>
       <a href="#" onclick="openHelp(event)">💬 צ'אט עם הצוות</a>
+      <a href="store.html">⚡ החנות למחשב</a>
       <a href="#" onclick="openDev(event)">🧑‍💻 העלו תוכנה משלכם</a>
     </div>
     <div class="foot-small">תוכנות פשוטות ושימושיות בעברית</div>
@@ -1256,7 +1305,9 @@
 
   // מעבר בין הגלריה לדף הפרטים לפי הכתובת (#app)
   // אותו קובץ משמש לכל הדפים: בשם ASD.html / ERT.html הוא נפתח ישר כדף הפרטים
-  const IN_ASD = !!PAGE || !!DYN_ID;
+  // דף החנות למחשב (store.html) – אותו קובץ, מציג רק את אזור החנות
+  const IS_STORE = /\/store\.html$/i.test(location.pathname);
+  const IN_ASD = !!PAGE || !!DYN_ID || IS_STORE;
   if (IN_ASD) {
     $("backLink").href = "./";
     document.querySelectorAll('.logo, .nav a[href^="#"], .foot-links a[href="#download"]').forEach(a => {
@@ -1265,6 +1316,13 @@
   }
 
   function route() {
+    if (IS_STORE) { // דף החנות: מסתירים את כל השאר
+      ["appPage", "top", "download", "steps"].forEach(id => $(id).classList.add("hidden"));
+      $("storePage").classList.remove("hidden");
+      document.title = "החנות למחשב – תוכנה בקליק";
+      document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.id === "navStore"));
+      return;
+    }
     const onApp = IN_ASD || location.hash === "#app";
     $("appPage").classList.toggle("hidden", !onApp);
     $("top").classList.toggle("hidden", onApp);
@@ -1466,7 +1524,8 @@
 
   // ----- התקנה דרך חנות "תוכנה בקליק" -----
   // ↓ כאן מדביקים את קישור ההורדה של החנות (מ-Google Drive). כל עוד ריק – מוצגת הודעת "בקרוב" ↓
-  const STORE_URL = "";
+  const STORE_URL = "https://drive.google.com/uc?export=download&id=1X2ufaDLSjEoAA9mYiKogLt2dLXRONVkj";
+  document.querySelectorAll(".store-download").forEach(a => a.href = STORE_URL); // כפתורי ההורדה בדף החנות
   $("apStore").onclick = () => {
     $("storeAppName").textContent = APP.name;
     const url = httpsUrl(STORE_URL);
