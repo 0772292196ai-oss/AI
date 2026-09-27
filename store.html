@@ -1684,15 +1684,32 @@
       ],
       howto: "מקלידים או מדביקים טקסט בתיבה (או פותחים קובץ txt), בוחרים קול – הילה (אישה) או אברי (גבר) – ומהירות, ולוחצים הקראה או F5. כדי להקריא רק חלק – מסמנים אותו ואז מקריאים. אפשר להשהות, להמשיך, ולעצור ב-Esc. כדי לקבל קובץ שמע – בוחרים שמירה כ-MP3. להקלדה קולית לוחצים F6 (או כפתור ההקלדה הקולית), מדברים בעברית, ואומרים בקול 'פסיק', 'נקודה', 'סימן שאלה', 'סימן קריאה', 'נקודתיים', 'שורה חדשה' או 'פסקה חדשה' לפיסוק. פס קטן מראה שהמיקרופון קולט. 'העתק הכל' מעתיק את הטקסט להדבקה בוואטסאפ, במייל או ב-Word. A+ ו-A− מגדילים ומקטינים את הגופן. הטקסט נשמר לבד כשסוגרים את התוכנה. חשוב: קולית לא מקליטה את הקול של המשתמש – קובץ ה-MP3 הוא של ההקראה (הקול של הילה או אברי מקריא את הטקסט), וההקלדה הקולית רק הופכת דיבור לטקסט ולא שומרת הקלטה. מי שרוצה MP3 של הדברים שלו יכול להקליד אותם בהקלדה קולית ואז לשמור את ההקראה כ-MP3. אם ההקראה או ההקלדה לא עובדות – לבדוק שיש חיבור לאינטרנט, ולהקלדה קולית שהמיקרופון מחובר ומאושר ב-Windows.",
       stats: "ert", ratings: "ratings_ert"
+    },
+    // ספר טלפונים – עדיין מוסתר: יש לו דף (TEL.html) אבל הוא לא בגלריה, לא בחיפוש ולא אצל העוזר
+    TEL: {
+      hidden: true,
+      name: "ספר טלפונים",
+      icon: '<div style="width:100%;height:100%;display:grid;place-items:center;font-size:2.6rem;background:linear-gradient(135deg,#10b981,#22d3ee)">📒</div>',
+      tag: "📦 1.7MB",
+      version: "1.0",
+      downloadsBefore: 0,
+      download: "https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA",
+      desc: "ספר טלפונים למחשב: שומרים את כל אנשי הקשר במקום אחד ומוצאים כל מספר בשניות.",
+      changes: [],
+      note: "ההורדה היא קובץ התקנה ל-Windows. אם Windows מציג חלון כחול: \"מידע נוסף\" ואז \"הפעל בכל זאת\".",
+      reqs: ["Windows 10 או 11"],
+      page: "TEL.html",
+      stats: "tel", ratings: "ratings_tel"
     }
   };
   // ↑ עד כאן ↑
 
   // איזה דף פתוח: ASD.html / ERT.html, או הדף הראשי (שם #app = אוטובוסים)
-  const PAGE = (location.pathname.match(/\/(ASD|ERT)\.html$/i) || [])[1];
+  const PAGE = (location.pathname.match(/\/(ASD|ERT|TEL)\.html$/i) || [])[1];
   // תוכנה של מפתח (אושרה בלוח הניהול) נפתחת בכתובת ?app=מזהה
   const DYN_ID = (new URLSearchParams(location.search).get("app") || "").toLowerCase().replace(/[^a-z0-9]/g, "");
   APPS.ASD.page = "ASD.html"; APPS.ERT.page = "ERT.html";
+  if (PAGE && APPS[PAGE.toUpperCase()].hidden) $("apStore").classList.add("hidden"); // תוכנה מוסתרת עוד לא בחנות
   const ALL_APPS = Object.assign({}, APPS); // + תוכנות של מפתחים, נטענות מ-Firebase
   let APP = DYN_ID
     ? { name: "טוען...", icon: "", tag: "", version: "", desc: "", note: "", download: "#", changes: [], reqs: [],
@@ -2397,7 +2414,7 @@
     "",
     "=== התוכנות באתר ===",
     "כתובת האתר: " + SITE_BASE,
-    ...Object.values(ALL_APPS).map(a => [
+    ...Object.values(ALL_APPS).filter(a => !a.hidden).map(a => [
       "--- " + a.name + " (גרסה " + a.version + (a.dev ? ", מאת המפתח " + a.dev : "") + ") ---",
       "קישור הורדה ישיר (קובץ ההתקנה): " + a.download,
       "דף הפרטים: " + SITE_BASE + a.page,
