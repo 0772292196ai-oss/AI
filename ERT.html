@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>תוכנות על רמה – תוכנות למחשב בחינם</title>
+<!-- תיאור לגוגל ותצוגה מקדימה כששולחים את הקישור בוואטסאפ -->
+<meta name="description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם: תוכנת אוטובוסים שעובדת בלי אינטרנט, קולית להקראה והקלדה קולית ועוד. הורדה והתקנה ב-Windows.">
+<meta name="theme-color" content="#0a1222">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="תוכנות על רמה">
+<meta property="og:title" content="תוכנות על רמה – תוכנות למחשב בחינם">
+<meta property="og:description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם. הורדה והתקנה ב-Windows.">
+<meta property="og:image" content="https://0772292196ai-oss.github.io/AI/logo.jpg">
+<meta property="og:locale" content="he_IL">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232f7cf6'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='5' width='16' height='10' rx='1.5'/%3E%3Cpath d='M9 19h6M12 15v4M12 7.5v4M10 9.8l2 2 2-2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -287,6 +297,27 @@
   .ai-note { font-size: .75rem; color: var(--muted); text-align: center; padding: 4px 10px 0; background: var(--card); }
   .ai-typing { opacity: .7; font-style: italic; }
 
+  /* ===== חיפוש, נתונים בכרטיס, שיתוף, "איך זה עובד" ===== */
+  .search {
+    width: min(280px, 60%); padding: 8px 14px; border-radius: 20px; font-size: .95rem;
+  }
+  .no-results { text-align: center; color: var(--muted); padding: 30px 0; margin: 0; }
+  .card-stats { display: flex; gap: 14px; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
+  .card-stats .stars { color: var(--gold); letter-spacing: 1px; }
+  .share-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; color: var(--muted); }
+  .share-row a { text-decoration: none; }
+  .steps { max-width: 1120px; margin: 0 auto; padding: 0 20px 70px; }
+  .steps h2 { text-align: center; margin: 0 0 22px; font-size: 1.5rem; }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; }
+  .step .n {
+    width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 10px;
+    font-weight: 800; font-size: 1.2rem; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  .step h3 { margin: 0 0 6px; font-size: 1.1rem; }
+  .step p { margin: 0; color: var(--muted); line-height: 1.55; }
+  :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
   @media (max-width: 760px) {
     .nav { display: none; }
     .topbar .inner { justify-content: space-between; }
@@ -361,9 +392,10 @@
 
   <main class="products" id="download">
     <div class="bar">
-      <span>2 תוכנות</span>
-      <span class="pill">הכל</span>
+      <span id="appCount">2 תוכנות</span>
+      <input type="search" id="appSearch" class="search" placeholder="🔍 חיפוש תוכנה...">
     </div>
+    <p class="no-results hidden" id="noResults">לא נמצאה תוכנה. נסו מילה אחרת, או שאלו את העוזר 🤖</p>
     <div class="grid">
       <article class="card" id="busCard">
         <div class="art">
@@ -376,6 +408,7 @@
             <span>🖥 Windows</span>
             <span>📶 עובד אופליין</span>
           </div>
+          <div class="card-stats" data-app="ASD"></div>
           <a class="btn" href="https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-">⬇ הורדה והתקנה</a>
           <a class="btn alt" href="ASD.html">ℹ פרטים נוספים</a>
           <button type="button" class="btn alt" id="cardHelp">💬 שאלה? פתחו צ'אט</button>
@@ -395,6 +428,7 @@
             <span>🆓 חינם</span>
             <span>📦 111KB</span>
           </div>
+          <div class="card-stats" data-app="ERT"></div>
           <a class="btn" href="https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq">⬇ הורדה והתקנה</a>
           <a class="btn alt" href="ERT.html">ℹ פרטים נוספים</a>
           <button type="button" class="btn alt" id="cardHelp2">💬 שאלה? פתחו צ'אט</button>
@@ -402,6 +436,16 @@
       </article>
     </div>
   </main>
+
+  <!-- ===== איך זה עובד ===== -->
+  <section class="steps" id="steps">
+    <h2>איך זה עובד?</h2>
+    <div class="steps-grid">
+      <div class="step"><div class="n">1</div><h3>בוחרים תוכנה</h3><p>מעיינים בכרטיסים, או מחפשים לפי שם. בדף הפרטים יש הסבר מלא ודירוגים.</p></div>
+      <div class="step"><div class="n">2</div><h3>מורידים ומתקינים</h3><p>לוחצים "הורדה והתקנה" ופותחים את הקובץ. בחינם, בלי הרשמה.</p></div>
+      <div class="step"><div class="n">3</div><h3>יש שאלה?</h3><p>שואלים את העוזר החכם 🤖, או מתחברים ופותחים צ'אט 💬 עם הצוות.</p></div>
+    </div>
+  </section>
 
   <!-- ===== דף פרטי התוכנה (נפתח בלחיצה על הכרטיס) ===== -->
   <section class="app-page hidden" id="appPage">
@@ -440,6 +484,11 @@
         <a class="btn dl-link" id="apDownload">⬇ הורדה והתקנה</a>
         <button type="button" class="btn alt" id="apHelp">💬 שאלה? פתחו צ'אט</button>
       </div>
+      <div class="share-row">
+        <span>שתפו את התוכנה:</span>
+        <a class="small-btn alt" id="shareWa" target="_blank" rel="noopener">🟢 וואטסאפ</a>
+        <button type="button" class="small-btn alt" id="shareCopy">🔗 העתקת קישור</button>
+      </div>
       <p class="app-note" id="apNote"></p>
 
       <h3>דרישות ומגבלות</h3>
@@ -447,7 +496,7 @@
     </div>
   </section>
 
-  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 33</footer>
+  <footer>תוכנות על רמה · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 34</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -940,7 +989,11 @@
     $("appPage").classList.toggle("hidden", !onApp);
     $("top").classList.toggle("hidden", onApp);
     $("download").classList.toggle("hidden", onApp);
-    if (onApp) { window.scrollTo(0, 0); loadAppStats(); }
+    $("steps").classList.toggle("hidden", onApp);
+    if (onApp) {
+      window.scrollTo(0, 0); loadAppStats();
+      document.title = APP.name + " – תוכנות על רמה";
+    } else if (typeof loadCardStats === "function" && cardStatsReady) loadCardStats();
   }
   window.addEventListener("hashchange", route);
   route();
@@ -960,6 +1013,54 @@
   document.querySelector('#busCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ASD));
   document.querySelector('#ertCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ERT));
   $("apDownload").addEventListener("click", () => countDownload(APP));
+
+  // בכרטיסים בדף הראשי: דירוג ממוצע ומספר הורדות של כל תוכנה
+  let cardStatsLoaded = false;
+  function loadCardStats() {
+    if (cardStatsLoaded) return;
+    cardStatsLoaded = true;
+    document.querySelectorAll(".card-stats").forEach(async box => {
+      const app = APPS[box.dataset.app];
+      const parts = [];
+      try {
+        const snap = await db.collection(app.ratings).get();
+        if (snap.size) {
+          let sum = 0; snap.forEach(d => sum += d.data().stars || 0);
+          const avg = sum / snap.size;
+          parts.push('<span><span class="stars">' + "★".repeat(Math.round(avg)) + "</span> " + avg.toFixed(1) + " (" + snap.size + ")</span>");
+        }
+      } catch (e) {}
+      try {
+        const d = await db.collection("stats").doc(app.stats).get();
+        const n = app.downloadsBefore + (d.exists ? d.data().downloads || 0 : 0);
+        if (n) parts.push("<span>⬇ " + n.toLocaleString("he-IL") + " הורדות</span>");
+      } catch (e) {}
+      box.innerHTML = parts.join("");
+    });
+  }
+
+  var cardStatsReady = true;
+  if (!(IN_ASD || location.hash === "#app")) loadCardStats();
+
+  // חיפוש תוכנה בדף הראשי
+  $("appSearch").addEventListener("input", () => {
+    const q = $("appSearch").value.trim().toLowerCase();
+    let shown = 0;
+    document.querySelectorAll("#download .card").forEach(c => {
+      const hit = !q || c.textContent.toLowerCase().includes(q);
+      c.classList.toggle("hidden", !hit);
+      if (hit) shown++;
+    });
+    $("noResults").classList.toggle("hidden", shown > 0);
+    $("appCount").textContent = shown === 1 ? "תוכנה אחת" : shown + " תוכנות";
+  });
+  $("appCount").textContent = document.querySelectorAll("#download .card").length + " תוכנות";
+
+  // שיתוף דף התוכנה
+  const shareUrl = "https://0772292196ai-oss.github.io/AI/" + (PAGE ? PAGE.toUpperCase() : "ASD") + ".html";
+  $("shareWa").href = "https://wa.me/?text=" + encodeURIComponent(APP.name + " – להורדה בחינם:\n" + shareUrl);
+  $("shareCopy").onclick = () => navigator.clipboard.writeText(shareUrl)
+    .then(() => { $("shareCopy").textContent = "✔ הקישור הועתק"; }, () => prompt("העתיקו את הקישור:", shareUrl));
 
   // דירוג: ממוצע של כולם + הדירוג שלי
   async function loadAppStats() {
