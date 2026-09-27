@@ -276,6 +276,16 @@
     .hero { padding-top: 40px; }
   }
 </style>
+<script>
+  // אם התמונה לא נטענה – מנסים שוב, עד 5 פעמים
+  function retryImg(img) {
+    const n = +(img.dataset.tries || 0) + 1;
+    if (n > 5) { img.onerror = null; return; }
+    img.dataset.tries = n;
+    const base = img.src.split("?")[0];
+    setTimeout(() => { img.src = base + "?try=" + n + "&t=" + Date.now(); }, 1000 * n);
+  }
+</script>
 </head>
 <body>
   <header class="topbar">
@@ -346,7 +356,7 @@
     <div class="grid">
       <article class="card">
         <div class="art">
-          <img src="https://f2.freeivr.co.il/assets/uploads/files/1790501103671-asx.jpg" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='ASX.jpg'" alt="תוכנת אוטובוסים">
+          <img src="https://f2.freeivr.co.il/assets/uploads/files/1790501103671-asx.jpg" referrerpolicy="no-referrer" onerror="retryImg(this)" alt="תוכנת אוטובוסים">
         </div>
         <div class="body">
           <h2>תוכנת אוטובוסים <span class="ver">v1.0.4</span></h2>
@@ -369,7 +379,7 @@
     <div class="app-box">
       <div class="app-top">
         <div class="app-icon">
-          <img src="https://f2.freeivr.co.il/assets/uploads/files/1790501103671-asx.jpg" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='ASX.jpg'" alt="">
+          <img src="https://f2.freeivr.co.il/assets/uploads/files/1790501103671-asx.jpg" referrerpolicy="no-referrer" onerror="retryImg(this)" alt="">
         </div>
         <div>
           <h1 id="apName"></h1>
@@ -409,7 +419,7 @@
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 17</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 18</footer>
   <div class="toast hidden" id="toast"></div>
 
 
