@@ -409,7 +409,7 @@
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 20</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 21</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -968,17 +968,32 @@
 
   // התראה במייל למשתמש כשהמנהל עונה
   async function notifyByMail(uid, to, name, text) {
-    if (!MAIL_URL || !to) return;
-    if (lastMailed[uid] && Date.now() - lastMailed[uid] < 5 * 60 * 1000) return;
-    lastMailed[uid] = Date.now();
+    if (!MAIL_URL) return;
+    // הודעה קטנה למנהל: האם נשלח מייל, ואם לא – למה
+    const flash = m => { toast(m); setTimeout(() => { if ($("toast").textContent === m) toast(""); }, 5000); };
+    if (!to) return flash("📧 לא נשלח מייל: אין כתובת מייל שמורה למשתמש הזה");
+    if (lastMailed[uid] && Date.now() - lastMailed[uid] < 5 * 60 * 1000)
+      return flash("📧 לא נשלח מייל: כבר נשלח לו מייל לפני פחות מ-5 דקות");
+    let msg;
     try {
       const idToken = await me.getIdToken();
-      await fetch(MAIL_URL, {
-        method: "POST", mode: "no-cors",
+      const res = await fetch(MAIL_URL, {
+        method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ idToken, to, name, text })
       });
-    } catch (e) { /* המייל הוא תוספת – הצ'אט עובד גם בלעדיו */ }
+      const t = (await res.text()).trim();
+      if (t === "ok") lastMailed[uid] = Date.now();
+      msg = {
+        "ok": "📧 נשלח מייל ל-" + to,
+        "forbidden": "📧 לא נשלח מייל: השרת לא זיהה אותך כמנהל",
+        "bad address": "📧 לא נשלח מייל: כתובת המייל של המשתמש לא תקינה",
+        "error": "📧 לא נשלח מייל: שגיאה בשרת המיילים (Apps Script)"
+      }[t] || "📧 לא נשלח מייל: תשובה לא צפויה מהשרת";
+    } catch (e) {
+      msg = "📧 לא נשלח מייל: אין חיבור לשרת המיילים (ייתכן שהסינון חוסם את script.google.com)";
+    }
+    flash(msg);
   }
   $("chatSendBtn").onclick = () => sendMsg();
   $("chatInput").addEventListener("keydown", e => {
