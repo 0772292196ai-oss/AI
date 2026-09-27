@@ -236,6 +236,19 @@
   .bubble.me { background: var(--accent); color: #fff; margin-right: auto; border-bottom-left-radius: 3px; }
   .bubble.them { background: var(--card2); border: 1px solid var(--line); margin-left: auto; border-bottom-right-radius: 3px; }
   .bubble time { display: block; font-size: .75rem; opacity: .7; margin-top: 2px; }
+  /* מחובר / מקליד / נקרא */
+  .chat-who { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+  .chat-who #chatTitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chat-who small { font-weight: 400; font-size: .8rem; opacity: .92; }
+  .chat-who small.typing { font-style: italic; }
+  .online-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #4ade80; margin-inline-end: 5px; box-shadow: 0 0 0 2px rgba(74,222,128,.25); }
+  .bubble .tick { font-size: .78rem; margin-inline-start: 6px; letter-spacing: -3px; }
+  .bubble .tick.read { color: #7ee3ff; font-weight: 700; }
+  .typing-bubble { display: inline-flex; gap: 4px; align-items: center; padding: 10px 14px; }
+  .typing-bubble i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: tdot 1.2s infinite ease-in-out; }
+  .typing-bubble i:nth-child(2) { animation-delay: .15s; } .typing-bubble i:nth-child(3) { animation-delay: .3s; }
+  @keyframes tdot { 0%, 60%, 100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+  .chat-item .item-typing { color: #4ade80; font-style: italic; }
   .chat-empty { text-align: center; color: var(--muted); margin-top: 30px; }
   .chat-send { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); background: var(--card); }
   .chat-send .attach {
@@ -844,7 +857,7 @@
   <div class="chat-box hidden" id="chatBox">
     <div class="chat-head">
       <button type="button" id="chatBack" class="hidden" title="חזרה לרשימה">→</button>
-      <span id="chatTitle">צ'אט</span>
+      <span class="chat-who"><span id="chatTitle">צ'אט</span><small id="chatStatus" class="hidden"></small></span>
       <span class="head-btns">
         <button type="button" id="chatBig" title="הגדלה / הקטנה">⛶</button>
         <button type="button" id="chatClose" title="סגירה">✕</button>
@@ -960,14 +973,110 @@
 
   const fmt = ts => ts ? ts.toDate().toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 
+  /* ===== מחובר עכשיו / מקליד / נקרא =====
+     הכול נשמר במסמך של השיחה (chats/מזהה) – לא צריך לשנות כללים ב-Firebase:
+     userSeen/adminSeen = מתי היה מחובר, userTyping/adminTyping = מתי הקליד, userRead/adminRead = עד מתי קרא */
+  const ONLINE_MS = 90 * 1000, TYPING_MS = 6000;
+  const tsMs = t => t && t.toMillis ? t.toMillis() : 0;
+  const SERVER_NOW = () => firebase.firestore.FieldValue.serverTimestamp();
+  const selfKey = () => isAdmin ? "admin" : "user";
+  const otherKey = () => isAdmin ? "user" : "admin";
+  let chatMeta = {}, stopMeta = null, statusTimer = null, beatTimer = null, listTimer = null;
+  let typingSeenAt = 0, prevTyping = -1, lastTypingWrite = 0, readPending = false;
+  let lastMsgs = [], ticks = [], lastListSnap = null;
+
+  // "פעימה": מסמנים שאני מחובר (משתמש – תמיד כשהאתר פתוח; מנהל – כשהשיחה פתוחה מולו)
+  function beat() {
+    if (!me || document.hidden) return;
+    const uid = isAdmin ? ($("chatBox").classList.contains("hidden") ? null : openUid) : me.uid;
+    if (!uid) return;
+    db.collection("chats").doc(uid).set({ [selfKey() + "Seen"]: SERVER_NOW() }, { merge: true }).catch(() => {});
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { beat(); markRead(); } });
+
+  function seenText(ms) {
+    const d = new Date(ms), hm = d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+    const day = d.toDateString() === new Date().toDateString() ? "היום"
+      : d.toDateString() === new Date(Date.now() - 864e5).toDateString() ? "אתמול"
+      : d.toLocaleDateString("he-IL", { day: "numeric", month: "numeric" });
+    return day + " ב-" + hm;
+  }
+
+  // השורה הקטנה מתחת לשם בראש הצ'אט
+  function renderStatus() {
+    const el = $("chatStatus");
+    if (!openUid) { el.classList.add("hidden"); return; }
+    const seen = tsMs(chatMeta[otherKey() + "Seen"]);
+    const typing = Date.now() - typingSeenAt < TYPING_MS;
+    el.classList.remove("hidden");
+    el.classList.toggle("typing", typing);
+    if (typing) el.textContent = isAdmin ? "מקליד/ה..." : "הצוות מקליד...";
+    else if (seen && Date.now() - seen < ONLINE_MS) {
+      el.innerHTML = '<span class="online-dot"></span>';
+      el.append(isAdmin ? "מחובר/ת עכשיו" : "הצוות מחובר עכשיו");
+    } else if (seen) el.textContent = (isAdmin ? "נראה/תה לאחרונה " : "הצוות היה מחובר ") + seenText(seen);
+    else el.textContent = isAdmin ? "עוד לא היה/תה מחובר/ת" : "נענה לכם בהקדם";
+    // בועת "מקליד" בתחתית השיחה
+    let tb = $("typingBubble");
+    if (typing && !tb) {
+      tb = document.createElement("div");
+      tb.id = "typingBubble"; tb.className = "bubble them typing-bubble";
+      tb.innerHTML = "<i></i><i></i><i></i>";
+      const box = $("chatMsgs"), atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+      box.appendChild(tb);
+      if (atBottom) box.scrollTop = box.scrollHeight;
+    } else if (!typing && tb) tb.remove();
+  }
+
+  // ✓ נשלח · ✓✓ (כחול) נקרא
+  function updateTicks() {
+    const read = tsMs(chatMeta[otherKey() + "Read"]);
+    ticks.forEach(({ el, ts }) => {
+      const isRead = ts && ts <= read;
+      el.textContent = !ts ? "🕓" : isRead ? "✓✓" : "✓";
+      el.classList.toggle("read", !!isRead);
+      el.title = !ts ? "נשלח..." : isRead ? "נקרא" : "נשלח";
+    });
+  }
+
+  // מסמנים שקראתי – רק כשהשיחה באמת פתוחה מול העיניים
+  function markRead() {
+    if (!openUid || readPending || document.hidden || $("chatBox").classList.contains("hidden")) return;
+    const lastOther = lastMsgs.filter(m => m.from === otherKey()).reduce((a, m) => Math.max(a, m.ts || 0), 0);
+    const myRead = tsMs(chatMeta[selfKey() + "Read"]);
+    const unread = isAdmin ? chatMeta.unreadAdmin : chatMeta.unreadUser;
+    if (lastOther <= myRead && !unread) return;
+    readPending = true;
+    db.collection("chats").doc(openUid).set({ [selfKey() + "Read"]: SERVER_NOW(), [isAdmin ? "unreadAdmin" : "unreadUser"]: false }, { merge: true })
+      .catch(() => {}).then(() => { readPending = false; });
+  }
+
+  // כשמקלידים – מודיעים לצד השני (לכל היותר פעם ב-3 שניות)
+  $("chatInput").addEventListener("input", () => {
+    if (!openUid || !$("chatInput").value.trim() || Date.now() - lastTypingWrite < 3000) return;
+    lastTypingWrite = Date.now();
+    db.collection("chats").doc(openUid).set({ [selfKey() + "Typing"]: SERVER_NOW() }, { merge: true }).catch(() => {});
+  });
+
+  function stopConversation() {
+    if (stopMsgs) { stopMsgs(); stopMsgs = null; }
+    if (stopMeta) { stopMeta(); stopMeta = null; }
+    clearInterval(statusTimer); statusTimer = null;
+    chatMeta = {}; lastMsgs = []; ticks = []; typingSeenAt = 0; prevTyping = -1;
+  }
+
   function startChat(user) {
-    if (stopList) stopList(); if (stopMsgs) stopMsgs(); if (stopDot) stopDot();
-    stopList = stopMsgs = stopDot = null;
+    if (stopList) stopList(); if (stopDot) stopDot();
+    stopList = stopDot = null;
+    stopConversation();
+    clearInterval(beatTimer); beatTimer = null;
+    clearInterval(listTimer); listTimer = null;
     $("chatDot").classList.add("hidden");
     me = user;
     $("chatBox").classList.add("hidden");
     if (!user) { $("chatFab").classList.add("hidden"); return; }
     isAdmin = user.email === ADMIN_EMAIL && user.emailVerified;
+    beat(); beatTimer = setInterval(beat, 40 * 1000);
     $("chatFab").title = isAdmin ? "הודעות מהמשתמשים" : "צ'אט איתנו";
     $("chatFab").classList.remove("hidden");
     // נקודה אדומה על העיגול כשיש הודעה חדשה
@@ -988,6 +1097,7 @@
   $("chatClose").onclick = () => {
     $("chatBox").classList.add("hidden");
     $("chatFab").classList.remove("hidden");
+    if (openUid) db.collection("chats").doc(openUid).set({ [selfKey() + "Typing"]: null }, { merge: true }).catch(() => {});
   };
   $("chatBack").onclick = showList;
   $("chatBig").onclick = () => {
@@ -997,34 +1107,45 @@
 
   // מנהל: רשימת כל השיחות
   function showList() {
-    if (stopMsgs) { stopMsgs(); stopMsgs = null; }
+    stopConversation();
     openUid = null;
     $("chatTitle").textContent = "שיחות";
+    $("chatStatus").classList.add("hidden");
     $("chatBack").classList.add("hidden");
     $("chatMsgs").classList.add("hidden");
     $("chatSend").classList.add("hidden");
     $("chatList").classList.remove("hidden");
+    clearInterval(listTimer); listTimer = setInterval(renderList, 15 * 1000); // "מחובר" מתעדכן עם הזמן
     if (stopList) return;
-    stopList = db.collection("chats").orderBy("updated", "desc").onSnapshot(snap => {
-      const list = $("chatList");
-      list.innerHTML = snap.empty ? '<p class="chat-empty">עוד אין הודעות</p>' : "";
-      snap.forEach(d => {
-        const c = d.data();
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "chat-item" + (c.unreadAdmin ? " new" : "");
-        b.innerHTML = "<span></span><small></small>";
-        b.firstChild.textContent = (c.unreadAdmin ? "🔵 " : "") + (c.name || c.email);
-        b.lastChild.textContent = (c.last || "") + " · " + fmt(c.updated);
-        b.onclick = () => openChat(d.id, c.name || c.email, c.email, c.name);
-        list.appendChild(b);
-      });
-    }, err => { $("chatList").innerHTML = '<p class="chat-empty">שגיאה בטעינה: ' + err.code + '</p>'; });
+    stopList = db.collection("chats").orderBy("updated", "desc").onSnapshot(snap => { lastListSnap = snap; renderList(); },
+      err => { $("chatList").innerHTML = '<p class="chat-empty">שגיאה בטעינה: ' + err.code + '</p>'; });
+  }
+
+  function renderList() {
+    if (!lastListSnap || openUid) return;
+    const list = $("chatList"), snap = lastListSnap;
+    list.innerHTML = snap.empty ? '<p class="chat-empty">עוד אין הודעות</p>' : "";
+    snap.forEach(d => {
+      const c = d.data({ serverTimestamps: "estimate" });
+      const online = Date.now() - tsMs(c.userSeen) < ONLINE_MS;
+      const typing = Date.now() - tsMs(c.userTyping) < TYPING_MS * 1.5;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chat-item" + (c.unreadAdmin ? " new" : "");
+      b.innerHTML = "<span></span><small></small>";
+      if (online) b.firstChild.innerHTML = '<span class="online-dot" title="מחובר/ת עכשיו"></span>';
+      b.firstChild.append((c.unreadAdmin ? "🔵 " : "") + (c.name || c.email));
+      if (typing) { b.lastChild.className = "item-typing"; b.lastChild.textContent = "מקליד/ה..."; }
+      else b.lastChild.textContent = (c.last || "") + " · " + fmt(c.updated);
+      b.onclick = () => openChat(d.id, c.name || c.email, c.email, c.name);
+      list.appendChild(b);
+    });
   }
 
   // פתיחת שיחה אחת
   function openChat(uid, title, email, name) {
-    if (stopMsgs) stopMsgs();
+    stopConversation();
+    clearInterval(listTimer); listTimer = null;
     openUid = uid; openEmail = email || ""; openName = name || "";
     $("chatTitle").textContent = title;
     $("chatBack").classList.toggle("hidden", !isAdmin);
@@ -1032,23 +1153,51 @@
     $("chatMsgs").classList.remove("hidden");
     $("chatSend").classList.remove("hidden");
     const ref = db.collection("chats").doc(uid);
-    ref.set(isAdmin ? { unreadAdmin: false } : { unreadUser: false }, { merge: true }).catch(() => {});
-    stopMsgs = ref.collection("messages").orderBy("ts").onSnapshot(snap => {
+    beat();
+
+    // פרטי השיחה: מחובר / מקליד / נקרא
+    let firstMeta = true;
+    stopMeta = ref.onSnapshot(d => {
+      chatMeta = d.exists ? d.data({ serverTimestamps: "estimate" }) : {};
+      const t = tsMs(chatMeta[otherKey() + "Typing"]);
+      // "מקליד" לפי הזמן שבו השינוי הגיע אלינו – כך שעון לא מדויק במחשב לא משנה
+      if (!t) typingSeenAt = 0;
+      else if (t !== prevTyping && !(firstMeta && Date.now() - t > TYPING_MS)) typingSeenAt = Date.now();
+      prevTyping = t; firstMeta = false;
+      renderStatus(); updateTicks(); markRead();
+    }, () => {});
+    statusTimer = setInterval(renderStatus, 2000);
+    renderStatus();
+
+    stopMsgs = ref.collection("messages").orderBy("ts").onSnapshot({ includeMetadataChanges: true }, snap => {
       const box = $("chatMsgs");
+      const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+      const grew = snap.size !== lastMsgs.length;
       box.innerHTML = snap.empty ? '<p class="chat-empty">' + (isAdmin ? "אין הודעות" : "כתבו לנו הודעה ונענה בהקדם") + "</p>" : "";
+      lastMsgs = []; ticks = [];
       snap.forEach(d => {
-        const m = d.data();
-        const mine = isAdmin ? m.from === "admin" : m.from === "user";
+        const m = d.data({ serverTimestamps: "estimate" });
+        const pending = d.metadata.hasPendingWrites;
+        lastMsgs.push({ from: m.from, ts: pending ? 0 : tsMs(m.ts) });
+        const mine = m.from === selfKey();
         const div = document.createElement("div");
         div.className = "bubble " + (mine ? "me" : "them");
         if (m.file) div.appendChild(renderFile(m.file));
         if (m.text) div.appendChild(document.createTextNode(m.text));
         const t = document.createElement("time");
         t.textContent = fmt(m.ts);
+        if (mine) {
+          const tick = document.createElement("span");
+          tick.className = "tick";
+          t.appendChild(tick);
+          ticks.push({ el: tick, ts: pending ? 0 : tsMs(m.ts) });
+        }
         div.appendChild(t);
         box.appendChild(div);
       });
-      box.scrollTop = box.scrollHeight;
+      $("typingBubble") && $("typingBubble").remove();
+      updateTicks(); renderStatus(); markRead();
+      if (atBottom || grew) box.scrollTop = box.scrollHeight;
     }, err => { $("chatMsgs").innerHTML = '<p class="chat-empty">שגיאה בטעינה: ' + err.code + '</p>'; });
   }
 
@@ -1059,7 +1208,8 @@
     const ref = db.collection("chats").doc(openUid);
     const now = firebase.firestore.FieldValue.serverTimestamp();
     const preview = (file ? "📎 " + file.name + (text ? " – " : "") : "") + text;
-    const info = { updated: now, last: preview.slice(0, 60) };
+    const info = { updated: now, last: preview.slice(0, 60), [selfKey() + "Typing"]: null, [selfKey() + "Seen"]: now };
+    lastTypingWrite = 0;
     if (isAdmin) Object.assign(info, { unreadAdmin: false, unreadUser: true });
     else Object.assign(info, { name: me.displayName || "", email: me.email || "", unreadAdmin: true });
     const msg = { text, from: isAdmin ? "admin" : "user", ts: now };
