@@ -370,11 +370,12 @@
           </svg>
         </div>
         <div class="body">
-          <h2>ERT <span class="ver">חדש</span></h2>
-          <p>תוכנה קולית למחשב. להתקנה ב-Windows.</p>
+          <h2>קולית <span class="ver">v1.0.0</span></h2>
+          <p>הקראה והקלדה קולית בעברית: מדביקים טקסט ושומעים אותו (וגם שומרים כ-MP3), או מדברים והמילים מופיעות על המסך.</p>
           <div class="meta">
             <span>🖥 Windows</span>
-            <span>🎤 קולי</span>
+            <span>🆓 חינם</span>
+            <span>📦 111KB</span>
           </div>
           <a class="btn" href="https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq">⬇ הורדה והתקנה</a>
           <a class="btn alt" href="ERT.html">ℹ פרטים נוספים</a>
@@ -413,7 +414,7 @@
       <p class="app-desc" id="apDesc"></p>
 
       <div class="panel" id="apChangesPanel">
-        <h3>מה חדש בגרסה <span id="apVer2"></span></h3>
+        <h3 id="apChangesTitle"></h3>
         <ul id="apChanges"></ul>
       </div>
 
@@ -423,12 +424,12 @@
       </div>
       <p class="app-note" id="apNote"></p>
 
-      <h3>דרישות מערכת</h3>
+      <h3>דרישות ומגבלות</h3>
       <ul id="apReqs"></ul>
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 25</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 26</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -837,16 +838,33 @@
       stats: "app", ratings: "ratings"
     },
     ERT: {
-      name: "ERT",
+      name: "קולית – הקראה והקלדה קולית",
       icon: '<div style="width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#9b6bff,#4a2aa8 70%)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:55%"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></div>',
-      tag: "🎤 קולי",
-      version: "1.0",
+      tag: "🆓 חינם · 111KB",
+      version: "1.0.0",
       downloadsBefore: 0,
       download: "https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq",
-      desc: "תוכנה קולית למחשב. להתקנה ב-Windows.",
-      changes: [],
-      note: "ההורדה היא קובץ התקנה ל-Windows. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
-      reqs: ["Windows 10 או 11"],
+      desc: "הקראה והקלדה קולית בעברית. מדביקים טקסט ושומעים אותו בקול של אישה או גבר, ושומרים את ההקראה כקובץ MP3. או מדברים – והמילים מופיעות על המסך. מתאים למבוגרים, לתלמידים, למי שמתקשה בקריאה או בהקלדה ולעולים חדשים.",
+      changesTitle: "מה אפשר לעשות",
+      changes: [
+        "🔊 הקראת כל טקסט עברי – בקול הילה (אישה) או אברי (גבר), ב-5 מהירויות",
+        "💾 שמירת ההקראה כקובץ MP3 – לשליחה בוואטסאפ או לשמיעה בטלפון",
+        "✂️ הקראה של קטע מסומן בלבד, עם השהיה, המשך ועצירה",
+        "📄 פתיחת קובץ טקסט (txt) והקראתו",
+        "🎤 הקלדה קולית – מדברים בעברית והמילים מופיעות בתיבה",
+        "✍️ פיסוק בקול: \"פסיק\", \"נקודה\", \"סימן שאלה\", \"שורה חדשה\" ועוד",
+        "📋 \"העתק הכל\" – להדבקה בוואטסאפ, במייל או ב-Word",
+        "🔠 כפתורים גדולים, הגדלת גופן, שמירה אוטומטית של הטקסט",
+        "⌨️ קיצורים: F5 הקראה, F6 הקלדה קולית, Esc עצירה"
+      ],
+      note: "בהתקנה Windows עשוי להציג אזהרה כחולה כי הקובץ לא חתום: לוחצים \"מידע נוסף\" ואז \"הפעל בכל זאת\". לא צריך הרשאות מנהל.",
+      reqs: [
+        "Windows 10 או 11 (עובד גם ב-Windows 8.1)",
+        "חיבור לאינטרנט – בלי אינטרנט התוכנה לא עובדת",
+        "מיקרופון – להקלדה קולית",
+        "זיהוי הדיבור עובד הכי טוב בחדר שקט ובדיבור ברור",
+        "ההקראה והזיהוי משתמשים בשירותים חינמיים של Microsoft ו-Google, שעלולים להשתנות בעתיד"
+      ],
       stats: "ert", ratings: "ratings_ert"
     }
   };
@@ -859,7 +877,8 @@
   $("apName").textContent = APP.name;
   $("apIcon").innerHTML = APP.icon;
   $("apTag").textContent = APP.tag;
-  $("apVer").textContent = $("apVer2").textContent = APP.version;
+  $("apVer").textContent = APP.version;
+  $("apChangesTitle").textContent = APP.changesTitle || "מה חדש בגרסה " + APP.version;
   $("apDesc").textContent = APP.desc;
   $("apNote").textContent = APP.note;
   $("apDownload").href = APP.download;
