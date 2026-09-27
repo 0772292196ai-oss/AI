@@ -5,7 +5,8 @@
     "version": "1.0.4",
     "desc": "מידע על קווי אוטובוס ותחנות ברחבי הארץ, שעובד גם במחשב בלי אינטרנט.",
     "download": "https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-",
-    "page": "ASD.html"
+    "page": "ASD.html",
+    "image": "https://raw.githubusercontent.com/0772292196ai-oss/AI/refs/heads/main/ASX.jpg"
   },
   {
     "key": "ERT",
@@ -13,6 +14,7 @@
     "version": "1.0.0",
     "desc": "הקראה והקלדה קולית בעברית: מדביקים טקסט ושומעים אותו (וגם שומרים כ-MP3), או מדברים והמילים מופיעות על המסך.",
     "download": "https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq",
-    "page": "ERT.html"
+    "page": "ERT.html",
+    "image": "https://vocalremover.org/img/splitter/player_en.png"
   }
 ]
