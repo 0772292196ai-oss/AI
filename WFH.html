@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>פורום תוכנה בקליק</title>
+<meta name="description" content="פורום הקהילה של תוכנה בקליק – שאלות, עזרה, רעיונות ודיונים על תוכנות, מחשבים וטכנולוגיה.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234f7cff'/%3E%3Cpath d='M6 7h12v7H10l-4 3z' fill='none' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== פורום בסגנון NodeBB: בהיר, כרטיסים לבנים, סרגל צד ===== */
+  :root {
+    --bg: #f4f6f9; --card: #fff; --line: #e3e7ee; --line2: #d4dae3; --ink: #1d2433; --muted: #6b7489;
+    --primary: #4f7cff; --primary2: #a855f7; --soft: #eef2ff; --danger: #dc3545; --ok: #16a34a;
+    --grad: linear-gradient(120deg, #4f7cff, #a855f7);
+    --side: 64px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: "Assistant", Arial, sans-serif; background: var(--bg); color: var(--ink); font-size: 16px; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; cursor: pointer; }
+  input, textarea, select { font: inherit; }
+  .hidden { display: none !important; }
+  h1, h2, h3 { font-family: "Heebo", "Assistant", sans-serif; }
+
+  /* סרגל צד (מימין) */
+  .side {
+    position: fixed; top: 0; bottom: 0; right: 0; width: var(--side); z-index: 20; background: var(--card);
+    border-left: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 4px;
+  }
+  .side .brand-mini { width: 42px; height: 42px; border-radius: 12px; background: var(--grad); display: grid; place-items: center; color: #fff; font-size: 1.3rem; margin-bottom: 10px; text-decoration: none; }
+  .side a.nav { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-size: 1.25rem; color: var(--muted); position: relative; text-decoration: none; }
+  .side a.nav:hover { background: var(--soft); }
+  .side a.nav.on { background: var(--soft); color: var(--primary); }
+  .side a.nav::after {
+    content: attr(data-tip); position: absolute; right: 54px; top: 50%; transform: translateY(-50%); white-space: nowrap;
+    background: #1d2433; color: #fff; font-size: .82rem; padding: 4px 10px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .15s;
+  }
+  .side a.nav:hover::after { opacity: 1; }
+  .side .grow { flex: 1; }
+
+  /* פס עליון */
+  .top {
+    position: sticky; top: 0; z-index: 15; margin-right: var(--side); height: 62px; background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; padding: 0 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-family: "Heebo", sans-serif; font-weight: 800; font-size: 1.3rem; text-decoration: none !important; }
+  .brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand small { display: block; font: 600 .78rem "Assistant", sans-serif; color: var(--muted); }
+  .top .search { flex: 1; max-width: 420px; margin-inline-start: auto; position: relative; }
+  .top .search input { width: 100%; padding: 9px 38px 9px 14px; border-radius: 10px; border: 1px solid var(--line2); background: var(--bg); outline: none; }
+  .top .search input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(79,124,255,.15); }
+  .top .search span { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  .userbox { display: flex; align-items: center; gap: 8px; }
+  .btn { border: 1px solid var(--line2); background: var(--card); color: var(--ink); padding: 8px 16px; border-radius: 10px; font-weight: 700; }
+  .btn:hover { background: var(--bg); }
+  .btn.primary { background: var(--grad); color: #fff; border: none; }
+  .btn.primary:hover { filter: brightness(1.07); }
+  .btn.danger { color: var(--danger); border-color: rgba(220,53,69,.35); }
+  .btn.sm { padding: 5px 11px; font-size: .88rem; border-radius: 8px; }
+  .btn:disabled { opacity: .55; cursor: default; }
+
+  /* תוכן */
+  main { margin-right: var(--side); padding: 22px; max-width: 1180px; }
+  .crumbs { color: var(--muted); font-size: .92rem; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .crumbs a { color: var(--muted); }
+  .page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .page-head h1 { margin: 0; font-size: 1.6rem; }
+  .page-head p { margin: 4px 0 0; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+
+  /* ברוכים הבאים */
+  .welcome { text-align: center; padding: 30px 20px; margin-bottom: 18px; }
+  .welcome .logo-big { font-family: "Heebo", sans-serif; font-weight: 800; font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0; }
+  .welcome .logo-big b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .welcome .tag { color: var(--muted); margin: 4px 0 16px; }
+  .welcome h2 { margin: 0 0 8px; font-size: 1.25rem; display: inline-block; background: #f3e8ff; padding: 2px 12px; border-radius: 8px; }
+  .welcome p { margin: 6px 0; }
+
+  /* רשימת קטגוריות */
+  .cat-row { display: grid; grid-template-columns: 52px 1fr 150px 230px; gap: 16px; align-items: center; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .cat-row:last-child { border-bottom: none; }
+  .cat-ic { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.5rem; color: #fff; }
+  .cat-main h3 { margin: 0; font-size: 1.12rem; }
+  .cat-main h3 a { color: var(--ink); }
+  .cat-main p { margin: 3px 0 0; color: var(--muted); font-size: .93rem; }
+  .cat-stats { display: flex; gap: 8px; }
+  .stat { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 10px; padding: 6px 4px; }
+  .stat b { display: block; font-size: 1.05rem; }
+  .stat small { color: var(--muted); font-size: .78rem; }
+  .cat-last { font-size: .88rem; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; min-width: 0; }
+  .cat-last .t { min-width: 0; }
+  .cat-last a { color: var(--ink); font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cat-admin { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: flex-end; margin-top: -8px; }
+
+  /* רשימת נושאים */
+  .topic-row { display: grid; grid-template-columns: 44px 1fr 90px 90px 200px; gap: 14px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .topic-row:last-child { border-bottom: none; }
+  .topic-row:hover { background: #fafbff; }
+  .topic-row h3 { margin: 0; font-size: 1.05rem; font-family: "Assistant", sans-serif; font-weight: 800; }
+  .topic-row h3 a { color: var(--ink); }
+  .topic-row .sub { color: var(--muted); font-size: .86rem; margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 20px; background: var(--soft); color: var(--primary); }
+  .pill.pin { background: #fff4d6; color: #a16207; }
+  .pill.lock { background: #fde2e4; color: #b42318; }
+  .num { text-align: center; }
+  .num b { display: block; }
+  .num small { color: var(--muted); font-size: .8rem; }
+  .last { font-size: .86rem; color: var(--muted); display: flex; gap: 8px; align-items: center; min-width: 0; }
+
+  /* אווטאר */
+  .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 800; flex: none; font-family: "Heebo", sans-serif; }
+  .av.s { width: 26px; height: 26px; font-size: .78rem; }
+  .av.l { width: 56px; height: 56px; font-size: 1.4rem; }
+
+  /* נושא: פוסטים */
+  .topic-title { margin: 0 0 6px; font-size: 1.7rem; }
+  .post { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 18px; border-bottom: 1px solid var(--line); }
+  .post:last-child { border-bottom: none; }
+  .post.op { background: #fbfcff; }
+  .post .who { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .post .who b { font-size: 1.02rem; }
+  .post .who small { color: var(--muted); }
+  .badge-admin { font-size: .74rem; font-weight: 800; color: #fff; background: #dc3545; border-radius: 6px; padding: 1px 7px; }
+  .content { line-height: 1.75; word-wrap: break-word; white-space: pre-wrap; }
+  .content blockquote { margin: 6px 0; padding: 8px 12px; border-inline-start: 4px solid var(--line2); background: var(--bg); border-radius: 8px; color: var(--muted); white-space: pre-wrap; }
+  .post-foot { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  .like { display: inline-flex; align-items: center; gap: 6px; }
+  .like.on { color: #fff; background: var(--primary); border-color: var(--primary); }
+  .edited { color: var(--muted); font-size: .82rem; }
+
+  /* כתיבה */
+  .composer { padding: 16px; margin-top: 16px; }
+  .composer h3 { margin: 0 0 10px; font-size: 1.1rem; }
+  .composer input, .composer textarea, .composer select, .field input, .field textarea, .field select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line2); border-radius: 10px; background: #fff; outline: none; color: var(--ink);
+  }
+  .composer textarea { min-height: 130px; resize: vertical; margin-top: 8px; line-height: 1.6; }
+  .composer input:focus, .composer textarea:focus, .field input:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,124,255,.15); }
+  .composer .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .hint { color: var(--muted); font-size: .86rem; }
+
+  /* ריק */
+  .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty .big { font-size: 3rem; }
+  .empty h3 { color: var(--ink); margin: 8px 0; }
+
+  /* חלונות */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(20,24,40,.45); display: grid; place-items: center; padding: 16px; }
+  .modal { width: min(440px, 100%); background: #fff; border-radius: 16px; padding: 22px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.4); max-height: calc(100vh - 32px); overflow: auto; }
+  .modal h2 { margin: 0 0 14px; font-size: 1.3rem; }
+  .tabs { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  .tabs button { flex: 1; background: none; border: none; padding: 10px; font-weight: 700; color: var(--muted); border-bottom: 2px solid transparent; }
+  .tabs button.on { color: var(--primary); border-color: var(--primary); }
+  .field { margin-bottom: 10px; }
+  .field label { display: block; font-weight: 700; margin-bottom: 4px; font-size: .92rem; }
+  .google { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .or { text-align: center; color: var(--muted); font-size: .88rem; margin: 12px 0; }
+  .msg { color: var(--danger); font-size: .9rem; min-height: 1.2em; margin: 8px 0 0; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 60; background: #1d2433; color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 700; }
+
+  /* קבוצות */
+  .grp-tools { display: flex; gap: 8px; align-items: center; }
+  .grp-tools select { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line2); background: #fff; }
+  .grp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .grp-card { display: flex; flex-direction: column; gap: 8px; padding: 16px; color: var(--ink); text-decoration: none !important; transition: transform .15s, box-shadow .15s; }
+  .grp-card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -18px rgba(30,40,80,.45); }
+  .grp-top { display: flex; align-items: center; gap: 12px; }
+  .grp-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 1.35rem; color: #fff; flex: none; }
+  .grp-top b { font-size: 1.1rem; display: block; }
+  .grp-top small { color: var(--muted); }
+  .grp-card p { margin: 0; color: var(--muted); font-size: .93rem; line-height: 1.55; }
+  .grp-badge { display: inline-flex; align-items: center; gap: 3px; font-size: .74rem; font-weight: 800; color: #fff; border-radius: 6px; padding: 1px 7px; }
+  .members { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; padding: 14px; }
+  .member { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; }
+  .member b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .section-h { margin: 22px 0 10px; font-size: 1.15rem; }
+  .lock-note { color: var(--muted); font-size: .86rem; }
+
+  /* טלפון */
+  @media (max-width: 860px) {
+    .cat-row { grid-template-columns: 46px 1fr; }
+    .cat-stats, .cat-last { grid-column: 2; }
+    .topic-row { grid-template-columns: 40px 1fr 60px; }
+    .topic-row .views, .topic-row .last { display: none; }
+  }
+  @media (max-width: 640px) {
+    :root { --side: 0px; }
+    .side { top: auto; left: 0; height: 60px; width: auto; flex-direction: row; justify-content: space-around; border-left: none; border-top: 1px solid var(--line); padding: 0 6px; }
+    .side .brand-mini, .side .grow { display: none; }
+    .side a.nav::after { display: none; }
+    main { padding: 14px 12px 80px; }
+    .top { padding: 0 12px; gap: 8px; }
+    .brand small, .top .search, .hide-sm { display: none; }
+    .brand { margin-inline-end: auto; }
+    .post { grid-template-columns: 1fr; }
+    .post > .av { display: none; }
+    .topic-title { font-size: 1.35rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="side" aria-label="ניווט בפורום">
+  <a class="brand-mini" href="#/" title="בית הפורום">💬</a>
+  <a class="nav" href="#/" data-tip="קטגוריות" data-view="home" aria-label="קטגוריות">🏠</a>
+  <a class="nav" href="#/recent" data-tip="נושאים אחרונים" data-view="recent" aria-label="נושאים אחרונים">🕒</a>
+  <a class="nav" href="#/popular" data-tip="פופולריים" data-view="popular" aria-label="פופולריים">🔥</a>
+  <a class="nav" href="#/search" data-tip="חיפוש" data-view="search" aria-label="חיפוש">🔍</a>
+  <a class="nav" href="#/groups" data-tip="קבוצות" data-view="groups" aria-label="קבוצות">👥</a>
+  <a class="nav" href="#/new" data-tip="נושא חדש" data-view="new" aria-label="נושא חדש">✏️</a>
+  <span class="grow"></span>
+  <a class="nav" href="./" data-tip="חזרה לאתר תוכנה בקליק" aria-label="חזרה לאתר">↩</a>
+</nav>
+
+<header class="top">
+  <a class="brand" href="#/"><span>פורום <b>תוכנה בקליק</b><small>פורום הקהילה – שאלות, עזרה ודיונים</small></span></a>
+  <div class="search"><span>🔍</span><input type="search" id="topSearch" placeholder="חיפוש בפורום..." aria-label="חיפוש בפורום"></div>
+  <div class="userbox" id="userbox"></div>
+</header>
+
+<main id="view"><div class="empty"><div class="big">⏳</div><h3>טוען את הפורום...</h3></div></main>
+
+<!-- התחברות / הרשמה -->
+<div class="overlay hidden" id="loginOverlay">
+  <div class="modal">
+    <div class="tabs"><button type="button" id="tabIn" class="on">התחברות</button><button type="button" id="tabUp">הרשמה</button></div>
+    <button type="button" class="btn google" id="googleBtn">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>
+      המשך עם Google
+    </button>
+    <p class="or">או עם אימייל וסיסמה</p>
+    <div class="field hidden" id="nameField"><label for="regName">שם (יוצג בפורום)</label><input id="regName" maxlength="40"></div>
+    <div class="field"><label for="email">אימייל</label><input id="email" type="email" dir="ltr"></div>
+    <div class="field"><label for="pass">סיסמה</label><input id="pass" type="password" dir="ltr"></div>
+    <button type="button" class="btn primary" id="authGo" style="width:100%">התחברות</button>
+    <p class="msg" id="authMsg"></p>
+    <button type="button" class="btn" id="authClose" style="width:100%">סגירה</button>
+  </div>
+</div>
+
+<!-- קבוצה (מנהל) -->
+<div class="overlay hidden" id="grpOverlay">
+  <div class="modal">
+    <h2 id="grpTitle">קבוצה חדשה</h2>
+    <div class="field"><label for="grpName">שם הקבוצה</label><input id="grpName" maxlength="50"></div>
+    <div class="field"><label for="grpDesc">תיאור (מה הקבוצה, ומי יכול להצטרף)</label><textarea id="grpDesc" maxlength="300" rows="3"></textarea></div>
+    <div class="field"><label for="grpIcon">אייקון (אימוג'י)</label><input id="grpIcon" maxlength="4" placeholder="👥"></div>
+    <div class="field"><label for="grpColor">צבע התג</label><input id="grpColor" type="color" value="#a855f7" style="height:44px;padding:4px"></div>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0 12px"><input type="checkbox" id="grpOpen"> אפשר לבקש להצטרף (אחרת – רק המנהל מוסיף)</label>
+    <button type="button" class="btn primary" id="grpSave" style="width:100%">שמירה</button>
+    <p class="msg" id="grpMsg"></p>
+    <button type="button" class="btn" id="grpCancel" style="width:100%">ביטול</button>
+  </div>
+</div>
+
+<!-- קטגוריה (מנהל) -->
+<div class="overlay hidden" id="catOverlay">
+  <div class="modal">
+    <h2 id="catTitle">קטגוריה חדשה</h2>
+    <div class="field"><label for="catName">שם הקטגוריה</label><input id="catName" maxlength="60"></div>
+    <div class="field"><label for="catDesc">תיאור קצר</label><input id="catDesc" maxlength="160"></div>
+    <div class="field"><label for="catIcon">אייקון (אימוג'י)</label><input id="catIcon" maxlength="4" placeholder="💻"></div>
+    <div class="field"><label for="catColor">צבע</label><input id="catColor" type="color" value="#4f7cff" style="height:44px;padding:4px"></div>
+    <div class="field"><label for="catOrder">מיקום ברשימה (מספר קטן = למעלה)</label><input id="catOrder" type="number" value="10"></div>
+    <div class="field"><label for="catGroup">מי יכול לפתוח נושאים?</label><select id="catGroup"></select></div>
+    <button type="button" class="btn primary" id="catSave" style="width:100%">שמירה</button>
+    <p class="msg" id="catMsg"></p>
+    <button type="button" class="btn" id="catCancel" style="width:100%">ביטול</button>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  // ===== הגדרות (אותו Firebase של האתר – אותם חשבונות) =====
+  firebase.initializeApp({
+    apiKey: "AIzaSyAKq6cEtOiw2q__8W8lN-zUaQprSMG1vmw",
+    authDomain: "project-6009216979838534734.firebaseapp.com",
+    projectId: "project-6009216979838534734",
+    appId: "1:135251714538:web:db532e77bb5665b4205293"
+  });
+  const auth = firebase.auth(), db = firebase.firestore();
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  const NOW = () => firebase.firestore.FieldValue.serverTimestamp();
+  const $ = id => document.getElementById(id);
+  let me = null, isAdmin = false, cats = [], topics = [], groups = [], catsReady = false, topicsReady = false;
+  let stopTopic = null, stopPosts = null;
+
+  // ===== כלים =====
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    for (const k in attrs || {}) {
+      if (k === "class") el.className = attrs[k];
+      else if (k.startsWith("on")) el[k] = attrs[k];
+      else if (attrs[k] != null) el.setAttribute(k, attrs[k]);
+    }
+    kids.flat(Infinity).forEach(c => c != null && c !== false && el.append(c.nodeType ? c : String(c)));
+    return el;
+  };
+  // מציג תוכן בדף (מדלג על חלקים ריקים)
+  const put = (v, ...kids) => v.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
+  const ms = t => t && t.toMillis ? t.toMillis() : 0;
+  function ago(t) {
+    const m = ms(t); if (!m) return "עכשיו";
+    const s = (Date.now() - m) / 1000;
+    if (s < 60) return "לפני רגע";
+    if (s < 3600) return "לפני " + Math.floor(s / 60) + " דקות";
+    if (s < 86400) return "לפני " + Math.floor(s / 3600) + " שעות";
+    if (s < 86400 * 7) return "לפני " + Math.floor(s / 86400) + " ימים";
+    return new Date(m).toLocaleDateString("he-IL");
+  }
+  const short = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(".0", "") + "k" : String(n || 0);
+  const COLORS = ["#4f7cff", "#a855f7", "#ec4899", "#f97316", "#16a34a", "#0ea5e9", "#e11d48", "#7c3aed", "#0d9488", "#ca8a04"];
+  function avatar(name, uid, size) {
+    let n = 0; for (const c of (uid || name || "?")) n = (n * 31 + c.charCodeAt(0)) >>> 0;
+    const a = h("span", { class: "av" + (size ? " " + size : "") }, (name || "?").trim().slice(0, 1) || "?");
+    a.style.background = COLORS[n % COLORS.length];
+    return a;
+  }
+  function toast(t) { $("toast").textContent = t; $("toast").classList.remove("hidden"); clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").classList.add("hidden"), 2600); }
+  const myName = () => (me && (me.displayName || (me.email || "").split("@")[0]) || "משתמש/ת").slice(0, 40);
+
+  // טקסט של פוסט: שורות שמתחילות ב-"> " הן ציטוט, וקישורי https לחיצים (בלי HTML – בטוח)
+  function renderText(text) {
+    const box = h("div", { class: "content" });
+    let quote = null;
+    String(text || "").split("\n").forEach((line, i, arr) => {
+      if (line.startsWith("> ")) {
+        if (!quote) { quote = h("blockquote"); box.append(quote); } else quote.append("\n");
+        quote.append(line.slice(2));
+        return;
+      }
+      if (quote && line === "") { quote = null; return; } // שורה ריקה אחרי ציטוט – בלי רווח כפול
+      quote = null;
+      line.split(/(https?:\/\/[^\s]+)/).forEach((part, j) => {
+        if (j % 2) box.append(h("a", { href: part, target: "_blank", rel: "noopener nofollow" }, part));
+        else box.append(part);
+      });
+      if (i < arr.length - 1) box.append("\n");
+    });
+    return box;
+  }
+
+  // ===== חשבון =====
+  auth.onAuthStateChanged(u => {
+    me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    const box = $("userbox"); box.innerHTML = "";
+    if (u) {
+      box.append(avatar(myName(), u.uid, "s"), h("b", { class: "hide-sm" }, myName()),
+        h("button", { class: "btn sm", onclick: () => auth.signOut() }, "התנתקות"));
+    } else {
+      box.append(h("button", { class: "btn sm", onclick: () => openLogin(false) }, "התחברות"),
+        h("button", { class: "btn sm primary", onclick: () => openLogin(true) }, "הרשמה"));
+    }
+    route();
+  });
+  let regMode = false;
+  function openLogin(reg, why) {
+    regMode = reg;
+    $("tabIn").classList.toggle("on", !reg); $("tabUp").classList.toggle("on", reg);
+    $("nameField").classList.toggle("hidden", !reg);
+    $("authGo").textContent = reg ? "הרשמה" : "התחברות";
+    $("authMsg").textContent = why || "";
+    $("loginOverlay").classList.remove("hidden");
+  }
+  $("tabIn").onclick = () => openLogin(false);
+  $("tabUp").onclick = () => openLogin(true);
+  $("authClose").onclick = () => $("loginOverlay").classList.add("hidden");
+  const authErr = e => $("authMsg").textContent = ({
+    "auth/invalid-email": "האימייל לא תקין", "auth/weak-password": "הסיסמה צריכה לפחות 6 תווים",
+    "auth/email-already-in-use": "כבר יש חשבון עם האימייל הזה – עברו ל\"התחברות\"",
+    "auth/invalid-credential": "אימייל או סיסמה שגויים", "auth/wrong-password": "סיסמה שגויה", "auth/user-not-found": "אין חשבון עם האימייל הזה",
+    "auth/popup-closed-by-user": "", "auth/unauthorized-domain": "האתר עוד לא מאושר ב-Firebase (דומיינים מורשים)"
+  })[e.code] || "שגיאה: " + (e.code || e.message);
+  $("googleBtn").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    .then(() => $("loginOverlay").classList.add("hidden")).catch(authErr);
+  $("authGo").onclick = async () => {
+    const email = $("email").value.trim(), pass = $("pass").value;
+    try {
+      if (regMode) {
+        const name = $("regName").value.trim();
+        if (name.length < 2) return $("authMsg").textContent = "כתבו שם (לפחות 2 אותיות)";
+        const c = await auth.createUserWithEmailAndPassword(email, pass);
+        await c.user.updateProfile({ displayName: name });
+        me = auth.currentUser; route();
+      } else await auth.signInWithEmailAndPassword(email, pass);
+      $("loginOverlay").classList.add("hidden");
+    } catch (e) { authErr(e); }
+  };
+  const needLogin = why => { if (me) return false; openLogin(false, why); return true; };
+
+  // ===== נתונים: קטגוריות ונושאים (מתעדכנים בזמן אמת) =====
+  db.collection("forum_cats").orderBy("order").onSnapshot(s => {
+    cats = s.docs.map(d => Object.assign({ id: d.id }, d.data())); catsReady = true; route(true);
+  }, e => { catsReady = true; showError(e); });
+  db.collection("forum_groups").onSnapshot(s => {
+    groups = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); route(true);
+  }, () => {});
+  db.collection("forum_topics").orderBy("lastTs", "desc").limit(500).onSnapshot(s => {
+    topics = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); topicsReady = true; route(true);
+  }, e => { topicsReady = true; showError(e); });
+  function showError(e) {
+    if (e.code === "permission-denied")
+      $("view").replaceChildren(h("div", { class: "card empty" }, h("div", { class: "big" }, "🔒"),
+        h("h3", {}, "הפורום עוד לא הופעל"), h("p", {}, "צריך להוסיף את כללי הפורום ב-Firebase (פיירסטור ← כללים).")));
+  }
+  const catOf = id => cats.find(c => c.id === id);
+  const postsOf = t => (t.replies || 0) + 1;
+
+  // ===== ניתוב לפי הכתובת (#/...) =====
+  let lastRoute = "";
+  window.addEventListener("hashchange", () => route());
+  function route(dataOnly) {
+    const hash = location.hash.replace(/^#/, "") || "/";
+    const [path, query] = hash.split("?");
+    const parts = path.split("/").filter(Boolean);
+    const q = new URLSearchParams(query || "");
+    // עדכון נתונים לא מצייר מחדש דף נושא (יש לו מאזין משלו) ולא דף כתיבה (כדי לא למחוק מה שמקלידים)
+    if (dataOnly && (parts[0] === "topic" || parts[0] === "new") && lastRoute === hash) return;
+    if (!catsReady || !topicsReady) return;
+    if (lastRoute !== hash) { window.scrollTo(0, 0); if (stopTopic) stopTopic(); if (stopPosts) stopPosts(); stopTopic = stopPosts = null; }
+    lastRoute = hash;
+    document.querySelectorAll(".side a.nav").forEach(a => a.classList.toggle("on", a.dataset.view === (parts[0] || "home")));
+    const v = $("view");
+    if (parts[0] === "category") return renderCategory(v, parts[1]);
+    if (parts[0] === "topic") return renderTopic(v, parts[1]);
+    if (parts[0] === "recent") return renderList(v, "🕒 נושאים אחרונים", "כל הנושאים, מהחדש לישן", topics);
+    if (parts[0] === "popular") return renderList(v, "🔥 נושאים פופולריים", "הנושאים עם הכי הרבה תגובות, לייקים וצפיות",
+      topics.slice().sort((a, b) => score(b) - score(a)));
+    if (parts[0] === "search") return renderSearch(v, q.get("q") || "");
+    if (parts[0] === "groups") return renderGroups(v, q.get("sort") || "name");
+    if (parts[0] === "group") return renderGroup(v, parts[1]);
+    if (parts[0] === "new") return renderNew(v, q.get("cat") || "");
+    renderHome(v);
+  }
+  const score = t => (t.replies || 0) * 3 + (t.likes || []).length * 2 + (t.views || 0) / 10;
+  const crumbs = (...items) => h("div", { class: "crumbs" }, h("a", { href: "#/" }, "🏠 הפורום"),
+    items.map(it => [" ‹ ", it.href ? h("a", { href: it.href }, it.t) : h("span", {}, it.t)]));
+
+  // ----- דף הבית: קטגוריות -----
+  function renderHome(v) {
+    const welcome = h("div", { class: "card welcome" },
+      h("p", { class: "logo-big" }, "פורום ", h("b", {}, "תוכנה בקליק")),
+      h("p", { class: "tag" }, "פורום הקהילה – תוכנות, מחשבים וטכנולוגיה"),
+      h("h2", {}, "ברוכים הבאים לפורום!"),
+      me ? h("p", {}, "שלום ", h("b", {}, myName()), " 👋 בחרו קטגוריה, או ", h("a", { href: "#/new" }, "פתחו נושא חדש"), ".")
+         : [h("p", {}, "כדאי להירשם כדי לשאול, להגיב ולעזור לאחרים."),
+            h("p", {}, "להרשמה ", h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(true); } }, "לחצו כאן"),
+              " · כבר רשומים? ", h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(false); } }, "התחברות"))]);
+    const head = h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "קטגוריות")),
+      isAdmin ? h("button", { class: "btn primary", onclick: () => editCat(null) }, "➕ קטגוריה חדשה") : null);
+    let list;
+    if (!cats.length) {
+      list = h("div", { class: "card empty" }, h("div", { class: "big" }, "🗂️"), h("h3", {}, "הפורום עדיין ריק"),
+        h("p", {}, isAdmin ? "התחילו ביצירת הקטגוריה הראשונה – בכפתור \"קטגוריה חדשה\" למעלה." : "בקרוב ייפתחו כאן הקטגוריות הראשונות."));
+    } else {
+      list = h("div", { class: "card" }, cats.map(c => {
+        const ts = topics.filter(t => t.cat === c.id);
+        const last = ts[0];
+        const ic = h("span", { class: "cat-ic" }, c.icon || "💬"); ic.style.background = c.color || "#4f7cff";
+        return h("div", { class: "cat-row" },
+          ic,
+          h("div", { class: "cat-main" }, h("h3", {}, h("a", { href: "#/category/" + c.id }, c.name)), h("p", {}, c.desc || ""),
+            groupOf(c.writeGroup) ? h("span", { class: "lock-note" }, "🔒 פתיחת נושאים: חברי קבוצת \"" + groupOf(c.writeGroup).name + "\"") : null),
+          h("div", { class: "cat-stats" },
+            h("div", { class: "stat" }, h("b", {}, short(ts.length)), h("small", {}, "נושאים")),
+            h("div", { class: "stat" }, h("b", {}, short(ts.reduce((s, t) => s + postsOf(t), 0))), h("small", {}, "פוסטים"))),
+          h("div", { class: "cat-last" }, last
+            ? [avatar(last.lastName || last.name, last.lastUid || last.uid, "s"),
+               h("div", { class: "t" }, h("a", { href: "#/topic/" + last.id }, last.title), h("small", {}, (last.lastName || last.name) + " · " + ago(last.lastTs)))]
+            : h("span", {}, "עוד אין נושאים")),
+          isAdmin ? h("div", { class: "cat-admin" },
+            h("button", { class: "btn sm", onclick: () => editCat(c) }, "✏️ עריכה"),
+            h("button", { class: "btn sm danger", onclick: () => delCat(c, ts.length) }, "🗑 מחיקה")) : null);
+      }));
+    }
+    put(v, welcome, head, list);
+  }
+
+  // ----- קטגוריה -----
+  function renderCategory(v, id) {
+    const c = catOf(id);
+    if (!c) return put(v, notFound("הקטגוריה לא נמצאה"));
+    const ts = topics.filter(t => t.cat === id).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+    const g = groupOf(c.writeGroup);
+    put(v, crumbs({ t: c.name }),
+      h("div", { class: "page-head" }, h("div", {}, h("h1", {}, (c.icon || "💬") + " " + c.name), h("p", {}, c.desc || ""),
+          g ? h("p", { class: "lock-note" }, "🔒 רק חברי הקבוצה ", h("a", { href: "#/group/" + g.id }, g.name), " יכולים לפתוח כאן נושאים. כולם יכולים לקרוא ולהגיב.") : null),
+        !me || canWrite(c)
+          ? h("button", { class: "btn primary", onclick: () => { if (!needLogin("כדי לפתוח נושא צריך להתחבר")) location.hash = "#/new?cat=" + id; } }, "✏️ נושא חדש")
+          : h("a", { class: "btn", href: "#/group/" + g.id }, "👥 הצטרפות לקבוצה")),
+      topicTable(ts, "אין עדיין נושאים בקטגוריה הזאת", "היו הראשונים לפתוח נושא!"));
+  }
+
+  function renderList(v, title, sub, list) {
+    put(v, crumbs({ t: title.replace(/^\S+ /, "") }),
+      h("div", { class: "page-head" }, h("div", {}, h("h1", {}, title), h("p", {}, sub))),
+      topicTable(list.slice(0, 100), "אין עדיין נושאים בפורום", "הנושאים החדשים יופיעו כאן."));
+  }
+
+  function topicTable(list, emptyTitle, emptySub) {
+    if (!list.length) return h("div", { class: "card empty" }, h("div", { class: "big" }, "📭"), h("h3", {}, emptyTitle), h("p", {}, emptySub));
+    return h("div", { class: "card" }, list.map(t => {
+      const c = catOf(t.cat);
+      return h("div", { class: "topic-row" },
+        avatar(t.name, t.uid),
+        h("div", {},
+          h("h3", {}, h("a", { href: "#/topic/" + t.id }, t.title)),
+          h("div", { class: "sub" },
+            t.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
+            t.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
+            c ? h("a", { class: "pill", href: "#/category/" + c.id }, (c.icon || "") + " " + c.name) : null,
+            h("span", {}, t.name + " · " + ago(t.ts)))),
+        h("div", { class: "num" }, h("b", {}, short(t.replies)), h("small", {}, "תגובות")),
+        h("div", { class: "num views" }, h("b", {}, short(t.views)), h("small", {}, "צפיות")),
+        h("div", { class: "last" }, avatar(t.lastName || t.name, t.lastUid || t.uid, "s"),
+          h("span", {}, (t.lastName || t.name) + " · " + ago(t.lastTs))));
+    }));
+  }
+
+  // ----- נושא -----
+  const viewed = new Set();
+  function renderTopic(v, id) {
+    const ref = db.collection("forum_topics").doc(id);
+    if (!viewed.has(id)) { // ספירת צפייה אחת לכל טעינה של הדף
+      viewed.add(id);
+      ref.update({ views: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+    }
+    let topic = null, posts = [];
+    const draw = () => {
+      if (!topic) return;
+      const c = catOf(topic.cat);
+      const canReply = me && (!topic.locked || isAdmin);
+      const composer = h("div", { class: "card composer" });
+      if (!me) composer.append(h("p", { style: "margin:0" }, "כדי להגיב צריך ",
+        h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(false); } }, "להתחבר"), " או ",
+        h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(true); } }, "להירשם"), "."));
+      else if (!canReply) composer.append(h("p", { style: "margin:0" }, "🔒 הנושא נעול – אי אפשר להגיב בו."));
+      else {
+        const ta = h("textarea", { id: "replyText", maxlength: "10000", placeholder: "כתבו תגובה... (שורה שמתחילה ב-\"> \" תוצג כציטוט)" });
+        ta.value = draftReply;
+        ta.oninput = () => draftReply = ta.value;
+        const send = h("button", { class: "btn primary" }, "שליחת תגובה");
+        send.onclick = () => reply(topic, ta, send);
+        composer.append(h("h3", {}, "✍️ תגובה"), ta, h("div", { class: "row" }, h("span", { class: "hint" }, "קישורים נהיים לחיצים אוטומטית"), send));
+      }
+      const adminBar = isAdmin || (me && me.uid === topic.uid) ? h("div", { class: "post-foot", style: "margin:0 0 12px" },
+        isAdmin ? h("button", { class: "btn sm", onclick: () => ref.update({ pinned: !topic.pinned }) }, topic.pinned ? "📌 ביטול נעיצה" : "📌 נעיצה") : null,
+        isAdmin ? h("button", { class: "btn sm", onclick: () => ref.update({ locked: !topic.locked }) }, topic.locked ? "🔓 פתיחה" : "🔒 נעילה") : null,
+        isAdmin ? moveSelect(topic) : null,
+        (isAdmin || (me.uid === topic.uid && !topic.replies)) ? h("button", { class: "btn sm danger", onclick: () => delTopic(topic) }, "🗑 מחיקת הנושא") : null) : null;
+      put(v, 
+        crumbs(c ? { t: c.name, href: "#/category/" + c.id } : { t: "נושא" }, { t: topic.title }),
+        h("h1", { class: "topic-title" }, topic.title),
+        h("div", { class: "crumbs" },
+          topic.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
+          topic.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
+          h("span", {}, "💬 " + (topic.replies || 0) + " תגובות · 👁 " + (topic.views || 0) + " צפיות")),
+        adminBar,
+        h("div", { class: "card" },
+          postEl(topic, ref, true),
+          posts.map(p => postEl(p, ref.collection("posts").doc(p.id), false, topic))),
+        composer);
+    };
+    stopTopic = ref.onSnapshot(d => {
+      if (!d.exists) return put(v, notFound("הנושא לא נמצא – אולי הוא נמחק"));
+      topic = Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" })); draw();
+    }, () => put(v, notFound("אין גישה לנושא")));
+    stopPosts = ref.collection("posts").orderBy("ts").onSnapshot(s => {
+      posts = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); draw();
+    }, () => {});
+  }
+  let draftReply = "";
+
+  function postEl(p, ref, isOp, topic) {
+    const likes = p.likes || [];
+    const liked = me && likes.includes(me.uid);
+    const text = renderText(p.text);
+    const foot = h("div", { class: "post-foot" });
+    const likeBtn = h("button", { class: "btn sm like" + (liked ? " on" : ""), title: "אהבתי" }, "👍 " + likes.length);
+    likeBtn.onclick = () => {
+      if (needLogin("כדי לסמן \"אהבתי\" צריך להתחבר")) return;
+      ref.update({ likes: liked ? firebase.firestore.FieldValue.arrayRemove(me.uid) : firebase.firestore.FieldValue.arrayUnion(me.uid) })
+        .catch(e => toast(e.code === "permission-denied" ? "אין הרשאה" : "שגיאה"));
+    };
+    foot.append(likeBtn);
+    if (me) foot.append(h("button", { class: "btn sm", onclick: () => quote(p) }, "💬 ציטוט"));
+    if (me && (me.uid === p.uid || isAdmin)) {
+      foot.append(h("button", { class: "btn sm", onclick: () => editPost(p, ref, isOp, text) }, "✏️ עריכה"));
+      if (!isOp) foot.append(h("button", { class: "btn sm danger", onclick: () => delPost(p, ref, topic) }, "🗑 מחיקה"));
+    }
+    return h("div", { class: "post" + (isOp ? " op" : "") },
+      avatar(p.name, p.uid, "l"),
+      h("div", {},
+        h("div", { class: "who" }, h("b", {}, p.name || "משתמש/ת"),
+          p.admin ? h("span", { class: "badge-admin" }, "מנהל") : null,
+          groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
+          h("small", {}, ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null),
+        text, foot));
+  }
+
+  function quote(p) {
+    const ta = $("replyText"); if (!ta) return;
+    const lines = String(p.text || "").split("\n").slice(0, 6).map(l => "> " + l).join("\n");
+    ta.value = (ta.value ? ta.value + "\n\n" : "") + "> @" + (p.name || "") + " כתב/ה:\n" + lines + "\n\n";
+    draftReply = ta.value; ta.focus(); ta.scrollIntoView({ block: "center" });
+  }
+
+  async function reply(topic, ta, btn) {
+    const text = ta.value.trim();
+    if (!text) return toast("כתבו תגובה");
+    btn.disabled = true;
+    const tRef = db.collection("forum_topics").doc(topic.id);
+    const batch = db.batch();
+    batch.set(tRef.collection("posts").doc(), { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [] });
+    batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid });
+    try { await batch.commit(); draftReply = ""; ta.value = ""; toast("✔ התגובה פורסמה"); }
+    catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
+    btn.disabled = false;
+  }
+
+  function editPost(p, ref, isOp, textEl) {
+    const ta = h("textarea", { maxlength: "10000", style: "width:100%;min-height:110px;padding:10px;border:1px solid var(--line2);border-radius:10px" });
+    ta.value = p.text || "";
+    const title = isOp ? h("input", { maxlength: "120", style: "width:100%;padding:10px;border:1px solid var(--line2);border-radius:10px;margin-bottom:8px" }) : null;
+    if (title) title.value = p.title || "";
+    const save = h("button", { class: "btn sm primary" }, "שמירה");
+    const box = h("div", {}, title, ta, h("div", { class: "post-foot" }, save, h("button", { class: "btn sm", onclick: () => { lastRoute = ""; route(); } }, "ביטול")));
+    textEl.replaceWith(box);
+    save.onclick = () => {
+      const upd = { text: ta.value.trim().slice(0, 10000), edited: true };
+      if (title) { if (!title.value.trim()) return toast("כתבו כותרת"); upd.title = title.value.trim().slice(0, 120); }
+      ref.update(upd).then(() => toast("✔ נשמר")).catch(() => toast("השמירה נכשלה"));
+    };
+  }
+
+  async function delPost(p, ref, topic) {
+    if (!confirm("למחוק את התגובה?")) return;
+    const batch = db.batch();
+    batch.delete(ref);
+    batch.update(db.collection("forum_topics").doc(topic.id), { replies: firebase.firestore.FieldValue.increment(-1) });
+    batch.commit().then(() => toast("התגובה נמחקה")).catch(() => toast("המחיקה נכשלה"));
+  }
+
+  async function delTopic(t) {
+    if (!confirm("למחוק את הנושא \"" + t.title + "\" וכל התגובות שלו?")) return;
+    try {
+      const ref = db.collection("forum_topics").doc(t.id);
+      const ps = await ref.collection("posts").get();
+      await Promise.all(ps.docs.map(d => d.ref.delete()));
+      await ref.delete();
+      toast("הנושא נמחק"); location.hash = "#/category/" + t.cat;
+    } catch (e) { toast("המחיקה נכשלה"); }
+  }
+
+  function moveSelect(t) {
+    const s = h("select", { class: "btn sm", title: "העברה לקטגוריה אחרת" }, cats.map(c => h("option", { value: c.id }, "📂 " + c.name)));
+    s.value = t.cat;
+    s.onchange = () => db.collection("forum_topics").doc(t.id).update({ cat: s.value }).then(() => toast("✔ הנושא הועבר"));
+    return s;
+  }
+
+  // ----- נושא חדש -----
+  let draftTitle = "", draftText = "";
+  function renderNew(v, catId) {
+    if (!me) {
+      put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "✏️"), h("h3", {}, "כדי לפתוח נושא צריך להתחבר"),
+        h("p", {}, h("button", { class: "btn primary", onclick: () => openLogin(false) }, "התחברות"), " ", h("button", { class: "btn", onclick: () => openLogin(true) }, "הרשמה"))));
+      return;
+    }
+    if (!cats.length) return put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "🗂️"), h("h3", {}, "אין עדיין קטגוריות"), h("p", {}, "אפשר לפתוח נושאים אחרי שהמנהל יוסיף קטגוריות.")));
+    const allowed = cats.filter(canWrite);
+    if (!allowed.length) return put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "🔒"), h("h3", {}, "אין קטגוריה שאפשר לפתוח בה נושא"), h("p", {}, "אפשר להצטרף לקבוצות בדף ", h("a", { href: "#/groups" }, "הקבוצות"), ".")));
+    const sel = h("select", {}, allowed.map(c => h("option", { value: c.id }, (c.icon || "") + " " + c.name)));
+    sel.value = allowed.some(c => c.id === catId) ? catId : allowed[0].id;
+    const title = h("input", { maxlength: "120", placeholder: "כותרת הנושא – קצרה וברורה" }); title.value = draftTitle;
+    const text = h("textarea", { maxlength: "10000", placeholder: "מה רציתם לשאול או לספר? כמה שיותר פרטים יעזרו לאחרים לעזור לכם." }); text.value = draftText;
+    title.oninput = () => draftTitle = title.value; text.oninput = () => draftText = text.value;
+    const go = h("button", { class: "btn primary" }, "פרסום הנושא");
+    go.onclick = async () => {
+      if (title.value.trim().length < 3) return toast("כתבו כותרת (לפחות 3 תווים)");
+      if (!text.value.trim()) return toast("כתבו את תוכן הנושא");
+      go.disabled = true;
+      try {
+        const ref = await db.collection("forum_topics").add({
+          cat: sel.value, title: title.value.trim().slice(0, 120), text: text.value.trim().slice(0, 10000),
+          uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
+          replies: 0, views: 0, likes: [], pinned: false, locked: false
+        });
+        draftTitle = draftText = ""; toast("✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
+      } catch (e) { go.disabled = false; toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
+    };
+    put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "page-head" }, h("h1", {}, "✏️ נושא חדש")),
+      h("div", { class: "card composer" }, h("div", { class: "field" }, h("label", {}, "קטגוריה"), sel), title, text,
+        h("div", { class: "row" }, h("span", { class: "hint" }, "שורה שמתחילה ב-\"> \" תוצג כציטוט · קישורים נהיים לחיצים"), go)));
+    title.focus();
+  }
+
+  // ----- חיפוש -----
+  function renderSearch(v, q) {
+    const input = h("input", { type: "search", value: q, placeholder: "מה לחפש?", style: "width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:12px;font-size:1.05rem" });
+    input.onkeydown = e => { if (e.key === "Enter") location.hash = "#/search?q=" + encodeURIComponent(input.value.trim()); };
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const res = words.length ? topics.filter(t => { const s = (t.title + " " + t.text + " " + t.name).toLowerCase(); return words.every(w => s.includes(w)); }) : [];
+    put(v, crumbs({ t: "חיפוש" }), h("div", { class: "page-head" }, h("h1", {}, "🔍 חיפוש")),
+      h("div", { class: "card", style: "padding:14px;margin-bottom:14px" }, input),
+      words.length ? [h("p", { class: "hint" }, "נמצאו " + res.length + " נושאים"), topicTable(res, "לא נמצאו תוצאות", "נסו מילים אחרות")] : null);
+    input.focus();
+  }
+  $("topSearch").onkeydown = e => { if (e.key === "Enter") { location.hash = "#/search?q=" + encodeURIComponent($("topSearch").value.trim()); $("topSearch").value = ""; } };
+
+  function notFound(t) { return h("div", { class: "card empty" }, h("div", { class: "big" }, "🤷"), h("h3", {}, t), h("p", {}, h("a", { href: "#/" }, "← חזרה לפורום"))); }
+
+  // ----- ניהול קטגוריות (מנהל בלבד) -----
+  let editingCat = null;
+  function editCat(c) {
+    editingCat = c;
+    $("catTitle").textContent = c ? "עריכת קטגוריה" : "קטגוריה חדשה";
+    $("catName").value = c ? c.name : ""; $("catDesc").value = c ? c.desc || "" : "";
+    $("catIcon").value = c ? c.icon || "" : ""; $("catColor").value = c ? c.color || "#4f7cff" : "#4f7cff";
+    $("catOrder").value = c ? c.order : (cats.length + 1) * 10; $("catMsg").textContent = "";
+    $("catGroup").replaceChildren(h("option", { value: "" }, "כל המשתמשים המחוברים"), groups.map(g => h("option", { value: g.id }, "רק חברי הקבוצה: " + g.name)));
+    $("catGroup").value = c && groupOf(c.writeGroup) ? c.writeGroup : "";
+    $("catOverlay").classList.remove("hidden"); $("catName").focus();
+  }
+  $("catCancel").onclick = () => $("catOverlay").classList.add("hidden");
+  $("catSave").onclick = async () => {
+    const data = { name: $("catName").value.trim().slice(0, 60), desc: $("catDesc").value.trim().slice(0, 160),
+      icon: $("catIcon").value.trim().slice(0, 4) || "💬", color: $("catColor").value, order: Number($("catOrder").value) || 0,
+      writeGroup: $("catGroup").value };
+    if (data.name.length < 2) return $("catMsg").textContent = "כתבו שם לקטגוריה";
+    try {
+      if (editingCat) await db.collection("forum_cats").doc(editingCat.id).update(data);
+      else await db.collection("forum_cats").add(data);
+      $("catOverlay").classList.add("hidden"); toast("✔ נשמר");
+    } catch (e) { $("catMsg").textContent = e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את כללי הפורום ב-Firebase" : "השמירה נכשלה"; }
+  };
+  async function delCat(c, n) {
+    if (n) return alert("יש בקטגוריה " + n + " נושאים. קודם העבירו או מחקו אותם.");
+    if (!confirm("למחוק את הקטגוריה \"" + c.name + "\"?")) return;
+    db.collection("forum_cats").doc(c.id).delete().then(() => toast("הקטגוריה נמחקה")).catch(() => toast("המחיקה נכשלה"));
+  }
+
+  /* ================= קבוצות ================= */
+  const groupOf = id => id ? groups.find(g => g.id === id) : null;
+  const groupsOf = uid => uid ? groups.filter(g => (g.members || []).includes(uid)) : [];
+  // מי יכול לפתוח נושא בקטגוריה: המנהל תמיד; אם הקטגוריה שייכת לקבוצה – רק חברי הקבוצה
+  function canWrite(c) {
+    if (!me) return false;
+    if (isAdmin) return true;
+    const g = groupOf(c.writeGroup);
+    return !g || (g.members || []).includes(me.uid); // קבוצה שנמחקה = הקטגוריה פתוחה לכולם
+  }
+
+  function renderGroups(v, sort) {
+    const list = groups.slice().sort((a, b) =>
+      sort === "members" ? (b.members || []).length - (a.members || []).length
+      : sort === "created" ? ms(b.created) - ms(a.created)
+      : (a.name || "").localeCompare(b.name || "", "he"));
+    const sel = h("select", { "aria-label": "מיון קבוצות" },
+      h("option", { value: "name" }, "מיון לפי: שם קבוצה"), h("option", { value: "members" }, "מיון לפי: מספר חברים"), h("option", { value: "created" }, "מיון לפי: תאריך יצירה"));
+    sel.value = sort;
+    sel.onchange = () => location.hash = "#/groups?sort=" + sel.value;
+    put(v, crumbs({ t: "קבוצות" }),
+      h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👥 קבוצות"), h("p", {}, "קבוצות של חברי הפורום – מומחים, כותבי מדריכים, צוות ועוד")),
+        h("div", { class: "grp-tools" }, sel, isAdmin ? h("button", { class: "btn primary", onclick: () => editGroup(null) }, "➕ קבוצה חדשה") : null)),
+      list.length ? h("div", { class: "grp-grid" }, list.map(g => {
+        const ic = h("span", { class: "grp-ic" }, g.icon || "👥"); ic.style.background = g.color || "#a855f7";
+        const mine = me && (g.members || []).includes(me.uid);
+        return h("a", { class: "card grp-card", href: "#/group/" + g.id },
+          h("div", { class: "grp-top" }, ic, h("div", {}, h("b", {}, g.name), h("small", {}, "👤 " + (g.members || []).length + " חברים" + (mine ? " · ✔ את/ה חבר/ה" : "")))),
+          g.desc ? h("p", {}, g.desc) : null);
+      }))
+      : h("div", { class: "card empty" }, h("div", { class: "big" }, "👥"), h("h3", {}, "עוד אין קבוצות"),
+          h("p", {}, isAdmin ? "צרו את הקבוצה הראשונה בכפתור \"קבוצה חדשה\"." : "בקרוב ייפתחו כאן קבוצות.")));
+  }
+
+  function renderGroup(v, id) {
+    const g = groupOf(id);
+    if (!g) return put(v, notFound("הקבוצה לא נמצאה"));
+    const ref = db.collection("forum_groups").doc(id);
+    const members = g.members || [], names = g.memberNames || {}, pending = g.pending || [], pNames = g.pendingNames || {};
+    const isMember = me && members.includes(me.uid), isPending = me && pending.includes(me.uid);
+    const F = firebase.firestore.FieldValue;
+    const act = (p, ok) => p.then(() => toast(ok)).catch(e => toast(e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את כללי הקבוצות ב-Firebase" : "הפעולה נכשלה"));
+    let action = null;
+    if (!me) action = h("button", { class: "btn primary", onclick: () => openLogin(false, "כדי להצטרף לקבוצה צריך להתחבר") }, "התחברות כדי להצטרף");
+    else if (isMember) action = h("button", { class: "btn danger", onclick: () => confirm("לעזוב את הקבוצה?") &&
+      act(ref.update({ members: F.arrayRemove(me.uid), ["memberNames." + me.uid]: F.delete() }), "עזבת את הקבוצה") }, "✔ את/ה חבר/ה · עזיבה");
+    else if (isPending) action = h("button", { class: "btn", onclick: () =>
+      act(ref.update({ pending: F.arrayRemove(me.uid), ["pendingNames." + me.uid]: F.delete() }), "הבקשה בוטלה") }, "⏳ הבקשה ממתינה לאישור · ביטול");
+    else if (g.open) action = h("button", { class: "btn primary", onclick: () =>
+      act(ref.update({ pending: F.arrayUnion(me.uid), ["pendingNames." + me.uid]: myName() }), "✔ הבקשה נשלחה למנהל") }, "🙋 בקשת הצטרפות");
+    else action = h("span", { class: "hint" }, "הצטרפות לקבוצה הזאת – רק דרך המנהל");
+
+    const ic = h("span", { class: "grp-ic", style: "width:60px;height:60px;font-size:1.8rem" }, g.icon || "👥"); ic.style.background = g.color || "#a855f7";
+    const cats4 = cats.filter(c => c.writeGroup === id);
+    const memberEl = (uid, name, buttons) => h("div", { class: "member" }, avatar(name, uid, "s"), h("b", {}, name || "משתמש/ת"), buttons);
+    put(v, crumbs({ t: "קבוצות", href: "#/groups" }, { t: g.name }),
+      h("div", { class: "card", style: "padding:20px;margin-bottom:16px" },
+        h("div", { class: "grp-top" }, ic, h("div", { style: "flex:1" }, h("h1", { style: "margin:0;font-size:1.6rem" }, g.name),
+          h("small", {}, "👤 " + members.length + " חברים" + (g.created ? " · נוצרה " + new Date(ms(g.created)).toLocaleDateString("he-IL") : ""))), action),
+        g.desc ? h("p", { style: "margin:14px 0 0;color:var(--muted);line-height:1.65" }, g.desc) : null,
+        cats4.length ? h("p", { class: "lock-note", style: "margin-top:10px" }, "🔓 חברי הקבוצה יכולים לפתוח נושאים ב: ", cats4.map((c, i) => [i ? ", " : "", h("a", { href: "#/category/" + c.id }, c.name)])) : null,
+        isAdmin ? h("div", { class: "post-foot" },
+          h("button", { class: "btn sm", onclick: () => editGroup(g) }, "✏️ עריכה"),
+          h("button", { class: "btn sm danger", onclick: () => confirm("למחוק את הקבוצה \"" + g.name + "\"?") && act(ref.delete().then(() => location.hash = "#/groups"), "הקבוצה נמחקה") }, "🗑 מחיקה")) : null),
+      isAdmin && pending.length ? [h("h3", { class: "section-h" }, "🙋 בקשות הצטרפות (" + pending.length + ")"),
+        h("div", { class: "card members" }, pending.map(uid => memberEl(uid, pNames[uid], [
+          h("button", { class: "btn sm primary", onclick: () => act(ref.update({ pending: F.arrayRemove(uid), ["pendingNames." + uid]: F.delete(), members: F.arrayUnion(uid), ["memberNames." + uid]: pNames[uid] || "משתמש/ת" }), "✔ אושר") }, "✔ אישור"),
+          h("button", { class: "btn sm danger", onclick: () => act(ref.update({ pending: F.arrayRemove(uid), ["pendingNames." + uid]: F.delete() }), "הבקשה נדחתה") }, "✖")])))] : null,
+      h("h3", { class: "section-h" }, "👤 חברי הקבוצה (" + members.length + ")"),
+      members.length ? h("div", { class: "card members" }, members.map(uid => memberEl(uid, names[uid],
+          isAdmin ? h("button", { class: "btn sm danger", title: "הוצאה מהקבוצה", onclick: () => confirm("להוציא את " + (names[uid] || "המשתמש") + " מהקבוצה?") &&
+            act(ref.update({ members: F.arrayRemove(uid), ["memberNames." + uid]: F.delete() }), "הוצא/ה מהקבוצה") }, "✖") : null)))
+        : h("div", { class: "card empty", style: "padding:26px" }, h("p", {}, "עוד אין חברים בקבוצה")));
+  }
+
+  let editingGroup = null;
+  function editGroup(g) {
+    editingGroup = g;
+    $("grpTitle").textContent = g ? "עריכת קבוצה" : "קבוצה חדשה";
+    $("grpName").value = g ? g.name : ""; $("grpDesc").value = g ? g.desc || "" : "";
+    $("grpIcon").value = g ? g.icon || "" : ""; $("grpColor").value = g ? g.color || "#a855f7" : "#a855f7";
+    $("grpOpen").checked = g ? !!g.open : true; $("grpMsg").textContent = "";
+    $("grpOverlay").classList.remove("hidden"); $("grpName").focus();
+  }
+  $("grpCancel").onclick = () => $("grpOverlay").classList.add("hidden");
+  $("grpSave").onclick = async () => {
+    const data = { name: $("grpName").value.trim().slice(0, 50), desc: $("grpDesc").value.trim().slice(0, 300),
+      icon: $("grpIcon").value.trim().slice(0, 4) || "👥", color: $("grpColor").value, open: $("grpOpen").checked };
+    if (data.name.length < 2) return $("grpMsg").textContent = "כתבו שם לקבוצה";
+    try {
+      if (editingGroup) await db.collection("forum_groups").doc(editingGroup.id).update(data);
+      else await db.collection("forum_groups").add(Object.assign(data, { created: NOW(), members: [], memberNames: {}, pending: [], pendingNames: {} }));
+      $("grpOverlay").classList.add("hidden"); toast("✔ נשמר");
+    } catch (e) { $("grpMsg").textContent = e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את כללי הפורום ב-Firebase" : "השמירה נכשלה"; }
+  };
+
+  // "לפני X דקות" מתעדכן לבד
+  setInterval(() => { const p = location.hash; if (!p.startsWith("#/topic") && !p.startsWith("#/new") && !p.startsWith("#/search")) route(true); }, 60000);
+</script>
+</body>
+</html>
