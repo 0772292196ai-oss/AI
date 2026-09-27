@@ -340,11 +340,11 @@
 
   <main class="products" id="download">
     <div class="bar">
-      <span>תוכנה 1</span>
+      <span>2 תוכנות</span>
       <span class="pill">הכל</span>
     </div>
     <div class="grid">
-      <article class="card">
+      <article class="card" id="busCard">
         <div class="art">
           <img src="ASX.jpg" alt="תוכנת אוטובוסים">
         </div>
@@ -360,6 +360,27 @@
           <button type="button" class="btn alt" id="cardHelp">💬 שאלה? פתחו צ'אט</button>
         </div>
       </article>
+
+      <!-- ===== תוכנה 2: ERT ===== -->
+      <article class="card" id="ertCard">
+        <div class="art" style="background: radial-gradient(circle at 30% 25%, #9b6bff, #4a2aa8 70%)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:40%">
+            <rect x="9" y="2" width="6" height="12" rx="3"/>
+            <path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>ERT <span class="ver">חדש</span></h2>
+          <p>תוכנה קולית למחשב. להתקנה ב-Windows.</p>
+          <div class="meta">
+            <span>🖥 Windows</span>
+            <span>🎤 קולי</span>
+          </div>
+          <a class="btn" href="https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq">⬇ הורדה והתקנה</a>
+          <a class="btn alt" href="ERT.html">ℹ פרטים נוספים</a>
+          <button type="button" class="btn alt" id="cardHelp2">💬 שאלה? פתחו צ'אט</button>
+        </div>
+      </article>
     </div>
   </main>
 
@@ -368,9 +389,7 @@
     <a href="#" class="back" id="backLink">→ חזרה לגלריה</a>
     <div class="app-box">
       <div class="app-top">
-        <div class="app-icon">
-          <img src="ASX.jpg" alt="">
-        </div>
+        <div class="app-icon" id="apIcon"></div>
         <div>
           <h1 id="apName"></h1>
           <div class="by">מאת אוטובוסים</div>
@@ -378,7 +397,7 @@
             <span>גרסה <b id="apVer"></b></span>
             <span>⬇ <b id="apDl">–</b> הורדות</span>
             <span>🖥 Windows</span>
-            <span>📶 עובד אופליין</span>
+            <span id="apTag"></span>
           </div>
         </div>
       </div>
@@ -393,7 +412,7 @@
 
       <p class="app-desc" id="apDesc"></p>
 
-      <div class="panel">
+      <div class="panel" id="apChangesPanel">
         <h3>מה חדש בגרסה <span id="apVer2"></span></h3>
         <ul id="apChanges"></ul>
       </div>
@@ -409,7 +428,7 @@
     </div>
   </section>
 
-  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 23</footer>
+  <footer>אוטובוסים · לשאלות ועזרה התחברו ופתחו את הצ'אט · גרסת אתר 25</footer>
   <div class="toast hidden" id="toast"></div>
 
 
@@ -798,35 +817,60 @@
   window.addEventListener("hashchange", checkHash);
 
   /* ===== דף פרטי התוכנה ===== */
-  // ↓ כאן עורכים את הפרטים שמופיעים בדף ↓
-  const APP = {
-    name: "תוכנת אוטובוסים",
-    version: "1.0.4",
-    downloadsBefore: 972, // הורדות מלפני שהמונה הותקן (מ-Google Drive); מתווסף למונה
-    download: "https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-",
-    desc: "מידע על קווי אוטובוס ותחנות ברחבי הארץ, שעובד גם במחשב בלי אינטרנט. מחפשים קו או תחנה, ורואים את המסלול וכל התחנות – בלי חיבור לרשת.",
-    changes: [
-      "שיפורי מהירות בחיפוש קווים ותחנות",
-      "עדכון נתוני הקווים והתחנות",
-      "תיקוני באגים קטנים"
-    ],
-    note: "ההורדה היא קובץ התקנה ל-Windows. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
-    reqs: ["Windows 10 או 11", "כ-200MB מקום פנוי בדיסק", "לא צריך חיבור לאינטרנט אחרי ההתקנה"]
+  // ↓ כאן עורכים את הפרטים של כל תוכנה. המפתח (ASD / ERT) הוא שם קובץ הדף ↓
+  const APPS = {
+    ASD: {
+      name: "תוכנת אוטובוסים",
+      icon: '<img src="ASX.jpg" alt="">',
+      tag: "📶 עובד אופליין",
+      version: "1.0.4",
+      downloadsBefore: 972, // הורדות מלפני שהמונה הותקן (מ-Google Drive); מתווסף למונה
+      download: "https://drive.google.com/uc?export=download&id=17pnsqzQiw_gYKFGePAV7QIis2bAkq5S-",
+      desc: "מידע על קווי אוטובוס ותחנות ברחבי הארץ, שעובד גם במחשב בלי אינטרנט. מחפשים קו או תחנה, ורואים את המסלול וכל התחנות – בלי חיבור לרשת.",
+      changes: [
+        "שיפורי מהירות בחיפוש קווים ותחנות",
+        "עדכון נתוני הקווים והתחנות",
+        "תיקוני באגים קטנים"
+      ],
+      note: "ההורדה היא קובץ התקנה ל-Windows. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
+      reqs: ["Windows 10 או 11", "כ-200MB מקום פנוי בדיסק", "לא צריך חיבור לאינטרנט אחרי ההתקנה"],
+      stats: "app", ratings: "ratings"
+    },
+    ERT: {
+      name: "ERT",
+      icon: '<div style="width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#9b6bff,#4a2aa8 70%)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:55%"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></div>',
+      tag: "🎤 קולי",
+      version: "1.0",
+      downloadsBefore: 0,
+      download: "https://drive.google.com/uc?export=download&id=1_eMLq0xfLNZ0Nko82q3WHrd6fcClZciq",
+      desc: "תוכנה קולית למחשב. להתקנה ב-Windows.",
+      changes: [],
+      note: "ההורדה היא קובץ התקנה ל-Windows. אחרי ההורדה פותחים אותו ומתקינים כרגיל.",
+      reqs: ["Windows 10 או 11"],
+      stats: "ert", ratings: "ratings_ert"
+    }
   };
   // ↑ עד כאן ↑
 
+  // איזה דף פתוח: ASD.html / ERT.html, או הדף הראשי (שם #app = אוטובוסים)
+  const PAGE = (location.pathname.match(/\/(ASD|ERT)\.html$/i) || [])[1];
+  const APP = APPS[(PAGE || "ASD").toUpperCase()];
+
   $("apName").textContent = APP.name;
+  $("apIcon").innerHTML = APP.icon;
+  $("apTag").textContent = APP.tag;
   $("apVer").textContent = $("apVer2").textContent = APP.version;
   $("apDesc").textContent = APP.desc;
   $("apNote").textContent = APP.note;
   $("apDownload").href = APP.download;
   const fillList = (el, items) => { el.innerHTML = ""; items.forEach(t => { const li = document.createElement("li"); li.textContent = t; el.appendChild(li); }); };
   fillList($("apChanges"), APP.changes);
+  $("apChangesPanel").classList.toggle("hidden", !APP.changes.length);
   fillList($("apReqs"), APP.reqs);
 
   // מעבר בין הגלריה לדף הפרטים לפי הכתובת (#app)
-  // אותו קובץ משמש לשני הדפים: בשם ASD.html הוא נפתח ישר כדף הפרטים
-  const IN_ASD = /\/ASD\.html$/i.test(location.pathname);
+  // אותו קובץ משמש לכל הדפים: בשם ASD.html / ERT.html הוא נפתח ישר כדף הפרטים
+  const IN_ASD = !!PAGE;
   if (IN_ASD) {
     $("backLink").href = "./";
     document.querySelectorAll('.logo, .nav a[href^="#"]').forEach(a => {
@@ -845,24 +889,29 @@
   route();
 
   // לחיצה בכל מקום בכרטיס פותחת את הדף (חוץ מהכפתורים)
-  document.querySelector(".card").addEventListener("click", e => {
+  $("busCard").addEventListener("click", e => {
     if (!e.target.closest("a, button")) location.href = "ASD.html";
   });
+  $("ertCard").addEventListener("click", e => {
+    if (!e.target.closest("a, button")) location.href = "ERT.html";
+  });
 
-  // מונה הורדות
-  document.querySelectorAll('.card a.btn:not(.alt), .dl-link').forEach(a => a.addEventListener("click", () => {
-    db.collection("stats").doc("app").set({ downloads: firebase.firestore.FieldValue.increment(1) }, { merge: true })
-      .then(loadAppStats).catch(() => {});
-  }));
+  // מונה הורדות – לכל תוכנה מונה משלה
+  const countDownload = app => db.collection("stats").doc(app.stats)
+    .set({ downloads: firebase.firestore.FieldValue.increment(1) }, { merge: true })
+    .then(() => { if (app === APP) loadAppStats(); }).catch(() => {});
+  document.querySelector('#busCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ASD));
+  document.querySelector('#ertCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ERT));
+  $("apDownload").addEventListener("click", () => countDownload(APP));
 
   // דירוג: ממוצע של כולם + הדירוג שלי
   async function loadAppStats() {
-    db.collection("stats").doc("app").get()
+    db.collection("stats").doc(APP.stats).get()
       .then(d => { $("apDl").textContent = (APP.downloadsBefore + (d.exists ? d.data().downloads || 0 : 0)).toLocaleString("he-IL"); })
       .catch(() => {});
     let mine = 0;
     try {
-      const snap = await db.collection("ratings").get();
+      const snap = await db.collection(APP.ratings).get();
       let sum = 0;
       snap.forEach(d => { sum += d.data().stars || 0; if (me && d.id === me.uid) mine = d.data().stars; });
       const avg = snap.size ? sum / snap.size : 0;
@@ -890,7 +939,7 @@
       s.className = i <= mine ? "on" : "";
       s.onmouseenter = () => box.querySelectorAll("button").forEach((x, j) => x.classList.toggle("on", j < i));
       s.onmouseleave = () => box.querySelectorAll("button").forEach((x, j) => x.classList.toggle("on", j < mine));
-      s.onclick = () => db.collection("ratings").doc(me.uid)
+      s.onclick = () => db.collection(APP.ratings).doc(me.uid)
         .set({ stars: i, ts: firebase.firestore.FieldValue.serverTimestamp() })
         .then(loadAppStats)
         .catch(e => alert("הדירוג לא נשמר. " + (e.code === "permission-denied" ? "צריך לעדכן את הכללים (Rules) ב-Firestore." : "")));
@@ -1018,6 +1067,7 @@
   }
   document.getElementById("navHelp").onclick = openHelp;
   document.getElementById("cardHelp").onclick = openHelp;
+  document.getElementById("cardHelp2").onclick = openHelp;
   document.getElementById("apHelp").onclick = openHelp;
 </script>
 </body>
