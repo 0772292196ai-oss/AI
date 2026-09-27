@@ -1163,7 +1163,7 @@
 
     const v = document.createElement("div");
     v.className = "viewer";
-    v.innerHTML = '<div class="viewer-head"><b></b><a class="small-btn primary">⬇ הורדה</a><button type="button" class="small-btn alt">✕ סגירה</button></div><div class="viewer-body"></div>';
+    v.innerHTML = '<div class="viewer-head"><b></b><a class="small-btn primary">⬇ הורדה</a><button type="button" class="small-btn alt viewer-close">✕ סגירה</button></div><div class="viewer-body"></div>';
     v.querySelector("b").textContent = name;
     if (id) {
       const cp = copyBtn(id);
@@ -1204,9 +1204,22 @@
       frame.title = name;
       body.appendChild(frame);
     } else notSupported();
-    const close = () => { v.remove(); urls.forEach(u => URL.revokeObjectURL(u)); document.removeEventListener("keydown", esc); };
+    // סגירה: כפתור "סגירה", מקש Esc, לחיצה על הרקע הכהה, או כפתור "חזור" בטלפון
+    let closed = false;
+    const close = fromBack => {
+      if (closed) return;
+      closed = true;
+      v.remove(); urls.forEach(u => URL.revokeObjectURL(u));
+      document.removeEventListener("keydown", esc);
+      window.removeEventListener("popstate", onBack);
+      if (!fromBack) history.back();
+    };
     const esc = e => { if (e.key === "Escape") close(); };
-    v.querySelector("button").onclick = close;
+    const onBack = () => close(true);
+    v.querySelector(".viewer-close").onclick = () => close();
+    body.addEventListener("click", e => { if (e.target === body) close(); });
+    history.pushState({ viewer: 1 }, "");
+    window.addEventListener("popstate", onBack);
     document.addEventListener("keydown", esc);
     document.body.appendChild(v);
   }
