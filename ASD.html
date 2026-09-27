@@ -716,6 +716,12 @@
   .store-how { border-radius: 26px; background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)); border-color: var(--line); }
   .store-hero h1 { font-weight: 900; letter-spacing: -1.5px; }
 
+  /* כפתור הורדה לטלפון (אנדרואיד) */
+  .btn.apk-btn { background: linear-gradient(120deg, #10b981, #22d3ee) !important; box-shadow: 0 14px 30px -14px rgba(16,185,129,.9), inset 0 1px 0 rgba(255,255,255,.25) !important; }
+  #apApk { margin-top: 10px; }
+  .nav a { white-space: nowrap; }
+  @media (max-width: 1180px) { .nav a { padding: 9px 9px; font-size: .92rem; } .live-pill .lbl { display: none; } }
+
   /* כמה מחוברים עכשיו */
   .live-pill {
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-size: .88rem; font-weight: 700;
@@ -882,10 +888,11 @@
           <div class="meta">
             <span>🖥 Windows</span>
             <span>📶 בלי אינטרנט</span>
-            <span>📦 1.7MB</span>
+            <span>📱 גם לאנדרואיד</span>
           </div>
           <div class="card-stats" data-app="TEL"></div>
-          <a class="btn" href="https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA">⬇ הורדה</a>
+          <a class="btn" href="https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA">⬇ הורדה למחשב</a>
+          <a class="btn apk-btn" href="https://drive.google.com/uc?export=download&id=1cms64eNPe6SkEAnutOVBaUzJQJeGiH5j">📱 הורדה לטלפון (אנדרואיד)</a>
           <a class="btn alt" href="TEL.html">ℹ פרטים נוספים</a>
           <button type="button" class="btn alt" id="cardHelp3">💬 שאלה? פתחו צ'אט</button>
         </div>
@@ -971,6 +978,8 @@
         <a class="btn dl-link" id="apDownload">⬇ הורדה והתקנה</a>
         <button type="button" class="btn alt" id="apHelp">💬 שאלה? פתחו צ'אט</button>
       </div>
+      <a class="btn apk-btn hidden" id="apApk">📱 הורדה לטלפון (אנדרואיד)</a>
+      <p class="app-note hidden" id="apApkNote"></p>
       <button type="button" class="btn store-btn" id="apStore">⚡ התקנה דרך חנות "תוכנה בקליק"</button>
       <button type="button" class="btn demo-btn hidden" id="apDemo"></button>
       <div class="share-row">
@@ -1724,8 +1733,11 @@
         "↩️ כפתורי \"חזרה\" ו\"הקודם\" – חוזרים לחיפוש או לעמוד הקודם",
         "💡 אין תוצאות? התוכנה מציעה לנסות פחות מילים, כתיב אחר או חיפוש לפי מספר",
         "📚 יותר מ-8,000 מספרי טלפון בכ-800 עמודים – כל הספר בתוך קובץ אחד",
-        "📶 עובד בלי אינטרנט – כל המידע שמור בתוך התוכנה"
+        "📶 עובד בלי אינטרנט – כל המידע שמור בתוך התוכנה",
+        "📱 יש גם גרסה לטלפון אנדרואיד – כפתור \"הורדה לטלפון\""
       ],
+      apk: "https://drive.google.com/uc?export=download&id=1cms64eNPe6SkEAnutOVBaUzJQJeGiH5j",
+      apkNote: "📱 לטלפון: מורידים את הקובץ (2.2MB) בטלפון אנדרואיד ופותחים אותו. אם הטלפון שואל – מאשרים \"התקנה ממקור לא ידוע\" לדפדפן. לאייפון אין גרסה.",
       note: "זו התוכנה עצמה ולא קובץ התקנה – אחרי ההורדה פותחים אותה בלחיצה כפולה. בפעם הראשונה Windows עשוי להציג אזהרה כחולה כי הקובץ לא חתום: לוחצים \"מידע נוסף\" ואז \"הפעל בכל זאת\". לא צריך הרשאות מנהל.",
       reqs: [
         "Windows 10 או 11",
@@ -1764,6 +1776,10 @@
     $("apDesc").textContent = APP.desc;
     $("apNote").textContent = APP.note;
     $("apDownload").href = APP.download;
+    // גרסה לטלפון (אנדרואיד), אם יש
+    $("apApk").classList.toggle("hidden", !APP.apk);
+    $("apApkNote").classList.toggle("hidden", !APP.apk);
+    if (APP.apk) { $("apApk").href = APP.apk; $("apApkNote").textContent = APP.apkNote || ""; $("apDownload").textContent = "⬇ הורדה למחשב"; }
     fillList($("apChanges"), APP.changes);
     $("apChangesPanel").classList.toggle("hidden", !APP.changes.length);
     fillList($("apReqs"), APP.reqs);
@@ -1822,6 +1838,8 @@
   document.querySelector('#busCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ASD));
   document.querySelector('#ertCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.ERT));
   document.querySelector('#telCard a.btn:not(.alt)').addEventListener("click", () => countDownload(APPS.TEL));
+  document.querySelector('#telCard .apk-btn').addEventListener("click", () => countDownload(APPS.TEL));
+  $("apApk").addEventListener("click", () => countDownload(APP));
   $("apDownload").addEventListener("click", () => countDownload(APP));
 
   // בכרטיסים בדף הראשי: דירוג ממוצע ומספר הורדות של כל תוכנה
