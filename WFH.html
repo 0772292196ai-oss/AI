@@ -182,6 +182,74 @@
   .lock-note { color: var(--muted); font-size: .86rem; }
 
   /* טלפון */
+  /* ===== פריסה בסגנון NodeBB: סרגל עם תוויות מימין, סרגל משתמש משמאל ===== */
+  :root { --side: 220px; --uside: 190px; }
+  body.mini { --side: 64px; }
+  .side { width: var(--side); align-items: stretch; padding: 12px 10px; overflow-y: auto; }
+  .side .brand-mini { align-self: center; }
+  .side a.nav { width: auto; height: 42px; display: flex; align-items: center; gap: 12px; padding: 0 12px; font-size: 1rem; font-weight: 700; color: #3a4257; text-decoration: none; }
+  .side a.nav i { font-style: normal; width: 22px; text-align: center; font-size: 1.1rem; flex: none; }
+  .side a.nav span { flex: 1; white-space: nowrap; overflow: hidden; }
+  .side a.nav::after { display: none; }
+  .side a.nav.on { background: #e9edf5; color: var(--ink); }
+  .cnt { font-style: normal; background: var(--primary); color: #fff; font-size: .74rem; font-weight: 800; padding: 1px 8px; border-radius: 8px; }
+  .cnt.soft { background: #e9edf5; color: var(--muted); }
+  body.mini .side a.nav span, body.mini .side .cnt { display: none; }
+  body.mini .side a.nav { justify-content: center; padding: 0; }
+  .uside { position: fixed; top: 0; bottom: 0; left: 0; width: var(--uside); z-index: 20; background: var(--card); border-right: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; }
+  .uside a, .uside button { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; color: #3a4257; font-weight: 700; background: none; border: none; text-decoration: none; text-align: right; width: 100%; }
+  .uside a:hover, .uside button:hover { background: #f1f4f9; text-decoration: none; }
+  .uside .me-row { font-size: 1.02rem; margin-bottom: 8px; }
+  .uside .me-row b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .uside .cnt { margin-inline-start: auto; }
+  .top, main { margin-right: var(--side); margin-left: var(--uside); }
+  main { max-width: none; }
+  .top .userbox { display: none; }
+
+  /* סרגל סינון מעל רשימת הנושאים */
+  .filterbar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; margin-bottom: 14px; flex-wrap: wrap; background: #f8f9fb; }
+  .filterbar select { border: none; background: transparent; font-weight: 700; color: #3a4257; padding: 8px 6px; cursor: pointer; border-radius: 8px; }
+  .filterbar select:hover { background: #eef1f6; }
+  .filterbar .sp { flex: 1; }
+  .newpill { position: sticky; top: 70px; z-index: 12; display: block; margin: -6px auto 10px; width: max-content; background: #4b5563; color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: .9rem; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); }
+
+  /* כרטיס נושא – כמו בתמונה: אווטאר, כותרת + תג, קטגוריה וזמן, 3 מספרים, התגובה האחרונה */
+  .tlist { display: flex; flex-direction: column; gap: 14px; }
+  .tcard { display: grid; grid-template-columns: 48px minmax(0, 1fr) 270px 260px; gap: 16px; align-items: center; padding: 16px 18px; }
+  .tcard.unread { border-inline-start: 4px solid var(--primary); }
+  .tcard .av { width: 44px; height: 44px; }
+  .tcard h3 { margin: 0; font-size: 1.22rem; font-family: "Assistant", sans-serif; font-weight: 700; line-height: 1.35; }
+  .tcard h3 a { color: #1f5fd6; }
+  .tcard .sub { margin-top: 4px; color: var(--muted); font-size: .9rem; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .tcard .sub a { color: #6f8fd6; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; font-size: .78rem; font-weight: 800; padding: 1px 8px; border-radius: 6px; border: 1.5px solid currentColor; vertical-align: middle; margin-inline-start: 6px; background: #fff; }
+  .solved { display: inline-flex; align-items: center; gap: 4px; font-size: .78rem; font-weight: 800; padding: 1px 8px; border-radius: 6px; background: #dcfce7; color: #15803d; margin-inline-start: 6px; vertical-align: middle; }
+  .boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .boxes div { background: #f6f7f9; border-radius: 8px; text-align: center; padding: 8px 4px; }
+  .boxes b { display: block; font-size: 1.3rem; font-weight: 600; color: #3a4257; }
+  .boxes small { color: var(--muted); font-size: .8rem; }
+  .lastbox { border-inline-start: 1px solid var(--line); padding-inline-start: 14px; font-size: .88rem; color: var(--muted); min-width: 0; }
+  .lastbox .who { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .lastbox .who .av { width: 20px; height: 20px; font-size: .68rem; }
+  .lastbox p { margin: 0; color: #4b5563; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .rules-text { padding: 22px; line-height: 1.85; white-space: pre-wrap; }
+  .ulist { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .ucard { display: flex; align-items: center; gap: 12px; padding: 14px; }
+  .ucard b { display: block; }
+  .ucard small { color: var(--muted); }
+  .menu-toggle { display: none; background: none; border: 1px solid var(--line2); border-radius: 10px; width: 42px; height: 42px; font-size: 1.2rem; }
+
+  @media (max-width: 1280px) {
+    :root { --uside: 0px; }
+    .uside { display: none; }
+    .top .userbox { display: flex; }
+    .tcard { grid-template-columns: 48px minmax(0, 1fr) 240px; }
+    .lastbox { display: none; }
+  }
+  @media (max-width: 860px) {
+    .tcard { grid-template-columns: 44px minmax(0, 1fr); }
+    .tcard .boxes { grid-column: 1 / -1; }
+  }
   @media (max-width: 860px) {
     .cat-row { grid-template-columns: 46px 1fr; }
     .cat-stats, .cat-last { grid-column: 2; }
@@ -189,10 +257,14 @@
     .topic-row .views, .topic-row .last { display: none; }
   }
   @media (max-width: 640px) {
-    :root { --side: 0px; }
-    .side { top: auto; left: 0; height: 60px; width: auto; flex-direction: row; justify-content: space-around; border-left: none; border-top: 1px solid var(--line); padding: 0 6px; }
-    .side .brand-mini, .side .grow { display: none; }
-    .side a.nav::after { display: none; }
+    :root, body.mini { --side: 0px; }
+    /* בטלפון: הסרגל נפתח כמגירה בלחיצה על ☰ */
+    .side { width: 250px; transform: translateX(100%); transition: transform .25s; box-shadow: -20px 0 50px -20px rgba(0,0,0,.4); z-index: 40; }
+    body.drawer .side { transform: none; }
+    body.mini .side a.nav span, body.mini .side .cnt { display: block; }
+    #collapseBtn { display: none !important; }
+    .menu-toggle { display: grid; place-items: center; }
+    .tcard .sub { font-size: .84rem; }
     main { padding: 14px 12px 80px; }
     .top { padding: 0 12px; gap: 8px; }
     .brand small, .top .search, .hide-sm { display: none; }
@@ -205,19 +277,29 @@
 </head>
 <body>
 
-<nav class="side" aria-label="ניווט בפורום">
+<!-- סרגל ניווט (מימין) – כמו בפורומי NodeBB -->
+<nav class="side" id="side" aria-label="ניווט בפורום">
   <a class="brand-mini" href="#/" title="בית הפורום">💬</a>
-  <a class="nav" href="#/" data-tip="קטגוריות" data-view="home" aria-label="קטגוריות">🏠</a>
-  <a class="nav" href="#/recent" data-tip="נושאים אחרונים" data-view="recent" aria-label="נושאים אחרונים">🕒</a>
-  <a class="nav" href="#/popular" data-tip="פופולריים" data-view="popular" aria-label="פופולריים">🔥</a>
-  <a class="nav" href="#/search" data-tip="חיפוש" data-view="search" aria-label="חיפוש">🔍</a>
-  <a class="nav" href="#/groups" data-tip="קבוצות" data-view="groups" aria-label="קבוצות">👥</a>
-  <a class="nav" href="#/new" data-tip="נושא חדש" data-view="new" aria-label="נושא חדש">✏️</a>
+  <a class="nav" href="#/" data-view="home"><i>🏠</i><span>דף הבית</span></a>
+  <a class="nav" href="#/rules" data-view="rules"><i>📜</i><span>חוקי הפורום</span></a>
+  <a class="nav" href="#/unread" data-view="unread"><i>📥</i><span>לא נקרא</span><em class="cnt hidden" id="cntUnread"></em></a>
+  <a class="nav" href="#/recent" data-view="recent"><i>🕒</i><span>פוסטים אחרונים</span></a>
+  <a class="nav" href="#/popular" data-view="popular"><i>🔥</i><span>פופולרי</span></a>
+  <a class="nav" href="#/unsolved" data-view="unsolved"><i>❓</i><span>לא נפתר</span><em class="cnt soft hidden" id="cntUnsolved"></em></a>
+  <a class="nav" href="#/users" data-view="users"><i>👤</i><span>משתמשים</span></a>
+  <a class="nav" href="#/groups" data-view="groups"><i>👥</i><span>קבוצות</span></a>
+  <a class="nav" href="#/search" data-view="search"><i>🔍</i><span>חיפוש</span></a>
+  <a class="nav" href="./" data-view="contact"><i>💬</i><span>צור קשר</span></a>
   <span class="grow"></span>
-  <a class="nav" href="./" data-tip="חזרה לאתר תוכנה בקליק" aria-label="חזרה לאתר">↩</a>
+  <a class="nav" href="./" data-view="site"><i>↩</i><span>לאתר תוכנה בקליק</span></a>
+  <a class="nav" href="#" id="collapseBtn"><i>»</i><span>כיווץ</span></a>
 </nav>
 
+<!-- סרגל משתמש (משמאל) -->
+<aside class="uside" id="uside" aria-label="החשבון שלי"></aside>
+
 <header class="top">
+  <button type="button" class="menu-toggle" id="menuToggle" aria-label="תפריט">☰</button>
   <a class="brand" href="#/"><span>פורום <b>תוכנה בקליק</b><small>פורום הקהילה – שאלות, עזרה ודיונים</small></span></a>
   <div class="search"><span>🔍</span><input type="search" id="topSearch" placeholder="חיפוש בפורום..." aria-label="חיפוש בפורום"></div>
   <div class="userbox" id="userbox"></div>
@@ -360,8 +442,65 @@
       box.append(h("button", { class: "btn sm", onclick: () => openLogin(false) }, "התחברות"),
         h("button", { class: "btn sm primary", onclick: () => openLogin(true) }, "הרשמה"));
     }
+    renderUside();
     route();
   });
+
+  /* ===== תגיות, "נקרא/לא נקרא", טיוטות ===== */
+  const TAGS = {
+    help:     { t: "עזרה",   ic: "🤝", c: "#4338ca" },
+    question: { t: "שאלה",   ic: "❓", c: "#4338ca" },
+    share:    { t: "שיתוף",  ic: "🔗", c: "#7c3aed" },
+    clarify:  { t: "בירור",  ic: "🔎", c: "#b45309" },
+    guide:    { t: "מדריך",  ic: "📘", c: "#0369a1" },
+    idea:     { t: "רעיון",  ic: "💡", c: "#0f766e" }
+  };
+  const ASK_TAGS = ["help", "question", "clarify"]; // נושאים שאפשר לסמן כ"נפתר"
+  const tagEl = key => { const t = TAGS[key]; if (!t) return null; const e = h("span", { class: "tag" }, t.ic + " " + t.t); e.style.color = t.c; return e; };
+  const store = (k, v) => { try { v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+  let seen = load("wfhSeen", {});           // נושא → מתי ראיתי אותו לאחרונה
+  const isUnread = t => ms(t.lastTs) > (seen[t.id] || 0) && !(me && t.lastUid === me.uid);
+  const markSeen = t => { seen[t.id] = Math.max(ms(t.lastTs), Date.now()); store("wfhSeen", seen); updateCounts(); };
+  const isOpenQ = t => ASK_TAGS.includes(t.tag) && !t.solved;
+  // התראות: תגובות של אחרים בנושאים שלי שעוד לא ראיתי
+  const notifs = () => me ? topics.filter(t => t.uid === me.uid && t.lastUid !== me.uid && t.replies > 0 && isUnread(t)) : [];
+
+  function updateCounts() {
+    const un = topics.filter(isUnread).length, uq = topics.filter(isOpenQ).length;
+    $("cntUnread").textContent = un > 99 ? "+99" : un; $("cntUnread").classList.toggle("hidden", !un);
+    $("cntUnsolved").textContent = uq; $("cntUnsolved").classList.toggle("hidden", !uq);
+    renderUside();
+  }
+
+  // סרגל המשתמש (משמאל)
+  function renderUside() {
+    const u = $("uside"); if (!u) return;
+    const draft = load("wfhDraft", null), n = notifs().length;
+    const cnt = x => x ? h("em", { class: "cnt" }, x) : null;
+    put(u, me
+      ? [h("a", { class: "me-row", href: "#/users" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : null),
+         h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש")),
+         h("a", { href: "#/notifications" }, "🔔", h("span", {}, "התראות"), cnt(n)),
+         h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
+         h("a", { href: "#/new" }, "📝", h("span", {}, "טיוטות"), cnt(draft && (draft.title || draft.text) ? 1 : 0)),
+         h("a", { href: "./" }, "💬", h("span", {}, "צ'אטים (באתר)")),
+         h("button", { type: "button", onclick: () => auth.signOut() }, "🚪", h("span", {}, "התנתקות"))]
+      : [h("button", { type: "button", onclick: () => openLogin(false) }, "🔑", h("span", {}, "התחברות")),
+         h("button", { type: "button", onclick: () => openLogin(true) }, "✨", h("span", {}, "הרשמה")),
+         h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש"))]);
+  }
+
+  // כיווץ הסרגל + מגירה בטלפון
+  if (load("wfhMini", false)) document.body.classList.add("mini");
+  $("collapseBtn").onclick = e => { e.preventDefault(); document.body.classList.toggle("mini"); store("wfhMini", document.body.classList.contains("mini")); };
+  $("menuToggle").onclick = e => { e.stopPropagation(); document.body.classList.toggle("drawer"); };
+  document.addEventListener("click", e => { if (document.body.classList.contains("drawer") && !e.target.closest("#side")) document.body.classList.remove("drawer"); });
+  $("side").addEventListener("click", e => { if (e.target.closest("a.nav") && e.target.closest("a").id !== "collapseBtn") document.body.classList.remove("drawer"); });
+
+  // חוקי הפורום (המנהל עורך)
+  let forumRules = "";
+  db.collection("forum_meta").doc("rules").onSnapshot(d => { forumRules = d.exists ? d.data().text || "" : ""; if (location.hash.startsWith("#/rules")) route(true); }, () => {});
   let regMode = false;
   function openLogin(reg, why) {
     regMode = reg;
@@ -426,15 +565,28 @@
     // עדכון נתונים לא מצייר מחדש דף נושא (יש לו מאזין משלו) ולא דף כתיבה (כדי לא למחוק מה שמקלידים)
     if (dataOnly && (parts[0] === "topic" || parts[0] === "new") && lastRoute === hash) return;
     if (!catsReady || !topicsReady) return;
+    updateCounts();
+    // ברשימות נושאים: לא קופצים באמצע קריאה – מציגים "טעינת פוסטים חדשים"
+    if (dataOnly && lastRoute === hash && LIST_VIEWS.includes(parts[0] || "") && listShown) {
+      const newest = topics.length ? ms(topics[0].lastTs) : 0;
+      if (newest > listShown) { const p = $("newPill"); if (p) p.classList.remove("hidden"); }
+      return;
+    }
     if (lastRoute !== hash) { window.scrollTo(0, 0); if (stopTopic) stopTopic(); if (stopPosts) stopPosts(); stopTopic = stopPosts = null; }
     lastRoute = hash;
     document.querySelectorAll(".side a.nav").forEach(a => a.classList.toggle("on", a.dataset.view === (parts[0] || "home")));
     const v = $("view");
     if (parts[0] === "category") return renderCategory(v, parts[1]);
     if (parts[0] === "topic") return renderTopic(v, parts[1]);
-    if (parts[0] === "recent") return renderList(v, "🕒 נושאים אחרונים", "כל הנושאים, מהחדש לישן", topics);
-    if (parts[0] === "popular") return renderList(v, "🔥 נושאים פופולריים", "הנושאים עם הכי הרבה תגובות, לייקים וצפיות",
+    listShown = 0;
+    if (parts[0] === "recent") return renderList(v, "🕒 פוסטים אחרונים", "כל הנושאים, מהחדש לישן", topics);
+    if (parts[0] === "popular") return renderList(v, "🔥 פופולרי", "הנושאים עם הכי הרבה תגובות, הצבעות וצפיות",
       topics.slice().sort((a, b) => score(b) - score(a)));
+    if (parts[0] === "unread") return renderList(v, "📥 לא נקרא", "נושאים עם תוכן חדש שעוד לא ראיתם", topics.filter(isUnread), true);
+    if (parts[0] === "unsolved") return renderList(v, "❓ לא נפתר", "שאלות ובקשות עזרה שעוד מחכות לתשובה – אולי אתם יודעים?", topics.filter(isOpenQ));
+    if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות חדשות בנושאים שפתחתם", notifs(), true);
+    if (parts[0] === "users") return renderUsers(v);
+    if (parts[0] === "rules") return renderRules(v);
     if (parts[0] === "search") return renderSearch(v, q.get("q") || "");
     if (parts[0] === "groups") return renderGroups(v, q.get("sort") || "name");
     if (parts[0] === "group") return renderGroup(v, parts[1]);
@@ -500,30 +652,87 @@
       topicTable(ts, "אין עדיין נושאים בקטגוריה הזאת", "היו הראשונים לפתוח נושא!"));
   }
 
-  function renderList(v, title, sub, list) {
+  // ----- רשימת נושאים עם סרגל סינון (כל הנושאים / כל הקטגוריות / כל התגיות) -----
+  const LIST_VIEWS = ["recent", "popular", "unread", "unsolved", "notifications"];
+  let listShown = 0, fMode = "", fCat = "", fTag = "";
+  function renderList(v, title, sub, list, markAll) {
+    const sel = (opts, val, on) => { const s = h("select", {}, opts.map(([k, t]) => h("option", { value: k }, t))); s.value = val; s.onchange = () => { on(s.value); route(); }; return s; };
+    let shown = list;
+    if (fMode === "unread") shown = shown.filter(isUnread);
+    if (fMode === "unsolved") shown = shown.filter(isOpenQ);
+    if (fMode === "mine") shown = me ? shown.filter(t => t.uid === me.uid) : [];
+    if (fCat) shown = shown.filter(t => t.cat === fCat);
+    if (fTag) shown = shown.filter(t => t.tag === fTag);
+    listShown = topics.length ? ms(topics[0].lastTs) : 1;
+    const bar = h("div", { class: "card filterbar" },
+      sel([["", "🔽 כל הנושאים"], ["unread", "📥 לא נקרא"], ["unsolved", "❓ לא נפתר"], ["mine", "✍️ הנושאים שלי"]], fMode, x => fMode = x),
+      sel([["", "☰ כל הקטגוריות"]].concat(cats.map(c => [c.id, (c.icon || "") + " " + c.name])), fCat, x => fCat = x),
+      sel([["", "🏷️ כל התגיות"]].concat(Object.keys(TAGS).map(k => [k, TAGS[k].ic + " " + TAGS[k].t])), fTag, x => fTag = x),
+      h("span", { class: "sp" }),
+      markAll && list.length ? h("button", { class: "btn sm", onclick: () => { list.forEach(t => seen[t.id] = Math.max(ms(t.lastTs), Date.now())); store("wfhSeen", seen); route(); toast("✔ הכל סומן כנקרא"); } }, "✔ סימון הכל כנקרא") : null,
+      h("button", { class: "btn primary", onclick: () => { if (!needLogin("כדי לפתוח נושא צריך להתחבר")) location.hash = "#/new" + (fCat ? "?cat=" + fCat : ""); } }, "נושא חדש"));
     put(v, crumbs({ t: title.replace(/^\S+ /, "") }),
       h("div", { class: "page-head" }, h("div", {}, h("h1", {}, title), h("p", {}, sub))),
-      topicTable(list.slice(0, 100), "אין עדיין נושאים בפורום", "הנושאים החדשים יופיעו כאן."));
+      bar,
+      h("button", { class: "newpill hidden", id: "newPill", onclick: () => { listShown = 0; lastRoute = ""; route(); window.scrollTo(0, 0); } }, "↑ טעינת פוסטים חדשים"),
+      topicTable(shown.slice(0, 150), fMode || fCat || fTag ? "אין נושאים שמתאימים לסינון" : "אין כאן נושאים כרגע",
+        fMode || fCat || fTag ? "נסו לשנות את הסינון" : "כשיהיו – הם יופיעו כאן."));
   }
 
+  // כרטיס נושא: אווטאר, כותרת + תג, קטגוריה וזמן, הצבעות/פוסטים/צפיות, והתגובה האחרונה
   function topicTable(list, emptyTitle, emptySub) {
     if (!list.length) return h("div", { class: "card empty" }, h("div", { class: "big" }, "📭"), h("h3", {}, emptyTitle), h("p", {}, emptySub));
-    return h("div", { class: "card" }, list.map(t => {
+    return h("div", { class: "tlist" }, list.map(t => {
       const c = catOf(t.cat);
-      return h("div", { class: "topic-row" },
+      const hasReply = t.replies > 0;
+      return h("div", { class: "card tcard" + (me && isUnread(t) ? " unread" : "") },
         avatar(t.name, t.uid),
         h("div", {},
-          h("h3", {}, h("a", { href: "#/topic/" + t.id }, t.title)),
+          h("h3", {}, h("a", { href: "#/topic/" + t.id }, t.title), tagEl(t.tag), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null),
           h("div", { class: "sub" },
             t.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
             t.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
-            c ? h("a", { class: "pill", href: "#/category/" + c.id }, (c.icon || "") + " " + c.name) : null,
+            c ? h("a", { href: "#/category/" + c.id }, c.name) : null,
             h("span", {}, t.name + " · " + ago(t.ts)))),
-        h("div", { class: "num" }, h("b", {}, short(t.replies)), h("small", {}, "תגובות")),
-        h("div", { class: "num views" }, h("b", {}, short(t.views)), h("small", {}, "צפיות")),
-        h("div", { class: "last" }, avatar(t.lastName || t.name, t.lastUid || t.uid, "s"),
-          h("span", {}, (t.lastName || t.name) + " · " + ago(t.lastTs))));
+        h("div", { class: "boxes" },
+          h("div", {}, h("b", {}, short((t.likes || []).length)), h("small", {}, "הצבעות")),
+          h("div", {}, h("b", {}, short(postsOf(t))), h("small", {}, "פוסטים")),
+          h("div", {}, h("b", {}, short(t.views)), h("small", {}, "צפיות"))),
+        h("div", { class: "lastbox" }, hasReply
+          ? [h("div", { class: "who" }, avatar(t.lastName, t.lastUid, "s"), h("b", {}, t.lastName || ""), h("span", {}, "· " + ago(t.lastTs))),
+             h("p", {}, t.lastText || "")]
+          : h("span", {}, "אין תגובות")));
     }));
+  }
+
+  // ----- משתמשים (מי שכתב בפורום) -----
+  function renderUsers(v) {
+    const map = {};
+    topics.forEach(t => {
+      (map[t.uid] = map[t.uid] || { uid: t.uid, name: t.name, topics: 0, admin: t.admin }).topics++;
+      if (t.lastUid && !map[t.lastUid]) map[t.lastUid] = { uid: t.lastUid, name: t.lastName, topics: 0 };
+    });
+    const users = Object.values(map).sort((a, b) => b.topics - a.topics);
+    put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים שכתבו בפורום"))),
+      users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, avatar(u.name, u.uid, "l"),
+          h("div", {}, h("b", {}, u.name || "משתמש/ת", u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : null),
+            h("small", {}, u.topics + " נושאים"),
+            h("div", {}, groupsOf(u.uid).slice(0, 2).map(g => { const b = h("span", { class: "grp-badge" }, g.name); b.style.background = g.color || "#a855f7"; return b; }))))))
+        : h("div", { class: "card empty" }, h("div", { class: "big" }, "👤"), h("h3", {}, "עוד אין משתמשים שכתבו בפורום")));
+  }
+
+  // ----- חוקי הפורום -----
+  function renderRules(v) {
+    const box = h("div", { class: "card rules-text" }, forumRules || "המנהל עוד לא כתב את חוקי הפורום.");
+    let edit = null;
+    if (isAdmin) {
+      const ta = h("textarea", { style: "width:100%;min-height:260px;padding:12px;border:1px solid var(--line2);border-radius:12px;line-height:1.7" }); ta.value = forumRules;
+      const save = h("button", { class: "btn primary" }, "שמירת החוקים");
+      save.onclick = () => db.collection("forum_meta").doc("rules").set({ text: ta.value.slice(0, 20000) })
+        .then(() => toast("✔ החוקים נשמרו")).catch(e => toast(e.code === "permission-denied" ? "אין הרשאה – צריך לעדכן את הכללים ב-Firebase" : "השמירה נכשלה"));
+      edit = h("div", { class: "card composer" }, h("h3", {}, "✏️ עריכת החוקים (רק את/ה רואה את זה)"), ta, h("div", { class: "row" }, h("span", { class: "hint" }, "כל שורה – חוק. אפשר מספרים ואימוג'י."), save));
+    }
+    put(v, crumbs({ t: "חוקי הפורום" }), h("div", { class: "page-head" }, h("h1", {}, "📜 חוקי הפורום")), box, edit);
   }
 
   // ----- נושא -----
@@ -537,6 +746,7 @@
     let topic = null, posts = [];
     const draw = () => {
       if (!topic) return;
+      markSeen(topic);
       const c = catOf(topic.cat);
       const canReply = me && (!topic.locked || isAdmin);
       const composer = h("div", { class: "card composer" });
@@ -552,14 +762,16 @@
         send.onclick = () => reply(topic, ta, send);
         composer.append(h("h3", {}, "✍️ תגובה"), ta, h("div", { class: "row" }, h("span", { class: "hint" }, "קישורים נהיים לחיצים אוטומטית"), send));
       }
-      const adminBar = isAdmin || (me && me.uid === topic.uid) ? h("div", { class: "post-foot", style: "margin:0 0 12px" },
+      const mineOrAdmin = isAdmin || (me && me.uid === topic.uid);
+      const adminBar = mineOrAdmin ? h("div", { class: "post-foot", style: "margin:0 0 12px" },
+        ASK_TAGS.includes(topic.tag) ? h("button", { class: "btn sm" + (topic.solved ? "" : " primary"), onclick: () => ref.update({ solved: !topic.solved }).then(() => toast(topic.solved ? "סומן כלא נפתר" : "✔ סומן כנפתר – תודה!")) }, topic.solved ? "↩ סימון כלא נפתר" : "✔ סימון כנפתר") : null,
         isAdmin ? h("button", { class: "btn sm", onclick: () => ref.update({ pinned: !topic.pinned }) }, topic.pinned ? "📌 ביטול נעיצה" : "📌 נעיצה") : null,
         isAdmin ? h("button", { class: "btn sm", onclick: () => ref.update({ locked: !topic.locked }) }, topic.locked ? "🔓 פתיחה" : "🔒 נעילה") : null,
         isAdmin ? moveSelect(topic) : null,
         (isAdmin || (me.uid === topic.uid && !topic.replies)) ? h("button", { class: "btn sm danger", onclick: () => delTopic(topic) }, "🗑 מחיקת הנושא") : null) : null;
       put(v, 
         crumbs(c ? { t: c.name, href: "#/category/" + c.id } : { t: "נושא" }, { t: topic.title }),
-        h("h1", { class: "topic-title" }, topic.title),
+        h("h1", { class: "topic-title" }, topic.title, tagEl(topic.tag), topic.solved ? h("span", { class: "solved" }, "✔ נפתר") : null),
         h("div", { class: "crumbs" },
           topic.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
           topic.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
@@ -621,7 +833,8 @@
     const tRef = db.collection("forum_topics").doc(topic.id);
     const batch = db.batch();
     batch.set(tRef.collection("posts").doc(), { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [] });
-    batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid });
+    batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
+      lastText: text.replace(/^> .*$/gm, "").replace(/\s+/g, " ").trim().slice(0, 140) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
     try { await batch.commit(); draftReply = ""; ta.value = ""; toast("✔ התגובה פורסמה"); }
     catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
     btn.disabled = false;
@@ -669,7 +882,9 @@
   }
 
   // ----- נושא חדש -----
-  let draftTitle = "", draftText = "";
+  // טיוטה נשמרת במחשב – אפשר לסגור ולחזור אליה (סרגל המשתמש ← "טיוטות")
+  let { title: draftTitle = "", text: draftText = "", tag: draftTag = "" } = load("wfhDraft", {}) || {};
+  const saveDraft = () => { store("wfhDraft", draftTitle || draftText ? { title: draftTitle, text: draftText, tag: draftTag } : undefined); renderUside(); };
   function renderNew(v, catId) {
     if (!me) {
       put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "✏️"), h("h3", {}, "כדי לפתוח נושא צריך להתחבר"),
@@ -683,7 +898,9 @@
     sel.value = allowed.some(c => c.id === catId) ? catId : allowed[0].id;
     const title = h("input", { maxlength: "120", placeholder: "כותרת הנושא – קצרה וברורה" }); title.value = draftTitle;
     const text = h("textarea", { maxlength: "10000", placeholder: "מה רציתם לשאול או לספר? כמה שיותר פרטים יעזרו לאחרים לעזור לכם." }); text.value = draftText;
-    title.oninput = () => draftTitle = title.value; text.oninput = () => draftText = text.value;
+    title.oninput = () => { draftTitle = title.value; saveDraft(); }; text.oninput = () => { draftText = text.value; saveDraft(); };
+    const tagSel = h("select", {}, h("option", { value: "" }, "ללא תגית"), Object.keys(TAGS).map(k => h("option", { value: k }, TAGS[k].ic + " " + TAGS[k].t)));
+    tagSel.value = draftTag; tagSel.onchange = () => { draftTag = tagSel.value; saveDraft(); };
     const go = h("button", { class: "btn primary" }, "פרסום הנושא");
     go.onclick = async () => {
       if (title.value.trim().length < 3) return toast("כתבו כותרת (לפחות 3 תווים)");
@@ -693,13 +910,19 @@
         const ref = await db.collection("forum_topics").add({
           cat: sel.value, title: title.value.trim().slice(0, 120), text: text.value.trim().slice(0, 10000),
           uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-          replies: 0, views: 0, likes: [], pinned: false, locked: false
+          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: tagSel.value, solved: false, lastText: ""
         });
-        draftTitle = draftText = ""; toast("✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
+        draftTitle = draftText = draftTag = ""; saveDraft(); toast("✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
       } catch (e) { go.disabled = false; toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
     };
     put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "page-head" }, h("h1", {}, "✏️ נושא חדש")),
-      h("div", { class: "card composer" }, h("div", { class: "field" }, h("label", {}, "קטגוריה"), sel), title, text,
+      h("div", { class: "card composer" },
+        h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:10px" },
+          h("div", { class: "field" }, h("label", {}, "קטגוריה"), sel),
+          h("div", { class: "field" }, h("label", {}, "תגית (לא חובה)"), tagSel)),
+        title, text,
+        draftTitle || draftText ? h("p", { class: "hint", style: "margin:6px 0 0" }, "📝 הטיוטה נשמרת אוטומטית במחשב. ",
+          h("a", { href: "#", onclick: e => { e.preventDefault(); if (confirm("למחוק את הטיוטה?")) { draftTitle = draftText = draftTag = ""; saveDraft(); lastRoute = ""; route(); } } }, "מחיקת הטיוטה")) : null,
         h("div", { class: "row" }, h("span", { class: "hint" }, "שורה שמתחילה ב-\"> \" תוצג כציטוט · קישורים נהיים לחיצים"), go)));
     title.focus();
   }
