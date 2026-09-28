@@ -661,6 +661,15 @@
   });
   const auth = firebase.auth(), db = firebase.firestore();
   const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  // שרת המיילים (Apps Script) – אותו שרת של האתר
+  const MAIL_URL = "https://script.google.com/macros/s/AKfycbwyWvpdgdveIEu4LgWESyDlRqUwlzjWjExKxDYg_NNqYUibUaVu-Brq0h9pCbSYdvTb/exec";
+  // שליחת אירוע לשרת המיילים. מחזיר את התשובה של השרת (או "" אם נכשל)
+  function mailEvent(type, data, user) {
+    const u = user || auth.currentUser;
+    if (!MAIL_URL || !u) return Promise.resolve("");
+    return u.getIdToken().then(idToken => fetch(MAIL_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(Object.assign({ idToken, type }, data || {})) })).then(r => r.text()).then(t => t.trim()).catch(() => "");
+  }
   const NOW = () => firebase.firestore.FieldValue.serverTimestamp();
   const $ = id => document.getElementById(id);
   let me = null, isAdmin = false, cats = [], topics = [], groups = [], catsReady = false, topicsReady = false;
@@ -983,6 +992,7 @@
       await cred.user.updateProfile({ displayName: name });
       await claimProfile(cred.user.uid, name);
       cred.user.sendEmailVerification().catch(() => {});
+      mailEvent("welcome", { name }, cred.user);
       profile = { username: name, terms: true };
       $("loginOverlay").classList.add("hidden");
       toast("🎉 ברוכים הבאים, " + name + "! שלחנו לכם מייל לאימות הכתובת.");
@@ -997,6 +1007,7 @@
           else {
             await claimProfile(c.user.uid, name);
             await c.user.updateProfile({ displayName: name }).catch(() => {});
+            mailEvent("welcome", { name }, c.user);
             profile = { username: name, terms: true };
             $("loginOverlay").classList.add("hidden"); toast("🎉 ברוכים הבאים, " + name + "! החשבון שלכם צורף לפורום.");
           }
@@ -1034,6 +1045,7 @@
       if (!(await unameFree(name))) { $("finishGo").disabled = false; return msg("שם המשתמש תפוס – נסו שם אחר"); }
       await claimProfile(me.uid, name);
       await me.updateProfile({ displayName: name }).catch(() => {});
+      mailEvent("welcome", { name });
       profile = { username: name, terms: true };
       $("finishOverlay").classList.add("hidden"); toast("✔ ההרשמה הושלמה – ברוכים הבאים!");
       renderUside(); lastRoute = ""; route();
@@ -1312,6 +1324,25 @@
     db.collection("forum_profiles").doc(u.uid).update({ rep: Number(n) }).then(() => toast("✔ המוניטין עודכן")).catch(() => toast("העדכון נכשל"));
   }
 
+  // 📧 הפעלה / כיבוי של מיילים (תגובות בנושאים שלי + הודעות פרטיות)
+  let mailOn = null;
+  function mailToggle() {
+    const a = h("a", { href: "#", title: "מייל כשמגיבים בנושאים שלך או כששולחים לך הודעה פרטית" });
+    const draw = () => put(a, mailOn === null ? "📧 התראות במייל: בודק..." : mailOn ? "📧 התראות במייל: פועל ✔ (לכיבוי)" : "📧 התראות במייל: כבוי (להפעלה)");
+    draw();
+    if (mailOn === null) mailEvent("status").then(s => { if (s === "on" || s === "off") { mailOn = s === "on"; draw(); } else put(a, "📧 התראות במייל: השרת לא זמין"); });
+    a.onclick = e => {
+      e.preventDefault(); if (mailOn === null) return;
+      put(a, "📧 שומר...");
+      mailEvent("subscribe", { on: !mailOn }).then(s => {
+        if (s === "on" || s === "off") { mailOn = s === "on"; toast(mailOn ? "📧 תקבלו מיילים על תגובות והודעות" : "📧 המיילים כובו"); }
+        else toast("לא הצלחתי לשמור – נסו שוב");
+        draw();
+      });
+    };
+    return a;
+  }
+
   // ----- פרופיל משתמש -----
   const viewedProfiles = new Set();
   const fullDate = t => { const m = ms(t); return m ? new Date(m).toLocaleString("he-IL", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"; };
@@ -1344,7 +1375,8 @@
       db.collection("reports").add({ appKey: "WFH", appId: "", appName: "פורום – משתמש: " + name, owner: uid, reason: "user",
         text: ("דיווח על משתמש בפורום: " + name + "\n" + why.trim()).slice(0, 1000),
         reporter: me.uid, reporterName: myName(), reporterEmail: me.email || "", createdAt: NOW() })
-        .then(() => toast("✔ הדיווח נשלח למנהל – תודה")).catch(() => toast("הדיווח לא נשלח"));
+        .then(() => { toast("✔ הדיווח נשלח למנהל – תודה"); mailEvent("admin", { kind: "user", name: myName(), text: "על המשתמש: " + name + "\n" + why.trim() }); })
+        .catch(() => toast("הדיווח לא נשלח"));
     };
     const blockBtn = h("a", { href: "#", class: "danger" }, "🚫 חסימת משתמש");
     if (isAdmin && !self) db.collection("blocked").doc(uid).get().then(d => { if (d.exists) put(blockBtn, "✔ ביטול חסימה"); }).catch(() => {});
@@ -1384,7 +1416,8 @@
             row("עוקבים", followers.length),
             row("עוקב/ת אחרי", following),
             groupsOf(uid).length ? h("div", { class: "pgroups" }, groupsOf(uid).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; })) : null,
-            me && (!self || isAdmin) ? h("div", { class: "pacts" },
+            me ? h("div", { class: "pacts" },
+              self && pr ? mailToggle() : null,
               !self ? h("a", { href: "#", class: "danger", onclick: e => { e.preventDefault(); report(); } }, "🚩 דיווח על משתמש") : null,
               isAdmin && !self ? blockBtn : null,
               isAdmin && pr ? h("a", { href: "#", onclick: e => { e.preventDefault(); setRep({ uid, name }); } }, "⭐ שינוי מוניטין") : null,
@@ -1600,7 +1633,13 @@
     else batch.update(tRef, { replies: FV.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
       lastText: brief(text), repliers: withReplier(topic, myName()), watchers: FV.arrayUnion(me.uid) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
     let ok = false;
-    try { await batch.commit(); draftReply = ""; replyParent = null; ta.value = ""; ok = true; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
+    try {
+      await batch.commit(); draftReply = ""; replyParent = null; ta.value = ""; ok = true;
+      toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה");
+      // 📧 מיילים: למנהל על תגובה שממתינה, או לעוקבי הנושא על תגובה חדשה
+      if (pend) mailEvent("admin", { kind: "pending", name: myName(), text: "תגובה בנושא \"" + topic.title + "\":\n" + text });
+      else mailEvent("forum_reply", { topic: topic.id });
+    }
     catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
     btn.disabled = false;
     return ok;
@@ -1794,6 +1833,7 @@
           watchers: [me.uid], repliers: [],
           pending: pend, pendingPosts: 0
         });
+        if (pend) mailEvent("admin", { kind: "pending", name: myName(), text: "נושא חדש: " + title.value.trim() + "\n" + ta.value.trim() });
         closeComposer(true); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
       } catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
       send.disabled = false;
@@ -2080,7 +2120,8 @@
       const b = db.batch();
       b.set(ref.collection("msgs").doc(), { uid: me.uid, name: myName(), text: text.slice(0, 2000), ts: NOW() });
       b.update(ref, { lastText: text.replace(/\s+/g, " ").slice(0, 120), lastTs: NOW(), lastUid: me.uid, ["read." + me.uid]: NOW(), ["names." + me.uid]: myName() });
-      try { await b.commit(); } catch (e) { ta.value = text; toast(e.code === "permission-denied" ? "אין הרשאה לשלוח (אולי החשבון חסום)" : "ההודעה לא נשלחה"); }
+      try { await b.commit(); mailEvent("dm", { room: id }); } // 📧 מייל לנמען (לכל היותר פעם בחצי שעה לשיחה)
+      catch (e) { ta.value = text; toast(e.code === "permission-denied" ? "אין הרשאה לשלוח (אולי החשבון חסום)" : "ההודעה לא נשלחה"); }
       send.disabled = false; ta.focus();
     };
     send.onclick = doSend;
