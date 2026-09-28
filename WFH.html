@@ -507,6 +507,8 @@
     .post > .av { display: none; }
     .topic-title { font-size: 1.35rem; }
   }
+  /* הדגשת מילות חיפוש */
+  mark { background: #fde68a; color: inherit; border-radius: 4px; padding: 0 2px; }
   /* ⬆ חזרה למעלה */
   .to-top-f { position: fixed; bottom: 22px; right: calc(var(--side) + 20px); z-index: 29; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line2); background: var(--card); color: var(--ink); font-size: 1.25rem; font-weight: 900; cursor: pointer; box-shadow: 0 12px 28px -10px rgba(15,23,42,.35); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
   .to-top-f.on { opacity: 1; transform: none; pointer-events: auto; }
@@ -1283,7 +1285,14 @@
   }
 
   // כרטיס נושא: אווטאר, כותרת + תג, קטגוריה וזמן, הצבעות/פוסטים/צפיות, והתגובה האחרונה
-  function topicTable(list, emptyTitle, emptySub) {
+  // הדגשת מילות חיפוש בטקסט (בלי HTML – בטוח)
+  function highlight(text, words) {
+    if (!words || !words.length) return text;
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const rx = new RegExp("(" + words.filter(Boolean).map(esc).join("|") + ")", "gi");
+    return String(text).split(rx).map((part, i) => i % 2 ? h("mark", {}, part) : part);
+  }
+  function topicTable(list, emptyTitle, emptySub, hl) {
     if (!list.length) return h("div", { class: "card empty" }, h("div", { class: "big" }, "📭"), h("h3", {}, emptyTitle), h("p", {}, emptySub));
     return h("div", { class: "tlist" }, list.map(t => {
       const c = catOf(t.cat);
@@ -1291,7 +1300,7 @@
       return h("div", { class: "card tcard" + (me && isUnread(t) ? " unread" : "") },
         h("a", { href: "#/user/" + t.uid, title: t.name }, avatar(t.name, t.uid)),
         h("div", {},
-          h("h3", {}, tagEl(t.tag), " ", h("a", { href: "#/topic/" + t.id }, t.title), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null, (t.tags || []).slice(0, 3).map(tagChip)),
+          h("h3", {}, tagEl(t.tag), " ", h("a", { href: "#/topic/" + t.id }, highlight(t.title, hl)), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null, (t.tags || []).slice(0, 3).map(tagChip)),
           h("div", { class: "sub" },
             t.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
             t.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
@@ -1507,6 +1516,12 @@
               .catch(e => toast(e.code === "permission-denied" ? "אין הרשאה (אולי צריך לעדכן את הכללים ב-Firebase)" : "שגיאה")); } },
           iWatch ? "🔔 במעקב" : "🔕 לא במעקב") : null,
         sortSel,
+        h("button", { class: "tl", title: "העתקת הקישור לנושא – לשליחה בוואטסאפ או במייל", onclick: async () => {
+          const url = location.href.split("#")[0] + "#/topic/" + topic.id;
+          try { await navigator.clipboard.writeText(url); toast("🔗 הקישור לנושא הועתק"); } catch (e) { prompt("העתיקו את הקישור:", url); } } }, "🔗 העתקת קישור"),
+        shownPosts.length ? h("button", { class: "tl", title: "קפיצה לתגובה האחרונה", onclick: () => {
+          const all = document.querySelectorAll("#view .post"); const last = all[all.length - 1];
+          if (last) { last.scrollIntoView({ behavior: "smooth", block: "center" }); last.classList.add("flash"); setTimeout(() => last.classList.remove("flash"), 1600); } } }, "⬇ לתגובה האחרונה") : null,
         h("span", { class: "sp" }),
         canReply ? h("button", { class: "btn primary", onclick: () => openReply(topic) }, "↩ תגובה") : null);
       const mineOrAdmin = isAdmin || (me && me.uid === topic.uid);
@@ -1610,7 +1625,7 @@
           p.admin ? h("span", { class: "badge-admin" }, "מנהל") : null, repEl(p.uid),
           p.pending && !isOp ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
-          h("small", {}, "כתב/ה " + ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name),
+          h("small", { title: fullDate(p.ts) }, "כתב/ה " + ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name),
           ex.num ? h("span", { class: "pnum" }, "#" + ex.num) : null),
         text, foot, kidsBox));
   }
@@ -1892,7 +1907,7 @@
     const res = words.length ? topics.filter(t => { const s = (t.title + " " + t.text + " " + t.name + " " + (t.tags || []).join(" ")).toLowerCase(); return words.every(w => s.includes(w)); }) : [];
     put(v, crumbs({ t: "חיפוש" }), h("div", { class: "page-head" }, h("h1", {}, "🔍 חיפוש")),
       h("div", { class: "card", style: "padding:14px;margin-bottom:14px" }, input),
-      words.length ? [h("p", { class: "hint" }, "נמצאו " + res.length + " נושאים"), topicTable(res, "לא נמצאו תוצאות", "נסו מילים אחרות")] : null);
+      words.length ? [h("p", { class: "hint" }, "נמצאו " + res.length + " נושאים"), topicTable(res, "לא נמצאו תוצאות", "נסו מילים אחרות", words)] : null);
     input.focus();
   }
   $("topSearch").onkeydown = e => { if (e.key === "Enter") { location.hash = "#/search?q=" + encodeURIComponent($("topSearch").value.trim()); $("topSearch").value = ""; } };

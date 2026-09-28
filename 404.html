@@ -71,6 +71,12 @@
   .lead { margin: 0 auto 8px; max-width: 520px; color: var(--ink2); font-size: 1.12rem; line-height: 1.7; }
   .path { display: block; width: fit-content; margin-inline: auto !important; margin: 4px 0 26px; font-size: .9rem; color: var(--muted); background: var(--glass); border: 1px solid var(--line); border-radius: 10px; padding: 4px 12px; direction: ltr; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  /* "אולי התכוונתם ל..." */
+  .guess { margin: -12px 0 24px; font-size: 1.08rem; font-weight: 700; color: var(--ink2); }
+  .guess a { color: #fff; text-decoration: none; font-weight: 900; padding: 6px 16px; margin-inline-start: 6px; border-radius: 12px; background: var(--grad); display: inline-block; box-shadow: 0 10px 26px -10px rgba(130,90,255,1); }
+  .guess a:hover { transform: translateY(-2px); }
+  .hidden { display: none !important; }
+
   /* חיפוש */
   .search { display: flex; gap: 8px; max-width: 520px; margin: 0 auto 22px; padding: 6px; border-radius: 18px; background: var(--glass); border: 1px solid var(--line2); backdrop-filter: blur(12px); box-shadow: 0 20px 45px -24px rgba(0,0,0,.8); }
   .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: inherit; font-size: 1.05rem; padding: 10px 12px; }
@@ -114,6 +120,7 @@
     <h1>אופס… הדף הזה הלך לאיבוד</h1>
     <p class="lead">יכול להיות שהקישור שגוי, או שהדף הועבר או נמחק. אבל לא נורא – בואו נמצא את מה שחיפשתם.</p>
     <div class="path" id="path"></div>
+    <p class="guess hidden" id="guess"></p>
 
     <form class="search" id="search" role="search">
       <input id="q" type="search" placeholder="🔍 חפשו תוכנה… (למשל: אוטובוסים)" aria-label="חיפוש תוכנה" autocomplete="off">
@@ -149,6 +156,31 @@
   const p = location.pathname.toLowerCase();
   const hint = /bus|asd|אוטובוס/.test(p) ? "אוטובוסים" : /ert|voice|קולית/.test(p) ? "קולית" : /tel|phone|טלפון/.test(p) ? "טלפונים" : "";
   if (hint) document.getElementById("q").value = hint;
+
+  // "אולי התכוונתם ל...": משווים את הכתובת לדפים שקיימים באתר (סובלני לשגיאת הקלדה קטנה)
+  (function () {
+    const PAGES = [
+      ["asd", "תוכנת אוטובוסים", "/AI/ASD.html"], ["ert", "קולית", "/AI/ERT.html"], ["tel", "ספר טלפונים", "/AI/TEL.html"],
+      ["store", "החנות למחשב", "/AI/store.html"], ["wfh", "פורום עזרה", "/AI/WFH.html"], ["forum", "פורום עזרה", "/AI/WFH.html"],
+      ["index", "דף הבית", "/AI/"], ["home", "דף הבית", "/AI/"]
+    ];
+    const dist = (a, b) => { // מרחק עריכה (Levenshtein)
+      const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+      for (let j = 1; j <= b.length; j++) d[0][j] = j;
+      for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      return d[a.length][b.length];
+    };
+    const seg = (location.pathname.split("/").filter(Boolean).pop() || "").toLowerCase().replace(/\.html?$/, "");
+    if (!seg || seg === "ai") return;
+    let best = null, bestD = 99;
+    PAGES.forEach(p => { const x = dist(seg, p[0]); if (x < bestD) { bestD = x; best = p; } });
+    if (!best || bestD > Math.max(1, Math.floor(best[0].length / 2))) return;
+    const g = document.getElementById("guess");
+    g.textContent = "🤔 אולי התכוונתם ל:";
+    const a = document.createElement("a"); a.href = best[2]; a.textContent = best[1] + " ←";
+    g.appendChild(a); g.classList.remove("hidden");
+  })();
 </script>
 </body>
 </html>
