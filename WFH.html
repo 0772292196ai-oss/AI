@@ -239,6 +239,51 @@
   .ucard small { color: var(--muted); }
   .menu-toggle { display: none; background: none; border: 1px solid var(--line2); border-radius: 10px; width: 42px; height: 42px; font-size: 1.2rem; }
 
+  /* ===== הרשמה בשלבים ===== */
+  .reg-steps { display: flex; gap: 4px; margin-bottom: 14px; }
+  .reg-steps span { flex: 1; text-align: center; font-size: .82rem; font-weight: 800; color: var(--muted); padding: 6px 2px; border-bottom: 3px solid var(--line); }
+  .reg-steps span.on { color: var(--primary); border-color: var(--primary); }
+  .reg-steps span.done { color: var(--ok); border-color: var(--ok); }
+  .field small.hint { display: block; margin-top: 4px; line-height: 1.5; }
+  .avail { display: block; font-size: .86rem; font-weight: 800; margin-top: 4px; }
+  .avail.ok { color: var(--ok); } .avail.bad { color: var(--danger); }
+  .reg-nav { display: flex; gap: 8px; } .reg-nav .btn { flex: 1; }
+  .terms-box { max-height: 200px; overflow-y: auto; border: 1px solid var(--line2); border-radius: 10px; padding: 12px; background: #fafbfd; white-space: pre-wrap; line-height: 1.7; font-size: .92rem; margin: 6px 0 10px; }
+  .agree { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; font-weight: 700; }
+
+  /* ===== צ'אטים פרטיים ===== */
+  .dm-panel { position: fixed; top: 150px; left: calc(var(--uside) + 6px); z-index: 45; width: 360px; max-width: calc(100vw - 20px); background: #fff; border: 1px solid var(--line2); border-radius: 12px; box-shadow: 0 20px 50px -18px rgba(20,30,60,.45); padding: 6px; }
+  .dm-list { max-height: 380px; overflow-y: auto; }
+  .dm-item { display: flex; gap: 10px; padding: 10px 8px; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none !important; align-items: flex-start; }
+  .dm-item:last-child { border-bottom: none; }
+  .dm-item:hover, .dm-item.on { background: #f5f7fb; }
+  .dm-item .av { width: 38px; height: 38px; }
+  .dm-item .mid { flex: 1; min-width: 0; }
+  .dm-item .mid b { display: block; font-size: .95rem; }
+  .dm-item .mid p { margin: 2px 0; color: #374151; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dm-item .mid small { color: var(--muted); font-size: .8rem; }
+  .dm-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #9ca3af; flex: none; margin-top: 6px; }
+  .dm-dot.new { background: var(--primary); border-color: var(--primary); }
+  .dm-foot { display: flex; flex-direction: column; gap: 6px; padding: 8px 2px 2px; border-top: 1px solid var(--line); margin-top: 4px; }
+  .dm-foot .btn { width: 100%; text-align: center; text-decoration: none; }
+  .chats { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 150px); min-height: 420px; overflow: hidden; }
+  .chats .col-list { border-inline-end: 1px solid var(--line); overflow-y: auto; }
+  .chats .col-conv { display: flex; flex-direction: column; min-width: 0; }
+  .conv-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); font-weight: 800; }
+  .conv-msgs { flex: 1; overflow-y: auto; padding: 16px; background: #fafbfd; display: flex; flex-direction: column; gap: 6px; }
+  .bub { max-width: 70%; padding: 8px 12px; border-radius: 14px; line-height: 1.55; white-space: pre-wrap; word-wrap: break-word; }
+  .bub.me { align-self: flex-start; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+  .bub.them { align-self: flex-end; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .bub time { display: block; font-size: .72rem; opacity: .7; margin-top: 2px; }
+  .conv-send { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); }
+  .conv-send textarea { flex: 1; resize: none; height: 44px; padding: 10px 12px; border: 1px solid var(--line2); border-radius: 10px; outline: none; }
+  .chat-btn { font-size: .78rem; font-weight: 700; color: var(--primary); background: var(--soft); border: none; border-radius: 6px; padding: 1px 8px; }
+  @media (max-width: 860px) {
+    .chats { grid-template-columns: 1fr; }
+    .chats.has-room .col-list { display: none; }
+    .chats:not(.has-room) .col-conv { display: none; }
+  }
+
   @media (max-width: 1280px) {
     :root { --uside: 0px; }
     .uside { display: none; }
@@ -315,13 +360,59 @@
       <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>
       המשך עם Google
     </button>
-    <p class="or">או עם אימייל וסיסמה</p>
-    <div class="field hidden" id="nameField"><label for="regName">שם (יוצג בפורום)</label><input id="regName" maxlength="40"></div>
-    <div class="field"><label for="email">אימייל</label><input id="email" type="email" dir="ltr"></div>
-    <div class="field"><label for="pass">סיסמה</label><input id="pass" type="password" dir="ltr"></div>
-    <button type="button" class="btn primary" id="authGo" style="width:100%">התחברות</button>
+    <p class="or">או</p>
+
+    <!-- התחברות -->
+    <div id="paneIn">
+      <div class="field"><label for="email">אימייל</label><input id="email" type="email" dir="ltr" autocomplete="email"></div>
+      <div class="field"><label for="pass">סיסמה</label><input id="pass" type="password" dir="ltr" autocomplete="current-password"></div>
+      <button type="button" class="btn primary" id="authGo" style="width:100%">התחברות</button>
+      <p style="text-align:center;margin:8px 0 0"><a href="#" id="forgotPass">שכחתי סיסמה</a></p>
+    </div>
+
+    <!-- הרשמה בשלבים: פרטי משתמש ← אימייל ← תקנון -->
+    <div id="paneUp" class="hidden">
+      <div class="reg-steps"><span data-s="1" class="on">1 · פרטי משתמש</span><span data-s="2">2 · אימייל</span><span data-s="3">3 · תקנון</span></div>
+      <div class="reg-step" data-step="1">
+        <div class="field"><label for="uName">שם משתמש</label><input id="uName" maxlength="16" placeholder="הכניסו שם משתמש" autocomplete="username">
+          <small class="hint">שם משתמש ייחודי בין 3 ל-16 תווים – אותיות בעברית או באנגלית, ספרות ו-_. אחרים יוכלו לציין אתכם באמצעות @שם המשתמש שלכם.</small>
+          <small class="avail" id="uAvail"></small></div>
+        <div class="field"><label for="uPass">סיסמה</label><input id="uPass" type="password" dir="ltr" placeholder="הכניסו סיסמה" autocomplete="new-password">
+          <small class="hint">הסיסמה חייבת להיות לפחות באורך של <b>6 תווים</b>.</small></div>
+        <div class="field"><label for="uPass2">אימות סיסמה</label><input id="uPass2" type="password" dir="ltr" placeholder="אימות סיסמה" autocomplete="new-password"></div>
+        <button type="button" class="btn primary" data-next="2" style="width:100%">המשך ←</button>
+      </div>
+      <div class="reg-step hidden" data-step="2">
+        <div class="field"><label for="uEmail">אימייל</label><input id="uEmail" type="email" dir="ltr" placeholder="name@example.com" autocomplete="email">
+          <small class="hint">משמש להתחברות, לאימות ולשחזור סיסמה. לא מוצג לאף אחד בפורום.</small></div>
+        <div class="reg-nav"><button type="button" class="btn" data-back="1">→ חזרה</button><button type="button" class="btn primary" data-next="3">המשך ←</button></div>
+      </div>
+      <div class="reg-step hidden" data-step="3">
+        <label style="font-weight:800">תקנון הפורום</label>
+        <div class="terms-box" id="termsBox"></div>
+        <label class="agree"><input type="checkbox" id="uAgree"> קראתי את התקנון ואני מסכים/ה לו</label>
+        <div class="reg-nav"><button type="button" class="btn" data-back="2">→ חזרה</button><button type="button" class="btn primary" id="regGo">הרשמו עכשיו</button></div>
+      </div>
+    </div>
+
     <p class="msg" id="authMsg"></p>
     <button type="button" class="btn" id="authClose" style="width:100%">סגירה</button>
+  </div>
+</div>
+
+<!-- השלמת הרשמה (למי שנכנס עם Google או עם חשבון מהאתר) -->
+<div class="overlay hidden" id="finishOverlay">
+  <div class="modal">
+    <h2>👋 עוד רגע ואתם בפנים</h2>
+    <p class="hint" style="margin:-6px 0 12px">כדי לכתוב בפורום צריך לבחור שם משתמש ולאשר את התקנון – פעם אחת בלבד.</p>
+    <div class="field"><label for="fName">שם משתמש</label><input id="fName" maxlength="16" placeholder="הכניסו שם משתמש">
+      <small class="hint">בין 3 ל-16 תווים – אותיות בעברית או באנגלית, ספרות ו-_.</small><small class="avail" id="fAvail"></small></div>
+    <label style="font-weight:800">תקנון הפורום</label>
+    <div class="terms-box" id="termsBox2"></div>
+    <label class="agree"><input type="checkbox" id="fAgree"> קראתי את התקנון ואני מסכים/ה לו</label>
+    <button type="button" class="btn primary" id="finishGo" style="width:100%">סיום ההרשמה</button>
+    <p class="msg" id="finishMsg"></p>
+    <button type="button" class="btn" id="finishLater" style="width:100%">אחר כך (אפשר רק לקרוא)</button>
   </div>
 </div>
 
@@ -353,6 +444,15 @@
     <button type="button" class="btn primary" id="catSave" style="width:100%">שמירה</button>
     <p class="msg" id="catMsg"></p>
     <button type="button" class="btn" id="catCancel" style="width:100%">ביטול</button>
+  </div>
+</div>
+
+<!-- רשימת הצ'אטים הקופצת (מסרגל המשתמש) -->
+<div class="dm-panel hidden" id="dmPanel">
+  <div class="dm-list" id="dmPanelList"></div>
+  <div class="dm-foot">
+    <button type="button" class="btn" id="dmAllRead">✔✔ סימון כל הצ'אטים כנקרא</button>
+    <a class="btn primary" href="#/chats" id="dmAll">☰ צפייה בכל הצ'אטים</a>
   </div>
 </div>
 
@@ -408,7 +508,8 @@
     return a;
   }
   function toast(t) { $("toast").textContent = t; $("toast").classList.remove("hidden"); clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").classList.add("hidden"), 2600); }
-  const myName = () => (me && (me.displayName || (me.email || "").split("@")[0]) || "משתמש/ת").slice(0, 40);
+  let profile = null, profileReady = false; // פרופיל בפורום: שם משתמש + אישור תקנון
+  const myName = () => (profile && profile.username || me && (me.displayName || (me.email || "").split("@")[0]) || "משתמש/ת").slice(0, 40);
 
   // טקסט של פוסט: שורות שמתחילות ב-"> " הן ציטוט, וקישורי https לחיצים (בלי HTML – בטוח)
   function renderText(text) {
@@ -432,8 +533,14 @@
   }
 
   // ===== חשבון =====
-  auth.onAuthStateChanged(u => {
+  auth.onAuthStateChanged(async u => {
     me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    if (!registering) { profile = null; profileReady = false; }
+    if (u) {
+      try { const d = await db.collection("forum_profiles").doc(u.uid).get(); if (d.exists) profile = d.data(); } catch (e) {}
+      profileReady = true;
+      if (!profile && !registering) openFinish(); // חשבון בלי שם משתמש בפורום – משלימים הרשמה
+    }
     const box = $("userbox"); box.innerHTML = "";
     if (u) {
       box.append(avatar(myName(), u.uid, "s"), h("b", { class: "hide-sm" }, myName()),
@@ -442,6 +549,7 @@
       box.append(h("button", { class: "btn sm", onclick: () => openLogin(false) }, "התחברות"),
         h("button", { class: "btn sm primary", onclick: () => openLogin(true) }, "הרשמה"));
     }
+    listenDms();
     renderUside();
     route();
   });
@@ -484,7 +592,7 @@
          h("a", { href: "#/notifications" }, "🔔", h("span", {}, "התראות"), cnt(n)),
          h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
          h("a", { href: "#/new" }, "📝", h("span", {}, "טיוטות"), cnt(draft && (draft.title || draft.text) ? 1 : 0)),
-         h("a", { href: "./" }, "💬", h("span", {}, "צ'אטים (באתר)")),
+         h("button", { type: "button", id: "dmToggle", onclick: e => { e.stopPropagation(); toggleDmPanel(); } }, "💬", h("span", {}, "צ'אטים"), cnt(dms.filter(dmUnread).length)),
          h("button", { type: "button", onclick: () => auth.signOut() }, "🚪", h("span", {}, "התנתקות"))]
       : [h("button", { type: "button", onclick: () => openLogin(false) }, "🔑", h("span", {}, "התחברות")),
          h("button", { type: "button", onclick: () => openLogin(true) }, "✨", h("span", {}, "הרשמה")),
@@ -501,15 +609,133 @@
   // חוקי הפורום (המנהל עורך)
   let forumRules = "";
   db.collection("forum_meta").doc("rules").onSnapshot(d => { forumRules = d.exists ? d.data().text || "" : ""; if (location.hash.startsWith("#/rules")) route(true); }, () => {});
-  let regMode = false;
+  /* ===== הרשמה בשלבים: שם משתמש + סיסמה ← אימייל ← תקנון ===== */
+  const DEFAULT_TERMS = [
+    "1. שומרים על שפה נקייה ומכבדת. אין קללות, השמצות, לשון הרע או פגיעה בכבודו של אדם.",
+    "2. כותבים בנושא הקטגוריה, ומחפשים לפני שפותחים נושא – אולי כבר נשאלה אותה שאלה.",
+    "3. אסור לפרסם תוכן לא צנוע, פרסומות, ספאם או קישורים לאתרים לא ראויים.",
+    "4. אסור לפרסם תוכנות או קבצים פרוצים, וירוסים, או כל דבר שמפר זכויות יוצרים.",
+    "5. לא מפרסמים פרטים אישיים – של עצמכם או של אחרים (טלפון, כתובת, תעודת זהות וכו').",
+    "6. עזרה ועצות בפורום ניתנות בהתנדבות ועל אחריות המשתמש בלבד.",
+    "7. הנהלת הפורום רשאית לערוך, להסתיר או למחוק תוכן, ולחסום משתמשים שמפרים את התקנון.",
+    "8. ההרשמה והשימוש בפורום מהווים הסכמה לתקנון זה ולעדכונים שלו."
+  ].join("\n");
+  const termsText = () => forumRules || DEFAULT_TERMS;
+  const UNAME = /^[A-Za-z0-9_א-ת]{3,16}$/;
+  let registering = false;
+
+  function setStep(n) {
+    document.querySelectorAll("#paneUp .reg-step").forEach(s => s.classList.toggle("hidden", s.dataset.step != n));
+    document.querySelectorAll(".reg-steps span").forEach(s => { s.classList.toggle("on", s.dataset.s == n); s.classList.toggle("done", s.dataset.s < n); });
+    $("authMsg").textContent = "";
+    $("termsBox").textContent = termsText();
+  }
   function openLogin(reg, why) {
-    regMode = reg;
     $("tabIn").classList.toggle("on", !reg); $("tabUp").classList.toggle("on", reg);
-    $("nameField").classList.toggle("hidden", !reg);
-    $("authGo").textContent = reg ? "הרשמה" : "התחברות";
+    $("paneIn").classList.toggle("hidden", reg); $("paneUp").classList.toggle("hidden", !reg);
+    $("googleBtn").lastChild.textContent = reg ? " הרשמה עם Google" : " המשך עם Google";
+    if (reg) setStep(1);
     $("authMsg").textContent = why || "";
     $("loginOverlay").classList.remove("hidden");
   }
+
+  // בדיקה שהשם פנוי (בזמן ההקלדה)
+  async function unameFree(name) {
+    const d = await db.collection("forum_unames").doc(name.toLowerCase()).get();
+    return !d.exists;
+  }
+  function watchUname(input, out) {
+    let t;
+    input.oninput = () => {
+      clearTimeout(t); out.className = "avail"; out.textContent = "";
+      const v = input.value.trim();
+      if (!v) return;
+      if (!UNAME.test(v)) { out.className = "avail bad"; out.textContent = "✖ 3-16 תווים: אותיות, ספרות ו-_ בלבד (בלי רווחים)"; return; }
+      t = setTimeout(async () => {
+        try { const free = await unameFree(v); if (input.value.trim() !== v) return;
+          out.className = "avail " + (free ? "ok" : "bad"); out.textContent = free ? "✔ שם המשתמש פנוי" : "✖ שם המשתמש תפוס – נסו שם אחר"; } catch (e) {}
+      }, 400);
+    };
+  }
+  watchUname($("uName"), $("uAvail"));
+  watchUname($("fName"), $("fAvail"));
+
+  document.querySelectorAll("#paneUp [data-back]").forEach(b => b.onclick = () => setStep(b.dataset.back));
+  document.querySelectorAll("#paneUp [data-next]").forEach(b => b.onclick = async () => {
+    const msg = t => $("authMsg").textContent = t;
+    if (b.dataset.next === "2") {
+      const n = $("uName").value.trim(), p = $("uPass").value;
+      if (!UNAME.test(n)) return msg("שם המשתמש צריך 3-16 תווים: אותיות, ספרות ו-_ בלבד");
+      if (p.length < 6) return msg("הסיסמה צריכה לפחות 6 תווים");
+      if (p !== $("uPass2").value) return msg("הסיסמאות לא זהות");
+      try { if (!(await unameFree(n))) return msg("שם המשתמש תפוס – נסו שם אחר"); } catch (e) { return msg("אין חיבור לפורום (אולי צריך לעדכן את הכללים ב-Firebase)"); }
+    }
+    if (b.dataset.next === "3" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($("uEmail").value.trim())) return msg("האימייל לא תקין");
+    setStep(b.dataset.next);
+  });
+
+  // יוצרים את שם המשתמש + הפרופיל (יחד – כדי ששם לא ייתפס באמצע)
+  function claimProfile(uid, name) {
+    const b = db.batch();
+    b.set(db.collection("forum_unames").doc(name.toLowerCase()), { uid, name });
+    b.set(db.collection("forum_profiles").doc(uid), { username: name, terms: true, termsAt: NOW(), created: NOW() });
+    return b.commit();
+  }
+
+  $("regGo").onclick = async () => {
+    const msg = t => $("authMsg").textContent = t;
+    if (!$("uAgree").checked) return msg("צריך לאשר את התקנון");
+    const name = $("uName").value.trim(), email = $("uEmail").value.trim(), pass = $("uPass").value;
+    $("regGo").disabled = true; registering = true;
+    let cred = null;
+    try {
+      cred = await auth.createUserWithEmailAndPassword(email, pass);
+      await cred.user.updateProfile({ displayName: name });
+      await claimProfile(cred.user.uid, name);
+      cred.user.sendEmailVerification().catch(() => {});
+      profile = { username: name, terms: true };
+      $("loginOverlay").classList.add("hidden");
+      toast("🎉 ברוכים הבאים, " + name + "! שלחנו לכם מייל לאימות הכתובת.");
+      renderUside(); route();
+    } catch (e) {
+      if (cred && e.code !== "auth/email-already-in-use") { try { await cred.user.delete(); } catch (x) {} } // לא משאירים חשבון בלי שם משתמש
+      if (e.code === "permission-denied") msg("שם המשתמש נתפס כרגע או שהכללים ב-Firebase לא מעודכנים – נסו שם אחר");
+      else { authErr(e); if (e.code === "auth/email-already-in-use") setStep(2); }
+    }
+    registering = false; $("regGo").disabled = false;
+  };
+
+  // השלמת הרשמה לחשבון קיים
+  function openFinish() {
+    $("termsBox2").textContent = termsText();
+    $("fName").value = (me && me.displayName || "").replace(/[^A-Za-z0-9_א-ת]/g, "").slice(0, 16);
+    $("fName").oninput(); $("finishMsg").textContent = ""; $("fAgree").checked = false;
+    $("finishOverlay").classList.remove("hidden");
+  }
+  $("finishLater").onclick = () => $("finishOverlay").classList.add("hidden");
+  $("finishGo").onclick = async () => {
+    const name = $("fName").value.trim(), msg = t => $("finishMsg").textContent = t;
+    if (!UNAME.test(name)) return msg("שם המשתמש צריך 3-16 תווים: אותיות, ספרות ו-_ בלבד");
+    if (!$("fAgree").checked) return msg("צריך לאשר את התקנון");
+    $("finishGo").disabled = true;
+    try {
+      if (!(await unameFree(name))) { $("finishGo").disabled = false; return msg("שם המשתמש תפוס – נסו שם אחר"); }
+      await claimProfile(me.uid, name);
+      await me.updateProfile({ displayName: name }).catch(() => {});
+      profile = { username: name, terms: true };
+      $("finishOverlay").classList.add("hidden"); toast("✔ ההרשמה הושלמה – ברוכים הבאים!");
+      renderUside(); lastRoute = ""; route();
+    } catch (e) { msg(e.code === "permission-denied" ? "השם נתפס כרגע או שהכללים ב-Firebase לא מעודכנים" : "משהו השתבש, נסו שוב"); }
+    $("finishGo").disabled = false;
+  };
+
+  $("forgotPass").onclick = e => {
+    e.preventDefault();
+    const email = $("email").value.trim();
+    if (!email) return $("authMsg").textContent = "כתבו את האימייל שלכם למעלה, ואז לחצו שוב \"שכחתי סיסמה\"";
+    auth.sendPasswordResetEmail(email).then(() => $("authMsg").textContent = "✔ שלחנו מייל לאיפוס הסיסמה")
+      .catch(authErr);
+  };
   $("tabIn").onclick = () => openLogin(false);
   $("tabUp").onclick = () => openLogin(true);
   $("authClose").onclick = () => $("loginOverlay").classList.add("hidden");
@@ -523,18 +749,16 @@
     .then(() => $("loginOverlay").classList.add("hidden")).catch(authErr);
   $("authGo").onclick = async () => {
     const email = $("email").value.trim(), pass = $("pass").value;
-    try {
-      if (regMode) {
-        const name = $("regName").value.trim();
-        if (name.length < 2) return $("authMsg").textContent = "כתבו שם (לפחות 2 אותיות)";
-        const c = await auth.createUserWithEmailAndPassword(email, pass);
-        await c.user.updateProfile({ displayName: name });
-        me = auth.currentUser; route();
-      } else await auth.signInWithEmailAndPassword(email, pass);
-      $("loginOverlay").classList.add("hidden");
-    } catch (e) { authErr(e); }
+    try { await auth.signInWithEmailAndPassword(email, pass); $("loginOverlay").classList.add("hidden"); }
+    catch (e) { authErr(e); }
   };
-  const needLogin = why => { if (me) return false; openLogin(false, why); return true; };
+  $("pass").onkeydown = e => { if (e.key === "Enter") $("authGo").click(); };
+  // כדי לכתוב: מחוברים + השלמתם הרשמה (שם משתמש ותקנון)
+  const needLogin = why => {
+    if (!me) { openLogin(false, why); return true; }
+    if (profileReady && !profile && !isAdmin) { openFinish(); return true; }
+    return false;
+  };
 
   // ===== נתונים: קטגוריות ונושאים (מתעדכנים בזמן אמת) =====
   db.collection("forum_cats").orderBy("order").onSnapshot(s => {
@@ -564,6 +788,7 @@
     const q = new URLSearchParams(query || "");
     // עדכון נתונים לא מצייר מחדש דף נושא (יש לו מאזין משלו) ולא דף כתיבה (כדי לא למחוק מה שמקלידים)
     if (dataOnly && (parts[0] === "topic" || parts[0] === "new") && lastRoute === hash) return;
+    if (dataOnly && parts[0] === "chats" && lastRoute === hash) return drawDmList($("chatList"), parts[1]); // לא מוחקים את מה שמקלידים
     if (!catsReady || !topicsReady) return;
     updateCounts();
     // ברשימות נושאים: לא קופצים באמצע קריאה – מציגים "טעינת פוסטים חדשים"
@@ -572,7 +797,10 @@
       if (newest > listShown) { const p = $("newPill"); if (p) p.classList.remove("hidden"); }
       return;
     }
-    if (lastRoute !== hash) { window.scrollTo(0, 0); if (stopTopic) stopTopic(); if (stopPosts) stopPosts(); stopTopic = stopPosts = null; }
+    if (lastRoute !== hash) {
+      window.scrollTo(0, 0); if (stopTopic) stopTopic(); if (stopPosts) stopPosts(); stopTopic = stopPosts = null;
+      if (stopConv) { stopConv(); stopConv = null; } openRoom = "";
+    }
     lastRoute = hash;
     document.querySelectorAll(".side a.nav").forEach(a => a.classList.toggle("on", a.dataset.view === (parts[0] || "home")));
     const v = $("view");
@@ -587,6 +815,8 @@
     if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות חדשות בנושאים שפתחתם", notifs(), true);
     if (parts[0] === "users") return renderUsers(v);
     if (parts[0] === "rules") return renderRules(v);
+    if (parts[0] === "chats") return renderChats(v, parts[1] || "");
+    if (parts[0] === "chat-with") return openDm(parts[1], decodeURIComponent(q.get("n") || ""));
     if (parts[0] === "search") return renderSearch(v, q.get("q") || "");
     if (parts[0] === "groups") return renderGroups(v, q.get("sort") || "name");
     if (parts[0] === "group") return renderGroup(v, parts[1]);
@@ -716,7 +946,7 @@
     put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים שכתבו בפורום"))),
       users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, avatar(u.name, u.uid, "l"),
           h("div", {}, h("b", {}, u.name || "משתמש/ת", u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : null),
-            h("small", {}, u.topics + " נושאים"),
+            h("small", {}, u.topics + " נושאים"), " ", chatBtn(u.uid, u.name),
             h("div", {}, groupsOf(u.uid).slice(0, 2).map(g => { const b = h("span", { class: "grp-badge" }, g.name); b.style.background = g.color || "#a855f7"; return b; }))))))
         : h("div", { class: "card empty" }, h("div", { class: "big" }, "👤"), h("h3", {}, "עוד אין משתמשים שכתבו בפורום")));
   }
@@ -815,7 +1045,7 @@
         h("div", { class: "who" }, h("b", {}, p.name || "משתמש/ת"),
           p.admin ? h("span", { class: "badge-admin" }, "מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
-          h("small", {}, ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null),
+          h("small", {}, ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name)),
         text, foot));
   }
 
@@ -1067,6 +1297,126 @@
       $("grpOverlay").classList.add("hidden"); toast("✔ נשמר");
     } catch (e) { $("grpMsg").textContent = e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את כללי הפורום ב-Firebase" : "השמירה נכשלה"; }
   };
+
+  /* ================= צ'אטים פרטיים בין משתמשים =================
+     כל שיחה: forum_dms/<מזהה1_מזהה2>, וההודעות בתוכה (msgs). רק שני המשתתפים יכולים לקרוא. */
+  let dms = [], stopDms = null, stopConv = null;
+  const roomId = (a, b) => [a, b].sort().join("_");
+  const otherOf = r => r.users.find(u => u !== me.uid) || me.uid;
+  const otherName = r => (r.names || {})[otherOf(r)] || "משתמש/ת";
+  const dmUnread = r => me && r.lastUid && r.lastUid !== me.uid && ms(r.lastTs) > ms((r.read || {})[me.uid]);
+
+  function listenDms() {
+    if (stopDms) stopDms(); stopDms = null; dms = [];
+    if (!me) { renderDmPanel(); return; }
+    stopDms = db.collection("forum_dms").where("users", "array-contains", me.uid).onSnapshot(s => {
+      dms = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" })))
+        .filter(r => r.lastTs || r.id === openRoom).sort((a, b) => ms(b.lastTs) - ms(a.lastTs));
+      renderUside(); renderDmPanel();
+      if (location.hash.startsWith("#/chats")) route(true);
+      const r = openRoom && dms.find(x => x.id === openRoom); // הודעה חדשה בשיחה הפתוחה – נקראה
+      if (r && dmUnread(r) && !document.hidden) db.collection("forum_dms").doc(r.id).update({ ["read." + me.uid]: NOW() }).catch(() => {});
+    }, () => {});
+  }
+
+  // כפתור "💬 צ'אט" ליד שם של משתמש
+  function chatBtn(uid, name) {
+    if (!uid || (me && uid === me.uid)) return null;
+    return h("button", { class: "chat-btn", type: "button", title: "שליחת הודעה פרטית",
+      onclick: () => { if (!needLogin("כדי לשלוח הודעה פרטית צריך להתחבר")) location.hash = "#/chat-with/" + uid + "?n=" + encodeURIComponent(name || ""); } }, "💬 צ'אט");
+  }
+
+  async function openDm(uid, name) {
+    if (!me) { openLogin(false, "כדי לשלוח הודעה פרטית צריך להתחבר"); return; }
+    if (!uid || uid === me.uid) { location.hash = "#/chats"; return; }
+    const id = roomId(me.uid, uid);
+    try {
+      await db.collection("forum_dms").doc(id).set({ users: [me.uid, uid].sort(), names: { [me.uid]: myName(), [uid]: (name || "משתמש/ת").slice(0, 40) } }, { merge: true });
+      location.replace("#/chats/" + id);
+    } catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את כללי הצ'אטים ב-Firebase" : "לא הצלחתי לפתוח צ'אט"); history.back(); }
+  }
+
+  function drawDmList(box, active) {
+    const cur = active && dms.find(r => r.id === active);
+    if (cur && $("convName")) $("convName").textContent = otherName(cur);
+    if (!box) return;
+    if (!me) return put(box, h("div", { class: "empty", style: "padding:30px 14px" }, h("p", {}, "צריך להתחבר כדי לראות צ'אטים")));
+    if (!dms.length) return put(box, h("div", { class: "empty", style: "padding:30px 14px" }, h("div", { class: "big" }, "💬"),
+      h("p", {}, "עוד אין צ'אטים. אפשר להתחיל צ'אט מהכפתור \"💬 צ'אט\" ליד שם של משתמש.")));
+    put(box, dms.map(r => {
+      const who = otherName(r), unread = dmUnread(r);
+      return h("a", { class: "dm-item" + (r.id === active ? " on" : ""), href: "#/chats/" + r.id },
+        avatar(who, otherOf(r)),
+        h("div", { class: "mid" }, h("b", {}, who),
+          r.lastText ? h("p", {}, (r.lastUid === me.uid ? "את/ה" : who) + ": " + r.lastText) : h("p", { style: "color:var(--muted)" }, "שיחה חדשה"),
+          h("small", {}, ago(r.lastTs))),
+        h("span", { class: "dm-dot" + (unread ? " new" : ""), title: unread ? "לא נקרא" : "נקרא" }));
+    }));
+  }
+
+  function renderDmPanel() { drawDmList($("dmPanelList"), openRoom); }
+  function toggleDmPanel(force) {
+    const p = $("dmPanel"), open = force != null ? force : p.classList.contains("hidden");
+    if (open && innerWidth < 1280) { location.hash = "#/chats"; return; } // במסך קטן – דף מלא
+    p.classList.toggle("hidden", !open);
+    if (open) { renderDmPanel(); const t = $("dmToggle"); if (t) p.style.top = Math.min(t.getBoundingClientRect().top, innerHeight - 520) + "px"; }
+  }
+  document.addEventListener("click", e => { if (!e.target.closest("#dmPanel") && !e.target.closest("#dmToggle")) $("dmPanel").classList.add("hidden"); });
+  $("dmAll").onclick = () => $("dmPanel").classList.add("hidden");
+  $("dmAllRead").onclick = () => {
+    const un = dms.filter(dmUnread);
+    if (!un.length) return toast("אין צ'אטים שלא נקראו");
+    const b = db.batch();
+    un.forEach(r => b.update(db.collection("forum_dms").doc(r.id), { ["read." + me.uid]: NOW() }));
+    b.commit().then(() => toast("✔ כל הצ'אטים סומנו כנקרא")).catch(() => toast("לא הצלחתי לסמן"));
+  };
+
+  // דף הצ'אטים: רשימה + שיחה
+  let openRoom = "";
+  function renderChats(v, id) {
+    if (stopConv) { stopConv(); stopConv = null; }
+    openRoom = id;
+    if (!me) return put(v, crumbs({ t: "צ'אטים" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "💬"), h("h3", {}, "כדי לראות צ'אטים צריך להתחבר"),
+      h("p", {}, h("button", { class: "btn primary", onclick: () => openLogin(false) }, "התחברות"))));
+    const list = h("div", { class: "col-list", id: "chatList" });
+    const conv = h("div", { class: "col-conv" });
+    put(v, crumbs({ t: "צ'אטים", href: "#/chats" }), h("div", { class: "card chats" + (id ? " has-room" : "") }, list, conv));
+    drawDmList(list, id);
+    if (!id) return put(conv, h("div", { class: "empty", style: "margin:auto" }, h("div", { class: "big" }, "💬"), h("h3", {}, "בחרו צ'אט מהרשימה")));
+    if (!id.split("_").includes(me.uid)) return put(conv, notFound("הצ'אט לא נמצא"));
+
+    const ref = db.collection("forum_dms").doc(id);
+    const other = id.split("_").find(u => u !== me.uid) || me.uid;
+    const room = () => dms.find(r => r.id === id) || { users: id.split("_"), names: {} };
+    const msgs = h("div", { class: "conv-msgs" }, h("p", { class: "hint", style: "margin:auto" }, "טוען..."));
+    const ta = h("textarea", { maxlength: "2000", placeholder: "כתבו הודעה... (Enter לשליחה, Shift+Enter לשורה חדשה)" });
+    const send = h("button", { class: "btn primary" }, "שליחה");
+    const doSend = async () => {
+      const text = ta.value.trim(); if (!text) return;
+      ta.value = ""; send.disabled = true;
+      const b = db.batch();
+      b.set(ref.collection("msgs").doc(), { uid: me.uid, name: myName(), text: text.slice(0, 2000), ts: NOW() });
+      b.update(ref, { lastText: text.replace(/\s+/g, " ").slice(0, 120), lastTs: NOW(), lastUid: me.uid, ["read." + me.uid]: NOW(), ["names." + me.uid]: myName() });
+      try { await b.commit(); } catch (e) { ta.value = text; toast(e.code === "permission-denied" ? "אין הרשאה לשלוח (אולי החשבון חסום)" : "ההודעה לא נשלחה"); }
+      send.disabled = false; ta.focus();
+    };
+    send.onclick = doSend;
+    ta.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); } };
+    put(conv,
+      h("div", { class: "conv-head" }, h("a", { href: "#/chats", class: "btn sm", style: "padding:2px 10px" }, "→"), avatar(otherName(room()), other, "s"), h("span", { id: "convName" }, otherName(room()))),
+      msgs, h("div", { class: "conv-send" }, ta, send));
+    ta.focus();
+    stopConv = ref.collection("msgs").orderBy("ts").limitToLast(300).onSnapshot(s => {
+      const atBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 80;
+      put(msgs, s.empty ? h("p", { class: "hint", style: "margin:auto" }, "עוד אין הודעות – כתבו את הראשונה 👋") :
+        s.docs.map(d => { const m = d.data({ serverTimestamps: "estimate" }); return h("div", { class: "bub " + (m.uid === me.uid ? "me" : "them") }, m.text, h("time", {}, ago(m.ts))); }));
+      if (atBottom || s.docChanges().some(c => c.type === "added")) msgs.scrollTop = msgs.scrollHeight;
+      // סימון כנקרא כשהשיחה פתוחה מול העיניים
+      const r = room();
+      if (!document.hidden && r.lastUid && r.lastUid !== me.uid && ms(r.lastTs) > ms((r.read || {})[me.uid]))
+        ref.update({ ["read." + me.uid]: NOW() }).catch(() => {});
+    }, () => put(msgs, h("p", { class: "hint", style: "margin:auto" }, "אין גישה לצ'אט הזה")));
+  }
 
   // "לפני X דקות" מתעדכן לבד
   setInterval(() => { const p = location.hash; if (!p.startsWith("#/topic") && !p.startsWith("#/new") && !p.startsWith("#/search")) route(true); }, 60000);

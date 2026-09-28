@@ -3,18 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>תוכנה בקליק – תוכנות למחשב בחינם</title>
+<title>ספר טלפונים 2026-27 – תוכנה בקליק</title>
 <!-- תיאור לגוגל ותצוגה מקדימה כששולחים את הקישור בוואטסאפ -->
-<meta name="description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם: תוכנת אוטובוסים שעובדת בלי אינטרנט, קולית להקראה והקלדה קולית ועוד. הורדה והתקנה ב-Windows.">
+<meta name="description" content="כל ספר הטלפונים במחשב ובטלפון, בלי אינטרנט: יותר מ-8,000 מספרים, חיפוש לפי שם, רחוב, עיר או מספר.">
 <meta name="theme-color" content="#0a1222">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="תוכנה בקליק">
-<meta property="og:title" content="תוכנה בקליק – תוכנות למחשב בחינם">
-<meta property="og:description" content="תוכנות פשוטות ושימושיות בעברית למחשב, בחינם. הורדה והתקנה ב-Windows.">
+<meta property="og:title" content="ספר טלפונים 2026-27 – תוכנה בקליק">
+<meta property="og:description" content="כל ספר הטלפונים במחשב ובטלפון, בלי אינטרנט: יותר מ-8,000 מספרים, חיפוש לפי שם, רחוב, עיר או מספר.">
 <meta property="og:image" content="https://0772292196ai-oss.github.io/AI/logo.jpg">
+<meta property="og:url" content="https://0772292196ai-oss.github.io/AI/TEL.html">
 <meta property="og:locale" content="he_IL">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232f7cf6'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='5' width='16' height='10' rx='1.5'/%3E%3Cpath d='M9 19h6M12 15v4M12 7.5v4M10 9.8l2 2 2-2'/%3E%3C/g%3E%3C/svg%3E">
+<!-- "הוספה למסך הבית" בטלפון – האתר נפתח כמו אפליקציה -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.jpg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="תוכנה בקליק">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="preconnect" href="https://www.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -720,6 +728,115 @@
   .btn.apk-btn { background: linear-gradient(120deg, #10b981, #22d3ee) !important; box-shadow: 0 14px 30px -14px rgba(16,185,129,.9), inset 0 1px 0 rgba(255,255,255,.25) !important; }
   #apApk { margin-top: 10px; }
   .nav a { white-space: nowrap; }
+
+  /* מספרים בראש הדף */
+  .hero-stats { display: flex; justify-content: center; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+  .hero-stats div {
+    min-width: 150px; padding: 16px 22px; border-radius: 20px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.015)); backdrop-filter: blur(12px);
+  }
+  .hero-stats b { display: block; font-family: "Heebo", sans-serif; font-size: 2rem; font-weight: 900; line-height: 1.1;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-stats span { color: var(--muted); font-size: .92rem; font-weight: 600; }
+
+  /* מיון */
+  .bar-tools { display: flex; gap: 10px; align-items: center; flex: 1; justify-content: flex-end; }
+  #appSort { width: auto; padding: 11px 14px; border-radius: 16px; background: var(--glass); border: 1px solid var(--line2); color: var(--ink); font-weight: 700; cursor: pointer; }
+  #appSort option { background: #0d1426; }
+
+  /* ביקורות */
+  .reviews { margin: -6px 0 20px; }
+  .review-form { background: rgba(0,0,0,.2); border: 1px solid var(--line); border-radius: 18px; padding: 12px; margin-bottom: 16px; }
+  .review-form textarea { width: 100%; resize: vertical; min-height: 64px; background: var(--glass); border: 1px solid var(--line); color: var(--ink); padding: 12px; font: inherit; border-radius: 12px; }
+  .review-form-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+  #reviewsList h3 { margin: 6px 0 12px; font-size: 1.15rem; }
+  .review-item { display: flex; gap: 12px; padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.025); margin-bottom: 10px; }
+  .rv-av { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; font-weight: 900; color: #fff; background: var(--grad); }
+  .rv-body { flex: 1; min-width: 0; }
+  .rv-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .rv-stars { color: var(--gold); letter-spacing: 1px; font-size: .95rem; }
+  .rv-top small { color: var(--muted); }
+  .rv-del { margin-inline-start: auto; background: none; border: none; opacity: .6; }
+  .rv-del:hover { opacity: 1; }
+  .review-item p { margin: 6px 0 0; color: #c3cbe3; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+  @media (max-width: 760px) { .bar-tools { flex-direction: column; align-items: stretch; } #appSort { width: 100%; } }
+
+  /* סינון מהיר */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 24px; }
+  .filters button {
+    padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: .95rem; color: var(--muted);
+    background: var(--glass); border: 1px solid var(--line); transition: all .2s;
+  }
+  .filters button:hover { color: var(--ink); border-color: var(--line2); }
+  .filters button.on { color: #fff; background: linear-gradient(135deg, rgba(79,124,255,.4), rgba(168,85,247,.35)); border-color: rgba(168,85,247,.5); }
+
+  /* שאלות נפוצות */
+  .faq { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+  .faq h2 { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -1px; margin: 0 0 26px; }
+  .faq-item {
+    border: 1px solid var(--line); border-radius: 18px; margin-bottom: 12px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)); transition: border-color .2s;
+  }
+  .faq-item[open] { border-color: rgba(168,85,247,.45); }
+  .faq-item summary {
+    cursor: pointer; list-style: none; padding: 18px 22px; font-weight: 800; font-size: 1.08rem;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: "+"; font-size: 1.5rem; font-weight: 400; color: var(--accent-2); transition: transform .25s; }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item p { margin: 0; padding: 0 22px 20px; color: #b3bdd8; line-height: 1.75; }
+  .faq-more { text-align: center; color: var(--muted); margin-top: 22px; }
+  .faq-more button { background: none; border: none; color: #c4a8ff; font-weight: 800; text-decoration: underline; }
+
+  /* תוכנות נוספות בדף תוכנה */
+  .more-apps { margin-top: 26px; }
+  .more-apps h3 { font-size: 1.3rem; margin: 0 0 14px; }
+  .more-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+  .more-card {
+    display: flex; align-items: center; gap: 14px; padding: 12px; border-radius: 18px; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)); transition: transform .2s, border-color .2s;
+  }
+  .more-card:hover { transform: translateY(-3px); border-color: rgba(168,85,247,.45); }
+  .more-card .mi { width: 56px; height: 56px; flex: none; border-radius: 14px; overflow: hidden; }
+  .more-card .mi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .more-card .mt { flex: 1; min-width: 0; }
+  .more-card b { display: block; }
+  .more-card small { color: var(--muted); display: block; line-height: 1.45; }
+  .more-card .go { color: var(--accent-2); font-size: 1.3rem; }
+
+  /* חזרה למעלה */
+  .to-top {
+    position: fixed; bottom: 92px; left: 26px; z-index: 14; width: 48px; height: 48px; border-radius: 16px; font-size: 1.3rem; color: #fff;
+    border: 1px solid var(--line2); background: rgba(12,16,32,.8); backdrop-filter: blur(12px); box-shadow: 0 14px 30px -12px rgba(0,0,0,.9);
+    animation: pop .2s ease;
+  }
+  .to-top:hover { border-color: rgba(168,85,247,.6); }
+  @media (max-width: 760px) { .hero-stats div { min-width: 0; flex: 1; padding: 12px; } .hero-stats b { font-size: 1.5rem; } .to-top { bottom: 84px; left: 16px; } }
+
+  /* תפריט לטלפון (☰) */
+  .menu-btn { display: none; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line2); background: var(--glass); flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 0; flex: none; }
+  .menu-btn span { display: block; width: 20px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s, opacity .2s; }
+  .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 760px) {
+    .menu-btn { display: flex; order: -1; }
+    .topbar .inner { gap: 10px; padding: 0 10px; }
+    .logo { font-size: 1.15rem; flex: 1; min-width: 0; }
+    .logo .mark { width: 34px; height: 34px; }
+    .auth { gap: 6px; }
+    .auth .small-btn { padding: 8px 12px; font-size: .9rem; }
+    .auth #openLogin { display: none; } /* בטלפון: "הרשמה" פותח את אותו חלון, ושם אפשר לעבור ל"התחברות" */
+    .who { display: none !important; }
+    .nav.open {
+      display: flex !important; flex-direction: column; gap: 4px; position: fixed; top: 76px; right: 8px; left: 8px;
+      padding: 10px; border-radius: 18px; border: 1px solid var(--line2);
+      background: rgba(8,11,22,.985); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 30px 60px -20px rgba(0,0,0,.9); animation: pop .2s ease;
+    }
+    .nav.open a { padding: 14px 16px; font-size: 1.05rem; }
+  }
   @media (max-width: 1180px) { .nav a { padding: 9px 9px; font-size: .92rem; } .live-pill .lbl { display: none; } }
 
   /* כמה מחוברים עכשיו */
@@ -767,7 +884,8 @@
         </span>
         <span>תוכנה <b>בקליק</b></span>
       </a>
-      <nav class="nav">
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="תפריט" aria-expanded="false" aria-controls="mainNav"><span></span><span></span><span></span></button>
+      <nav class="nav" id="mainNav" aria-label="תפריט ראשי">
         <a href="#top" class="on">בית</a>
         <a href="#download">תוכנות</a>
         <a href="#" id="navHelp">עזרה וצ'אט</a>
@@ -830,18 +948,36 @@
     <div class="hero-badges">
       <span>✔ בחינם</span><span>✔ בעברית</span><span>✔ ל-Windows 10 ו-11</span><span>✔ תמיכה בצ'אט</span>
     </div>
+    <div class="hero-stats">
+      <div><b id="stApps">–</b><span>תוכנות</span></div>
+      <div><b id="stDl">–</b><span>הורדות</span></div>
+      <div><b id="stLive">–</b><span>מחוברים עכשיו</span></div>
+    </div>
   </section>
 
   <main class="products" id="download">
     <div class="bar">
       <span id="appCount">2 תוכנות</span>
-      <input type="search" id="appSearch" class="search" placeholder="🔍 חיפוש תוכנה...">
+      <div class="bar-tools">
+        <select id="appSort" aria-label="מיון תוכנות">
+          <option value="">מיון: מומלץ</option>
+          <option value="dl">הכי מורדות</option>
+          <option value="name">לפי שם (א-ת)</option>
+        </select>
+        <input type="search" id="appSearch" class="search" placeholder="🔍 חיפוש תוכנה..." aria-label="חיפוש תוכנה">
+      </div>
+    </div>
+    <div class="filters" id="appFilter" role="group" aria-label="סינון תוכנות">
+      <button type="button" data-f="" class="on">הכל</button>
+      <button type="button" data-f="offline">📶 בלי אינטרנט</button>
+      <button type="button" data-f="android">📱 גם לטלפון</button>
+      <button type="button" data-f="new">✨ חדש</button>
     </div>
     <p class="no-results hidden" id="noResults">לא נמצאה תוכנה. נסו מילה אחרת, או שאלו את העוזר 🤖</p>
     <div class="grid">
-      <article class="card" id="busCard">
+      <article class="card" id="busCard" data-tags="offline">
         <div class="art">
-          <img src="https://raw.githubusercontent.com/0772292196ai-oss/AI/refs/heads/main/ASX.jpg" alt="תוכנת אוטובוסים">
+          <img src="https://raw.githubusercontent.com/0772292196ai-oss/AI/refs/heads/main/ASX.jpg" alt="תוכנת אוטובוסים" loading="lazy" decoding="async">
         </div>
         <div class="body">
           <h2>תוכנת אוטובוסים <span class="ver">v1.0.4</span></h2>
@@ -858,9 +994,9 @@
       </article>
 
       <!-- ===== תוכנה 2: ERT ===== -->
-      <article class="card" id="ertCard">
+      <article class="card" id="ertCard" data-tags="">
         <div class="art" style="background:#15151f">
-          <img src="https://vocalremover.org/img/splitter/player_en.png" alt="קולית" style="object-fit:contain">
+          <img src="https://vocalremover.org/img/splitter/player_en.png" alt="קולית" style="object-fit:contain" loading="lazy" decoding="async">
         </div>
         <div class="body">
           <h2>קולית <span class="ver">v1.0.0</span></h2>
@@ -878,7 +1014,7 @@
       </article>
 
       <!-- ===== תוכנה 3: ספר טלפונים ===== -->
-      <article class="card" id="telCard">
+      <article class="card" id="telCard" data-tags="offline android new">
         <div class="art" style="background:linear-gradient(135deg,#10b981,#22d3ee)">
           <span style="font-size:6rem;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35))">📒</span>
         </div>
@@ -940,6 +1076,15 @@
     </div>
   </section>
 
+  <!-- ===== שאלות נפוצות (נבנה מאותו מידע שהעוזר AI משתמש בו) ===== -->
+  <section class="faq" id="faq">
+    <h2>שאלות נפוצות</h2>
+    <div class="faq-list" id="faqList"></div>
+    <p class="faq-more">לא מצאתם תשובה? <button type="button" onclick="document.getElementById('aiFab').click()">🤖 שאלו את העוזר</button></p>
+  </section>
+
+  <button type="button" class="to-top hidden" id="toTop" aria-label="חזרה למעלה" title="חזרה למעלה">↑</button>
+
   <!-- ===== דף פרטי התוכנה (נפתח בלחיצה על הכרטיס) ===== -->
   <section class="app-page hidden" id="appPage">
     <a href="#" class="back" id="backLink">→ חזרה לגלריה</a>
@@ -965,6 +1110,18 @@
           <b id="apAvg"></b> <span class="my-rate" id="apCount"></span>
         </div>
         <div class="my-rate" id="apMyRate"></div>
+      </div>
+
+      <!-- ביקורות בכתב -->
+      <div class="reviews" id="reviewsBox">
+        <div class="review-form hidden" id="reviewForm">
+          <textarea id="reviewText" maxlength="400" rows="2" placeholder="ספרו לאחרים מה חשבתם על התוכנה (לא חובה)"></textarea>
+          <div class="review-form-row">
+            <span class="hint" id="reviewHint">בחרו כוכבים למעלה, כתבו כמה מילים ולחצו "פרסום"</span>
+            <button type="button" class="small-btn primary" id="reviewSend">פרסום ביקורת</button>
+          </div>
+        </div>
+        <div id="reviewsList"></div>
       </div>
 
       <p class="app-desc" id="apDesc"></p>
@@ -993,6 +1150,10 @@
       <h3>דרישות ומגבלות</h3>
       <ul id="apReqs"></ul>
     </div>
+    <div class="more-apps hidden" id="moreAppsBox">
+      <h3>תוכנות נוספות שאולי תאהבו</h3>
+      <div class="more-grid" id="moreApps"></div>
+    </div>
   </section>
 
   <footer>
@@ -1016,7 +1177,7 @@
     <div class="modal wide">
       <div class="modal-head">
         <h2>🧑‍💻 אזור המפתחים</h2>
-        <button type="button" class="x-btn" data-close="devOverlay">✕</button>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="devOverlay">✕</button>
       </div>
       <div id="devBody"></div>
     </div>
@@ -1027,7 +1188,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>⚡ התקנה דרך "תוכנה בקליק"</h2>
-        <button type="button" class="x-btn" data-close="storeOverlay">✕</button>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="storeOverlay">✕</button>
       </div>
       <p class="dev-intro">"תוכנה בקליק" היא חנות קטנה למחשב (קובץ אחד, בלי התקנה): מתקינים ממנה כל תוכנה מהאתר בלחיצה, ומסירים תוכנות מהמחשב.</p>
       <ol class="store-steps">
@@ -1040,12 +1201,25 @@
     </div>
   </div>
 
+  <!-- ===== "ההורדה התחילה!" – הוראות אחרי לחיצה על הורדה ===== -->
+  <div class="overlay hidden" id="dlOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="dlTitle">⬇ ההורדה התחילה!</h2>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="dlOverlay">✕</button>
+      </div>
+      <ol class="store-steps" id="dlSteps"></ol>
+      <label class="check"><input type="checkbox" id="dlNever"> לא להציג את זה שוב</label>
+      <button type="button" class="primary-btn" id="dlOk">הבנתי 👍</button>
+    </div>
+  </div>
+
   <!-- ===== דיווח על תוכנה ===== -->
   <div class="overlay hidden" id="reportOverlay">
     <div class="modal">
       <div class="modal-head">
         <h2>🚩 דיווח על תוכנה</h2>
-        <button type="button" class="x-btn" data-close="reportOverlay">✕</button>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="reportOverlay">✕</button>
       </div>
       <p class="dev-intro">מצאתם בעיה בתוכנה <b id="repApp"></b>? ספרו לנו והצוות יבדוק. הדיווח נשלח רק לצוות.</p>
       <div class="field">
@@ -1073,7 +1247,7 @@
     <div class="modal wide">
       <div class="modal-head">
         <h2>🛡️ ניהול תוכנות</h2>
-        <button type="button" class="x-btn" data-close="adminOverlay">✕</button>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="adminOverlay">✕</button>
       </div>
       <div class="tabs">
         <button type="button" class="on" data-atab="pending">ממתינות לאישור</button>
@@ -1091,8 +1265,8 @@
     <div class="chat-head">
       <span>🤖 עוזר חכם</span>
       <span class="head-btns">
-        <button type="button" id="aiBig" title="הגדלה / הקטנה">⛶</button>
-        <button type="button" id="aiClose" title="סגירה">✕</button>
+        <button type="button" id="aiBig" title="הגדלה / הקטנה" aria-label="הגדלה או הקטנה">⛶</button>
+        <button type="button" id="aiClose" title="סגירה" aria-label="סגירה">✕</button>
       </span>
     </div>
     <div class="chat-msgs" id="aiMsgs"></div>
@@ -1110,8 +1284,8 @@
       <button type="button" id="chatBack" class="hidden" title="חזרה לרשימה">→</button>
       <span class="chat-who"><span id="chatTitle">צ'אט</span><small id="chatStatus" class="hidden"></small></span>
       <span class="head-btns">
-        <button type="button" id="chatBig" title="הגדלה / הקטנה">⛶</button>
-        <button type="button" id="chatClose" title="סגירה">✕</button>
+        <button type="button" id="chatBig" title="הגדלה / הקטנה" aria-label="הגדלה או הקטנה">⛶</button>
+        <button type="button" id="chatClose" title="סגירה" aria-label="סגירה">✕</button>
       </span>
     </div>
     <div class="chat-list hidden" id="chatList"></div>
@@ -1801,7 +1975,7 @@
 
   function route() {
     if (IS_STORE) { // דף החנות: מסתירים את כל השאר
-      ["appPage", "top", "download", "steps"].forEach(id => $(id).classList.add("hidden"));
+      ["appPage", "top", "download", "steps", "faq"].forEach(id => $(id).classList.add("hidden"));
       $("storePage").classList.remove("hidden");
       document.title = "החנות למחשב – תוכנה בקליק";
       document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.id === "navStore"));
@@ -1812,6 +1986,7 @@
     $("top").classList.toggle("hidden", onApp);
     $("download").classList.toggle("hidden", onApp);
     $("steps").classList.toggle("hidden", onApp);
+    $("faq").classList.toggle("hidden", onApp);
     if (onApp) {
       window.scrollTo(0, 0); loadAppStats();
       document.title = APP.name + " – תוכנה בקליק";
@@ -1861,27 +2036,101 @@
         const d = await db.collection("stats").doc(app.stats).get();
         const n = app.downloadsBefore + (d.exists ? d.data().downloads || 0 : 0);
         if (n) parts.push("<span>⬇ " + n.toLocaleString("he-IL") + " הורדות</span>");
+        totalDownloads += n;
+        const card = box.closest(".card"); if (card) card.dataset.dl = n; // למיון "הכי מורדות"
+        $("stDl").textContent = totalDownloads.toLocaleString("he-IL");
       } catch (e) {}
       box.innerHTML = parts.join("");
     });
   }
+  var totalDownloads = 0;
 
   var cardStatsReady = true;
   if (!(IN_ASD || location.hash === "#app")) loadCardStats();
 
-  // חיפוש תוכנה בדף הראשי
-  $("appSearch").addEventListener("input", () => {
+  // חיפוש + סינון מהיר בדף הראשי
+  let appFilter = "";
+  function filterCards() {
     const q = $("appSearch").value.trim().toLowerCase();
     let shown = 0;
     document.querySelectorAll("#download .card").forEach(c => {
-      const hit = !q || c.textContent.toLowerCase().includes(q);
+      const tags = " " + (c.dataset.tags || "") + " ";
+      const hit = (!q || c.textContent.toLowerCase().includes(q)) && (!appFilter || tags.includes(" " + appFilter + " "));
       c.classList.toggle("hidden", !hit);
       if (hit) shown++;
     });
     $("noResults").classList.toggle("hidden", shown > 0);
     $("appCount").textContent = shown === 1 ? "תוכנה אחת" : shown + " תוכנות";
+  }
+  $("appSearch").addEventListener("input", filterCards);
+  $("appFilter").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    appFilter = b.dataset.f;
+    $("appFilter").querySelectorAll("button").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", x === b); });
+    filterCards();
   });
   $("appCount").textContent = document.querySelectorAll("#download .card").length + " תוכנות";
+  $("stApps").textContent = document.querySelectorAll("#download .card").length;
+
+  // מיון הגלריה
+  document.querySelectorAll("#download .card").forEach((c, i) => c.dataset.order = i);
+  $("appSort").addEventListener("change", () => {
+    const grid = document.querySelector("#download .grid"), how = $("appSort").value;
+    const cards = [...grid.querySelectorAll(".card")];
+    cards.forEach((c, i) => { if (c.dataset.order === undefined) c.dataset.order = 100 + i; });
+    const name = c => (c.querySelector("h2") || c).textContent.trim();
+    cards.sort((a, b) => how === "dl" ? (+b.dataset.dl || 0) - (+a.dataset.dl || 0)
+      : how === "name" ? name(a).localeCompare(name(b), "he") : a.dataset.order - b.dataset.order);
+    cards.forEach(c => grid.appendChild(c));
+  });
+
+  // אחרי לחיצה על הורדה: חלון "ההורדה התחילה!" עם הוראות מה עושים עכשיו
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href*="export=download"], a.dl-link');
+    if (!a) return;
+    try { if (localStorage.getItem("dlHelpOff")) return; } catch (x) {}
+    const apk = a.classList.contains("apk-btn") || a.id === "apApk";
+    $("dlTitle").textContent = apk ? "📱 ההורדה לטלפון התחילה!" : "⬇ ההורדה התחילה!";
+    const steps = apk ? [
+      "חכו שההורדה תסתיים, ואז לחצו על הקובץ שירד (או על ההתראה למעלה).",
+      "אם הטלפון שואל – אשרו \"התקנה ממקור לא ידוע\" לדפדפן.",
+      "לחצו \"התקן\" – וזהו! התוכנה תופיע ברשימת האפליקציות."
+    ] : [
+      "הקובץ יורד לתיקיית \"הורדות\". אם Google Drive שואל – לחצו \"הורד בכל זאת\".",
+      "פתחו את הקובץ שירד (לחיצה כפולה).",
+      "אם מופיע חלון כחול \"Windows הגן על המחשב\" – לחצו \"מידע נוסף\" ואז \"הפעל בכל זאת\".",
+      "משהו לא עובד? שאלו את העוזר 🤖 או פתחו צ'אט 💬 – נשמח לעזור."
+    ];
+    $("dlSteps").innerHTML = "";
+    steps.forEach(t => { const li = document.createElement("li"); li.textContent = t; $("dlSteps").appendChild(li); });
+    $("dlNever").checked = false;
+    setTimeout(() => $("dlOverlay").classList.remove("hidden"), 400);
+  });
+  $("dlOk").onclick = () => {
+    if ($("dlNever").checked) try { localStorage.setItem("dlHelpOff", "1"); } catch (x) {}
+    $("dlOverlay").classList.add("hidden");
+  };
+
+  // "תוכנות נוספות" בתחתית דף תוכנה
+  function renderMoreApps() {
+    const others = Object.values(APPS).filter(a => a !== APP && !a.hidden);
+    $("moreAppsBox").classList.toggle("hidden", !others.length || !onDetailsPage());
+    $("moreApps").innerHTML = "";
+    others.forEach(a => {
+      const el = document.createElement("a");
+      el.className = "more-card"; el.href = "./" + a.page;
+      el.innerHTML = '<span class="mi"></span><span class="mt"><b></b><small></small></span><span class="go">←</span>';
+      el.querySelector(".mi").innerHTML = a.icon;
+      el.querySelector("b").textContent = a.name;
+      el.querySelector("small").textContent = (a.desc || "").slice(0, 70) + ((a.desc || "").length > 70 ? "…" : "");
+      $("moreApps").appendChild(el);
+    });
+  }
+  renderMoreApps();
+
+  // כפתור "חזרה למעלה"
+  window.addEventListener("scroll", () => $("toTop").classList.toggle("hidden", scrollY < 700), { passive: true });
+  $("toTop").onclick = () => scrollTo({ top: 0, behavior: "smooth" });
 
   /* ===== ניסיון חד-פעמי של הגרסה לנייד – רק למחוברים, פעם אחת לכל חשבון ===== */
   function onDetailsPage() { return !!PAGE || !!DYN_ID || location.hash === "#app"; }
@@ -2008,6 +2257,7 @@
     });
     const n = document.querySelectorAll("#download .card").length;
     $("appCount").textContent = n === 1 ? "תוכנה אחת" : n + " תוכנות";
+    $("stApps").textContent = n;
     loadCardStats();
   }
   loadDynCards();
@@ -2393,18 +2643,73 @@
     db.collection("stats").doc(APP.stats).get()
       .then(d => { $("apDl").textContent = (APP.downloadsBefore + (d.exists ? d.data().downloads || 0 : 0)).toLocaleString("he-IL"); })
       .catch(() => {});
-    let mine = 0;
+    let mine = 0, reviews = [];
     try {
       const snap = await db.collection(APP.ratings).get();
       let sum = 0;
-      snap.forEach(d => { sum += d.data().stars || 0; if (me && d.id === me.uid) mine = d.data().stars; });
+      snap.forEach(d => {
+        const r = d.data();
+        sum += r.stars || 0;
+        if (me && d.id === me.uid) { mine = r.stars; if (document.activeElement !== $("reviewText")) $("reviewText").value = r.text || ""; }
+        if (r.text) reviews.push(Object.assign({ id: d.id }, r));
+      });
       const avg = snap.size ? sum / snap.size : 0;
       $("apStars").style.width = (avg / 5 * 100) + "%";
       $("apAvg").textContent = snap.size ? avg.toFixed(1) : "";
       $("apCount").textContent = snap.size ? "(" + snap.size + ")" : "עוד אין דירוגים";
     } catch (e) { $("apCount").textContent = ""; }
+    myStars = mine;
     renderMyRate(mine);
+    renderReviews(reviews);
   }
+
+  /* ===== ביקורות בכתב – נשמרות יחד עם הדירוג (אותו מסמך, בלי כללים חדשים) ===== */
+  let myStars = 0;
+  function renderReviews(list) {
+    $("reviewForm").classList.toggle("hidden", !me);
+    const box = $("reviewsList");
+    box.innerHTML = "";
+    list.sort((a, b) => (b.ts && b.ts.toMillis ? b.ts.toMillis() : 0) - (a.ts && a.ts.toMillis ? a.ts.toMillis() : 0));
+    if (list.length) {
+      const h = document.createElement("h3");
+      h.textContent = "💬 מה אומרים על התוכנה (" + list.length + ")";
+      box.appendChild(h);
+    }
+    list.slice(0, 30).forEach(r => {
+      const el = document.createElement("div");
+      el.className = "review-item";
+      el.innerHTML = '<span class="rv-av"></span><div class="rv-body"><div class="rv-top"><b></b><span class="rv-stars"></span><small></small></div><p></p></div>';
+      const name = (r.name || "משתמש/ת").slice(0, 40);
+      el.querySelector(".rv-av").textContent = name.slice(0, 1);
+      el.querySelector("b").textContent = name;
+      el.querySelector(".rv-stars").textContent = "★".repeat(r.stars || 0) + "☆".repeat(5 - (r.stars || 0));
+      el.querySelector("small").textContent = r.ts && r.ts.toDate ? r.ts.toDate().toLocaleDateString("he-IL") : "";
+      el.querySelector("p").textContent = String(r.text).slice(0, 400);
+      if (me && (r.id === me.uid || isAdmin)) { // מחיקה: הכותב/ת – או המנהל
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "rv-del"; del.textContent = "🗑"; del.title = "מחיקת הביקורת";
+        del.onclick = () => {
+          if (!confirm("למחוק את הביקורת?")) return;
+          const ref = db.collection(APP.ratings).doc(r.id);
+          (r.id === me.uid ? ref.set({ text: firebase.firestore.FieldValue.delete() }, { merge: true }) : ref.delete())
+            .then(loadAppStats).catch(e => alert("המחיקה נכשלה" + (e.code === "permission-denied" ? " – צריך לעדכן את הכללים ב-Firebase." : ".")));
+        };
+        el.querySelector(".rv-top").appendChild(del);
+      }
+      box.appendChild(el);
+    });
+  }
+  $("reviewSend").onclick = () => {
+    const text = $("reviewText").value.trim().slice(0, 400);
+    if (!myStars) { $("reviewHint").textContent = "⭐ קודם בחרו כמה כוכבים לתת (למעלה)"; return; }
+    if (text.length < 2) { $("reviewHint").textContent = "כתבו כמה מילים על התוכנה"; return; }
+    $("reviewSend").disabled = true;
+    db.collection(APP.ratings).doc(me.uid)
+      .set({ stars: myStars, text, name: (me.displayName || "משתמש/ת").slice(0, 40), ts: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+      .then(() => { $("reviewHint").textContent = "✔ הביקורת פורסמה – תודה!"; loadAppStats(); })
+      .catch(() => { $("reviewHint").textContent = "הביקורת לא נשמרה, נסו שוב."; })
+      .then(() => { $("reviewSend").disabled = false; });
+  };
 
   function renderMyRate(mine) {
     const box = $("apMyRate");
@@ -2424,7 +2729,7 @@
       s.onmouseenter = () => box.querySelectorAll("button").forEach((x, j) => x.classList.toggle("on", j < i));
       s.onmouseleave = () => box.querySelectorAll("button").forEach((x, j) => x.classList.toggle("on", j < mine));
       s.onclick = () => db.collection(APP.ratings).doc(me.uid)
-        .set({ stars: i, ts: firebase.firestore.FieldValue.serverTimestamp() })
+        .set({ stars: i, name: (me.displayName || "משתמש/ת").slice(0, 40), ts: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }) // merge: לא מוחק ביקורת שנכתבה
         .then(loadAppStats)
         .catch(e => alert("הדירוג לא נשמר. " + (e.code === "permission-denied" ? "צריך לעדכן את הכללים (Rules) ב-Firestore." : "")));
       box.appendChild(s);
@@ -2447,7 +2752,7 @@
      "לוחצים 'הורדה והתקנה' בכרטיס של התוכנה או בדף הפרטים שלה. הקובץ יורד מ-Google Drive. אם Drive אומר שלא ניתן לסרוק את הקובץ – לוחצים 'הורד בכל זאת'. פותחים את הקובץ שירד. אם Windows מציג חלון כחול 'Windows הגן על המחשב' – לוחצים 'מידע נוסף' ואז 'הפעל בכל זאת'."],
     ["כמה זה עולה", "כל התוכנות באתר חינמיות."],
     ["האם זה עובד בטלפון / באנדרואיד / באייפון / במק",
-     "לא. התוכנות מיועדות למחשב עם Windows בלבד (Windows 10 או 11). את האתר עצמו אפשר לפתוח גם בטלפון."],
+     "רוב התוכנות מיועדות למחשב עם Windows (10 או 11). לספר טלפונים יש גם גרסה לטלפון אנדרואיד – כפתור 'הורדה לטלפון' בכרטיס ובדף שלה. לאייפון ולמק אין כרגע גרסה. את האתר עצמו אפשר לפתוח בכל טלפון, ואפילו להוסיף אותו למסך הבית."],
     ["איך מדרגים תוכנה",
      "נכנסים לדף הפרטים של התוכנה (כפתור 'פרטים נוספים' או לחיצה על הכרטיס), מתחברים, ולוחצים על מספר הכוכבים הרצוי (1 עד 5). אפשר לשנות את הדירוג בכל זמן."],
     ["ההורדה חסומה / לא עובדת",
@@ -2455,6 +2760,16 @@
     ["איך מוצאים את דף הפרטים / מידע נוסף על תוכנה",
      "לוחצים על הכרטיס של התוכנה, או על 'פרטים נוספים'. שם יש תיאור מלא, מה התוכנה יודעת לעשות, דרישות, מונה הורדות ודירוג."]
   ];
+
+  // "שאלות נפוצות" בדף הראשי – מאותן שאלות שהעוזר מכיר (בלי "מי אתה")
+  SITE_FAQ.slice(1).forEach(([q, a]) => {
+    const d = document.createElement("details");
+    d.className = "faq-item";
+    d.innerHTML = "<summary></summary><p></p>";
+    d.querySelector("summary").textContent = q.split(" / ")[0] + "?";
+    d.querySelector("p").textContent = a;
+    $("faqList").appendChild(d);
+  });
   // ↑ עד כאן ↑
 
   const SITE_BASE = "https://0772292196ai-oss.github.io/AI/";
@@ -2726,6 +3041,7 @@
       const pill = $("livePill");
       pill.classList.toggle("hidden", !works || !total);
       $("liveNum").textContent = total.toLocaleString("he-IL");
+      if (works && total) $("stLive").textContent = total.toLocaleString("he-IL");
       // בדף של תוכנה: כמה צופים בה עכשיו
       const n = per[pageKey()] || 0, onApp = !$("appPage").classList.contains("hidden");
       $("apLive").classList.toggle("hidden", !works || !onApp || !n);
@@ -2748,6 +3064,15 @@
     window.addEventListener("pagehide", () => { me.delete().catch(() => {}); }); // יוצאים – יורדים מהספירה מיד
   })();
 </script><script>
+  // תפריט לטלפון (☰)
+  (function () {
+    const btn = $("menuBtn"), nav = $("mainNav");
+    const set = open => { nav.classList.toggle("open", open); btn.setAttribute("aria-expanded", open); };
+    btn.addEventListener("click", e => { e.stopPropagation(); set(!nav.classList.contains("open")); });
+    nav.addEventListener("click", e => { if (e.target.closest("a")) set(false); });
+    document.addEventListener("click", e => { if (nav.classList.contains("open") && !e.target.closest("#mainNav")) set(false); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
+  })();
   // עיצוב 3.0: אור שעוקב אחרי העכבר על הכרטיסים + כניסה רכה כשגוללים
   document.addEventListener("pointermove", e => {
     const c = e.target.closest && e.target.closest(".card, .step");
