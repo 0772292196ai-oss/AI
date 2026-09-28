@@ -109,6 +109,54 @@
   .pill.lock { background: #fde2e4; color: #b42318; }
   .pill.wait { background: #fff1c2; color: #92400e; }
   .crumbs .sp { flex: 1; }
+  a.uname { color: var(--ink); font-weight: 800; }
+  a.uname:hover { color: var(--primary); }
+
+  /* 👍 ניקוד 👎 */
+  .votes { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line2); border-radius: 10px; padding: 1px 3px; background: var(--card); }
+  .votes b { min-width: 22px; text-align: center; font-size: .9rem; }
+  .votes b.neg { color: var(--danger); }
+  .vbtn { background: none; border: 0; border-radius: 7px; width: 30px; height: 28px; cursor: pointer; filter: grayscale(1); opacity: .6; font-size: 1rem; }
+  .vbtn:hover { background: var(--soft); opacity: 1; filter: none; }
+  .vbtn.on { filter: none; opacity: 1; background: #e6edff; }
+  .vbtn.down.on { background: #fde2e4; }
+
+  /* פרופיל משתמש */
+  .profile { overflow: hidden; padding: 0; margin-bottom: 18px; }
+  .pcover { --hue: 230; height: 190px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.05) 25%, transparent 25%) -40px 0 / 80px 80px,
+      linear-gradient(225deg, rgba(255,255,255,.04) 25%, transparent 25%) -40px 0 / 80px 80px,
+      linear-gradient(315deg, rgba(0,0,0,.18) 25%, transparent 25%) 0 0 / 80px 80px,
+      linear-gradient(45deg, rgba(0,0,0,.12) 25%, transparent 25%) 0 0 / 80px 80px,
+      linear-gradient(120deg, hsl(var(--hue) 22% 22%), hsl(calc(var(--hue) + 40) 25% 30%)); }
+  .phead { display: flex; align-items: flex-end; gap: 16px; padding: 0 24px 18px; margin-top: -66px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+  .phead .sp { flex: 1; }
+  .phead > .btn { margin-bottom: 4px; }
+  .av.xl { width: 140px; height: 140px; font-size: 3.6rem; border: 5px solid var(--card); box-shadow: 0 10px 30px -10px rgba(0,0,0,.35); }
+  .pname h1 { margin: 0; font-size: 1.8rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pname .handle { color: var(--muted); font-weight: 700; direction: rtl; }
+  .pgrid { display: grid; grid-template-columns: 250px 1fr; gap: 20px; padding: 20px 24px 24px; }
+  .pabout { border-inline-end: 1px solid var(--line); padding-inline-end: 16px; }
+  .phd { background: var(--bg); border-radius: 8px; padding: 7px 12px; font-weight: 800; margin-bottom: 6px; }
+  .prow { display: flex; justify-content: space-between; padding: 8px 12px; font-size: .95rem; }
+  .prow span { color: var(--ink); font-weight: 700; } .prow b { color: var(--muted); font-weight: 600; }
+  .pgroups { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 12px; }
+  .pacts { border-top: 1px solid var(--line); margin-top: 10px; padding: 10px 12px 0; display: flex; flex-direction: column; gap: 10px; font-size: .92rem; }
+  .pacts a { color: var(--primary); } .pacts a.danger { color: var(--danger); }
+  .pstats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 10px; align-content: start; min-width: 0; }
+  .pstat { background: var(--bg); border-radius: 10px; padding: 16px 12px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+  .pstat small { color: var(--muted); font-weight: 700; }
+  .pstat b { font-size: 2rem; font-weight: 600; line-height: 1.1; }
+  .pstat span { font-size: 1.05rem; }
+  .psec { font-size: 1.2rem; margin: 6px 0 12px; }
+  @media (max-width: 760px) {
+    .pgrid { grid-template-columns: 1fr; padding: 16px; }
+    .pabout { border: 0; padding: 0; }
+    .phead { padding: 0 16px 16px; margin-top: -56px; }
+    .av.xl { width: 112px; height: 112px; font-size: 2.8rem; }
+    .pcover { height: 140px; }
+  }
   .tagchip { font-size: .78rem; font-weight: 700; color: var(--primary) !important; background: var(--soft); border-radius: 20px; padding: 1px 9px; margin-inline-start: 4px; }
   .mention { color: var(--primary); font-weight: 700; }
 
@@ -598,7 +646,7 @@
 
   // מוניטין: כל 👍 שמישהו אחר נותן לפוסט שלך = נקודה אחת.
   // מי שיש לו פחות מ-20 – הנושאים והתגובות שלו ממתינים לאישור מנהל.
-  const REP_MIN = 20;
+  const REP_MIN = 20, REP_LIKE = 10, REP_DISLIKE = 50;
   let profiles = {}, allTopics = [];
   const repOf = uid => (profiles[uid] && profiles[uid].rep) || 0;
   const myRep = () => (profile && profile.rep) || 0;
@@ -704,10 +752,13 @@
       try { const d = await db.collection("forum_profiles").doc(u.uid).get(); if (d.exists) profile = d.data(); } catch (e) {}
       profileReady = true;
       if (!profile && !registering) openFinish(); // חשבון בלי שם משתמש בפורום – משלימים הרשמה
+      // "נראה לאחרונה" בפרופיל – מתעדכן לכל היותר פעם ב-10 דקות
+      if (profile && Date.now() - ms(profile.lastSeen) > 600000)
+        db.collection("forum_profiles").doc(u.uid).update({ lastSeen: NOW() }).catch(() => {});
     }
     const box = $("userbox"); box.innerHTML = "";
     if (u) {
-      box.append(avatar(myName(), u.uid, "s"), h("b", { class: "hide-sm" }, myName()),
+      box.append(h("a", { href: "#/user/" + u.uid, title: "הפרופיל שלי", style: "display:flex;align-items:center;gap:8px;color:inherit" }, avatar(myName(), u.uid, "s"), h("b", { class: "hide-sm" }, myName())),
         h("button", { class: "btn sm", onclick: () => auth.signOut() }, "התנתקות"));
     } else {
       box.append(h("button", { class: "btn sm", onclick: () => openLogin(false) }, "התחברות"),
@@ -766,7 +817,7 @@
     const draft = load("wfhDraft", null), n = notifs().length;
     const cnt = x => x ? h("em", { class: "cnt" }, x) : null;
     put(u, me
-      ? [h("a", { class: "me-row", href: "#/users" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : (profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + myRep()) : null)),
+      ? [h("a", { class: "me-row", href: "#/user/" + me.uid, title: "הפרופיל שלי" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : (profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + myRep()) : null)),
          h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש")),
          h("a", { href: "#/notifications" }, "🔔", h("span", {}, "התראות"), cnt(n)),
          h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
@@ -1054,6 +1105,7 @@
     if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות חדשות בנושאים שפתחתם", notifs(), true);
     if (parts[0] === "queue") return renderList(v, "⏳ ממתין לאישור", "נושאים ותגובות של משתמשים עם פחות מ-" + REP_MIN + " מוניטין – פתחו נושא כדי לאשר או לדחות", queue());
     if (parts[0] === "users") return renderUsers(v);
+    if (parts[0] === "user") return renderProfile(v, parts[1] || "");
     if (parts[0] === "rules") return renderRules(v);
     if (parts[0] === "chats") return renderChats(v, parts[1] || "");
     if (parts[0] === "chat-with") return openDm(parts[1], decodeURIComponent(q.get("n") || ""));
@@ -1155,7 +1207,7 @@
       const c = catOf(t.cat);
       const hasReply = t.replies > 0;
       return h("div", { class: "card tcard" + (me && isUnread(t) ? " unread" : "") },
-        avatar(t.name, t.uid),
+        h("a", { href: "#/user/" + t.uid, title: t.name }, avatar(t.name, t.uid)),
         h("div", {},
           h("h3", {}, tagEl(t.tag), " ", h("a", { href: "#/topic/" + t.id }, t.title), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null, (t.tags || []).slice(0, 3).map(tagChip)),
           h("div", { class: "sub" },
@@ -1166,11 +1218,11 @@
             c ? h("a", { href: "#/category/" + c.id }, c.name) : null,
             h("span", {}, t.name + " · " + ago(t.ts)))),
         h("div", { class: "boxes" },
-          h("div", {}, h("b", {}, short((t.likes || []).length)), h("small", {}, "הצבעות")),
+          h("div", {}, h("b", {}, short((t.likes || []).length - (t.dislikes || []).length)), h("small", {}, "הצבעות")),
           h("div", {}, h("b", {}, short(postsOf(t))), h("small", {}, "פוסטים")),
           h("div", {}, h("b", {}, short(t.views)), h("small", {}, "צפיות"))),
         h("div", { class: "lastbox" }, hasReply
-          ? [h("div", { class: "who" }, avatar(t.lastName, t.lastUid, "s"), h("b", {}, t.lastName || ""), h("span", {}, "· " + ago(t.lastTs))),
+          ? [h("div", { class: "who" }, avatar(t.lastName, t.lastUid, "s"), h("a", { class: "uname", href: "#/user/" + t.lastUid }, t.lastName || ""), h("span", {}, "· " + ago(t.lastTs))),
              h("p", {}, t.lastText || "")]
           : h("span", {}, "אין תגובות")));
     }));
@@ -1186,18 +1238,106 @@
       if (t.lastUid && !map[t.lastUid]) map[t.lastUid] = { uid: t.lastUid, name: t.lastName, topics: 0 };
     });
     const users = Object.values(map).sort((a, b) => repOf(b.uid) - repOf(a.uid) || b.topics - a.topics);
-    const setRep = u => {
-      const n = prompt("כמה מוניטין לתת ל-" + u.name + "? (" + REP_MIN + " ומעלה = מפרסם בלי אישור)", repOf(u.uid));
-      if (n === null || !/^\d+$/.test(n.trim())) return;
-      db.collection("forum_profiles").doc(u.uid).update({ rep: Number(n) }).then(() => toast("✔ המוניטין עודכן")).catch(() => toast("העדכון נכשל"));
-    };
     put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים רשומים · ⭐ = מוניטין (" + REP_MIN + " ומעלה – מפרסמים בלי אישור מנהל)"))),
-      users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, avatar(u.name, u.uid, "l"),
-          h("div", {}, h("b", {}, u.name || "משתמש/ת", u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : [" ", repEl(u.uid)]),
+      users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, h("a", { href: "#/user/" + u.uid }, avatar(u.name, u.uid, "l")),
+          h("div", {}, h("a", { class: "uname", href: "#/user/" + u.uid }, h("b", {}, u.name || "משתמש/ת")), u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : [" ", repEl(u.uid)],
             h("small", {}, u.topics + " נושאים"), " ", chatBtn(u.uid, u.name),
             isAdmin && profiles[u.uid] ? [" ", h("button", { class: "btn sm", onclick: () => setRep(u) }, "⭐ מוניטין")] : null,
             h("div", {}, groupsOf(u.uid).slice(0, 2).map(g => { const b = h("span", { class: "grp-badge" }, g.name); b.style.background = g.color || "#a855f7"; return b; }))))))
         : h("div", { class: "card empty" }, h("div", { class: "big" }, "👤"), h("h3", {}, "עוד אין משתמשים רשומים")));
+  }
+  function setRep(u) {
+    const n = prompt("כמה מוניטין לתת ל-" + u.name + "? (" + REP_MIN + " ומעלה = מפרסם בלי אישור)", repOf(u.uid));
+    if (n === null || !/^-?\d+$/.test(n.trim())) return;
+    db.collection("forum_profiles").doc(u.uid).update({ rep: Number(n) }).then(() => toast("✔ המוניטין עודכן")).catch(() => toast("העדכון נכשל"));
+  }
+
+  // ----- פרופיל משתמש -----
+  const viewedProfiles = new Set();
+  const fullDate = t => { const m = ms(t); return m ? new Date(m).toLocaleString("he-IL", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"; };
+  function renderProfile(v, uid) {
+    const pr = profiles[uid];
+    const mine = allTopics.filter(t => t.uid === uid && canSee(t));
+    const anyT = allTopics.find(t => t.uid === uid) || allTopics.find(t => t.lastUid === uid);
+    if (!pr && !anyT) return put(v, notFound("המשתמש לא נמצא"));
+    const name = pr ? pr.username : anyT.uid === uid ? anyT.name : anyT.lastName;
+    const isAdm = allTopics.some(t => t.uid === uid && t.admin);
+    const self = me && me.uid === uid;
+    if (pr && !self && !viewedProfiles.has(uid)) { // צפייה אחת לכל טעינה
+      viewedProfiles.add(uid);
+      db.collection("forum_profiles").doc(uid).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(() => {});
+    }
+    const followers = (pr && pr.followers) || [];
+    const following = Object.keys(profiles).filter(k => (profiles[k].followers || []).includes(uid)).length;
+    const iFollow = me && followers.includes(me.uid);
+    const follow = () => {
+      if (needLogin("כדי לעקוב צריך להתחבר")) return;
+      const FV = firebase.firestore.FieldValue;
+      db.collection("forum_profiles").doc(uid).update({ followers: iFollow ? FV.arrayRemove(me.uid) : FV.arrayUnion(me.uid) })
+        .then(() => toast(iFollow ? "הפסקתם לעקוב" : "✔ אתם עוקבים אחרי " + name))
+        .catch(e => toast(e.code === "permission-denied" ? "אין הרשאה (אולי צריך לעדכן את הכללים ב-Firebase)" : "שגיאה"));
+    };
+    const report = () => {
+      if (needLogin("כדי לדווח צריך להתחבר")) return;
+      const why = prompt("מה הבעיה עם המשתמש " + name + "? (נשלח למנהל)");
+      if (!why || !why.trim()) return;
+      db.collection("reports").add({ appKey: "WFH", appId: "", appName: "פורום – משתמש: " + name, owner: uid, reason: "user",
+        text: ("דיווח על משתמש בפורום: " + name + "\n" + why.trim()).slice(0, 1000),
+        reporter: me.uid, reporterName: myName(), reporterEmail: me.email || "", createdAt: NOW() })
+        .then(() => toast("✔ הדיווח נשלח למנהל – תודה")).catch(() => toast("הדיווח לא נשלח"));
+    };
+    const blockBtn = h("a", { href: "#", class: "danger" }, "🚫 חסימת משתמש");
+    if (isAdmin && !self) db.collection("blocked").doc(uid).get().then(d => { if (d.exists) put(blockBtn, "✔ ביטול חסימה"); }).catch(() => {});
+    blockBtn.onclick = async e => {
+      e.preventDefault();
+      const ref = db.collection("blocked").doc(uid);
+      try {
+        if ((await ref.get()).exists) { if (!confirm("לבטל את החסימה של " + name + "?")) return; await ref.delete(); put(blockBtn, "🚫 חסימת משתמש"); toast("החסימה בוטלה"); }
+        else {
+          const why = prompt("למה לחסום את " + name + "? (חסום/ה לא יוכל/תוכל לכתוב בפורום ובאתר)");
+          if (why === null) return;
+          await ref.set({ email: "", reason: why.trim() || "חסימה מהפורום", label: name + " (פורום)", at: NOW() });
+          put(blockBtn, "✔ ביטול חסימה"); toast("🚫 " + name + " נחסם/ה");
+        }
+      } catch (x) { toast("הפעולה נכשלה"); }
+    };
+    const stat = (ic, label, val, small) => h("div", { class: "pstat" }, h("small", {}, ic + " " + label), h(small ? "span" : "b", {}, val));
+    const row = (label, val) => h("div", { class: "prow" }, h("span", {}, label), h("b", {}, val));
+    const cover = h("div", { class: "pcover" });
+    put(v, crumbs({ t: "משתמשים", href: "#/users" }, { t: name }),
+      h("div", { class: "card profile" },
+        cover,
+        h("div", { class: "phead" },
+          avatar(name, uid, "xl"),
+          h("div", { class: "pname" }, h("h1", {}, name, isAdm ? h("span", { class: "badge-admin" }, "מנהל") : null),
+            h("div", { class: "handle" }, "@" + name)),
+          h("span", { class: "sp" }),
+          self ? h("span", { class: "hint" }, "👋 זה הפרופיל שלך")
+            : [h("button", { class: "btn" + (iFollow ? "" : " primary"), onclick: follow }, iFollow ? "✔ במעקב" : "➕ מעקב"),
+               h("button", { class: "btn", onclick: () => { if (!needLogin("כדי לשלוח הודעה צריך להתחבר")) location.hash = "#/chat-with/" + uid + "?n=" + encodeURIComponent(name); } }, "💬 צ'אט")]),
+        h("div", { class: "pgrid" },
+          h("aside", { class: "pabout" },
+            h("div", { class: "phd" }, "אודות"),
+            row("פוסטים", short(((pr && pr.postCount) || 0) + mine.length)),
+            row("נושאים", short(mine.length)),
+            row("קבוצות", groupsOf(uid).length),
+            row("עוקבים", followers.length),
+            row("עוקב/ת אחרי", following),
+            groupsOf(uid).length ? h("div", { class: "pgroups" }, groupsOf(uid).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; })) : null,
+            !self && me ? h("div", { class: "pacts" },
+              h("a", { href: "#", class: "danger", onclick: e => { e.preventDefault(); report(); } }, "🚩 דיווח על משתמש"),
+              isAdmin ? blockBtn : null,
+              isAdmin && pr ? h("a", { href: "#", onclick: e => { e.preventDefault(); setRep({ uid, name }); } }, "⭐ שינוי מוניטין") : null) : null),
+          h("div", { class: "pstats" },
+            stat("⭐", "מוניטין", pr ? repOf(uid) : "—"),
+            stat("👁", "צפיות בפרופיל", short((pr && pr.views) || 0)),
+            stat("👤", "תאריך הצטרפות", fullDate(pr && pr.created), true),
+            stat("🕒", "נראה לאחרונה", pr && pr.lastSeen ? ago(pr.lastSeen) : "—", true)))),
+      h("h2", { class: "psec" }, "📝 הנושאים של " + name),
+      topicTable(mine.slice(0, 30), "עוד אין נושאים", name + " עוד לא פתח/ה נושאים."));
+    // רקע משתנה לפי המשתמש
+    let n = 0; for (const c of uid) n = (n * 31 + c.charCodeAt(0)) >>> 0;
+    cover.style.setProperty("--hue", n % 360);
   }
 
   // ----- חוקי הפורום -----
@@ -1278,23 +1418,35 @@
   let draftReply = "";
 
   function postEl(p, ref, isOp, topic) {
-    const likes = p.likes || [];
-    const liked = me && likes.includes(me.uid);
+    const likes = p.likes || [], dislikes = p.dislikes || [];
+    const liked = !!me && likes.includes(me.uid), disliked = !!me && dislikes.includes(me.uid);
     const text = renderText(p.text);
     const foot = h("div", { class: "post-foot" });
-    const likeBtn = h("button", { class: "btn sm like" + (liked ? " on" : ""), title: "אהבתי" }, "👍 " + likes.length);
-    likeBtn.onclick = () => {
-      if (needLogin("כדי לסמן \"אהבתי\" צריך להתחבר")) return;
-      const FV = firebase.firestore.FieldValue, b = db.batch();
-      b.update(ref, { likes: liked ? FV.arrayRemove(me.uid) : FV.arrayUnion(me.uid) });
-      // 👍 מאדם אחר = נקודת מוניטין לכותב/ת (repT/repP – על איזה פוסט, כדי שהכללים יבדקו)
-      if (profiles[p.uid] && p.uid !== me.uid) {
+    // 👍 / 👎 – לייק מ-10 מוניטין, דיסלייק מ-50. כל 👍 = +1 מוניטין לכותב/ת, כל 👎 = -1
+    const vote = up => {
+      if (needLogin("כדי להצביע צריך להתחבר")) return;
+      if (p.uid === me.uid) return toast("אי אפשר להצביע על פוסט של עצמכם");
+      const need = up ? REP_LIKE : REP_DISLIKE, adding = up ? !liked : !disliked;
+      if (adding && !isAdmin && myRep() < need)
+        return toast((up ? "👍 לייק" : "👎 דיסלייק") + " – רק ממי שיש לו " + need + " מוניטין ומעלה (יש לך " + myRep() + ")");
+      const L = up ? !liked : false, D = up ? false : !disliked; // לייק מבטל דיסלייק ולהפך
+      const FV = firebase.firestore.FieldValue, b = db.batch(), upd = {};
+      if (L !== liked) upd.likes = L ? FV.arrayUnion(me.uid) : FV.arrayRemove(me.uid);
+      if (D !== disliked) upd.dislikes = D ? FV.arrayUnion(me.uid) : FV.arrayRemove(me.uid);
+      b.update(ref, upd);
+      const delta = (L - liked) - (D - disliked);
+      // repT/repP – על איזה פוסט ההצבעה, כדי שהכללים ב-Firebase יבדקו שהמוניטין אמיתי
+      if (profiles[p.uid] && delta) {
         const seg = ref.path.split("/");
-        b.update(db.collection("forum_profiles").doc(p.uid), { rep: FV.increment(liked ? -1 : 1), repT: seg[1], repP: seg[3] || "" });
+        b.update(db.collection("forum_profiles").doc(p.uid), { rep: FV.increment(delta), repT: seg[1], repP: seg[3] || "" });
       }
-      b.commit().catch(e => toast(e.code === "permission-denied" ? "אין הרשאה" : "שגיאה"));
+      b.commit().catch(e => toast(e.code === "permission-denied" ? "אין הרשאה (אולי צריך לעדכן את הכללים ב-Firebase)" : "שגיאה"));
     };
-    foot.append(likeBtn);
+    const score = likes.length - dislikes.length;
+    foot.append(h("span", { class: "votes" },
+      h("button", { class: "vbtn" + (liked ? " on" : ""), title: "אהבתי (מ-" + REP_LIKE + " מוניטין)", onclick: () => vote(true) }, "👍"),
+      h("b", { class: score < 0 ? "neg" : "", title: likes.length + " 👍 · " + dislikes.length + " 👎" }, score),
+      h("button", { class: "vbtn down" + (disliked ? " on" : ""), title: "לא אהבתי (מ-" + REP_DISLIKE + " מוניטין)", onclick: () => vote(false) }, "👎")));
     if (p.pending && !isOp && isAdmin) foot.append(
       h("button", { class: "btn sm primary", onclick: () => approvePost(p, ref, topic) }, "✔ אישור התגובה"),
       h("button", { class: "btn sm danger", onclick: () => rejectPost(ref, topic) }, "✖ דחייה"));
@@ -1307,9 +1459,9 @@
       if (!isOp) foot.append(h("button", { class: "btn sm danger", onclick: () => delPost(p, ref, topic) }, "🗑 מחיקה"));
     }
     return h("div", { class: "post" + (isOp ? " op" : "") + (p.pending && !isOp ? " pending" : "") },
-      avatar(p.name, p.uid, "l"),
+      h("a", { href: "#/user/" + p.uid, title: "לפרופיל" }, avatar(p.name, p.uid, "l")),
       h("div", {},
-        h("div", { class: "who" }, h("b", {}, p.name || "משתמש/ת"),
+        h("div", { class: "who" }, h("a", { class: "uname", href: "#/user/" + p.uid }, p.name || "משתמש/ת"),
           p.admin ? h("span", { class: "badge-admin" }, "מנהל") : repEl(p.uid),
           p.pending && !isOp ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
@@ -1328,7 +1480,11 @@
     btn.disabled = true;
     const tRef = db.collection("forum_topics").doc(topic.id);
     const batch = db.batch(), pend = needsApproval();
-    batch.set(tRef.collection("posts").doc(), { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [], pending: pend });
+    const pRef = tRef.collection("posts").doc();
+    batch.set(pRef, { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [], dislikes: [], pending: pend });
+    // מונה הפוסטים בפרופיל (postT/postP – איזה פוסט נוסף, כדי שהכללים יבדקו)
+    if (profile && profiles[me.uid]) batch.update(db.collection("forum_profiles").doc(me.uid),
+      { postCount: firebase.firestore.FieldValue.increment(1), postT: topic.id, postP: pRef.id });
     if (pend) batch.update(tRef, { pendingPosts: firebase.firestore.FieldValue.increment(1) }); // המנהל יראה שיש תגובה לאישור
     else batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
       lastText: brief(text) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
@@ -1520,7 +1676,7 @@
         const ref = await db.collection("forum_topics").add({
           cat: draft.cat, title: title.value.trim().slice(0, 120), text: ta.value.trim().slice(0, 10000), tags: draft.tags.slice(0, 5),
           uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: draft.tag || "", solved: false, lastText: "",
+          replies: 0, views: 0, likes: [], dislikes: [], pinned: false, locked: false, tag: draft.tag || "", solved: false, lastText: "",
           pending: pend, pendingPosts: 0
         });
         closeComposer(true); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
