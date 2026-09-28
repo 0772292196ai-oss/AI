@@ -232,6 +232,12 @@
   .install-steps b { color: var(--ink); }
   .install-os { font-weight: 900; margin: 14px 0 4px; }
 
+  /* קישורים בהודעות צ'אט – כחולים ולחיצים */
+  .bubble a.msg-link { color: #60a5fa; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; word-break: break-all; }
+  .bubble a.msg-link:hover { color: #93c5fd; }
+  .bubble.me a.msg-link { color: #dbeafe; } /* בבועה הכחולה שלי – תכלת בהיר שייראה */
+  :root[data-theme="light"] .bubble.them a.msg-link { color: #2563eb; }
+
   /* ===== פס התקדמות גלילה + פס עליון שמתכווץ ===== */
   .scroll-bar { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 60; transform-origin: right; transform: scaleX(0); background: var(--grad); box-shadow: 0 0 12px rgba(168,85,247,.8); pointer-events: none; }
   .topbar { transition: height .25s, top .25s, box-shadow .25s, background .25s; }
@@ -1581,7 +1587,7 @@
         const div = document.createElement("div");
         div.className = "bubble " + (mine ? "me" : "them");
         if (m.file) div.appendChild(renderFile(m.file));
-        if (m.text) div.appendChild(document.createTextNode(m.text));
+        if (m.text) appendLinked(div, m.text); // קישורים בהודעה – כחולים ולחיצים
         const t = document.createElement("time");
         t.textContent = fmt(m.ts);
         if (mine) {
@@ -3005,6 +3011,20 @@
     ].filter(Boolean).join("\n"))
   ].join("\n");
   const aiHistory = [];
+
+  // טקסט של הודעה בצ'אט: כל קישור (https://... או www...) נהיה קישור כחול ולחיץ, שנפתח בלשונית חדשה
+  function appendLinked(el, text) {
+    String(text).split(/((?:https?:\/\/|www\.)[^\s<>"']+)/i).forEach((part, i) => {
+      if (!(i % 2)) { if (part) el.append(part); return; }
+      const clean = part.replace(/[.,;:!?)\]]+$/, ""), rest = part.slice(clean.length);
+      const href = /^www\./i.test(clean) ? "https://" + clean : clean;
+      if (!/^https?:\/\//i.test(href)) { el.append(part); return; }
+      const a = document.createElement("a");
+      a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.className = "msg-link";
+      a.textContent = clean;
+      el.append(a); if (rest) el.append(rest);
+    });
+  }
 
   // תשובת העוזר: קישורים של האתר ושל ההורדות נהיים לחיצים (קישורים אחרים נשארים טקסט רגיל)
   function aiRender(div, text) {
