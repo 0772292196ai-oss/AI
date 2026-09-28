@@ -698,9 +698,31 @@
       toast("🎉 ברוכים הבאים, " + name + "! שלחנו לכם מייל לאימות הכתובת.");
       renderUside(); route();
     } catch (e) {
-      if (cred && e.code !== "auth/email-already-in-use") { try { await cred.user.delete(); } catch (x) {} } // לא משאירים חשבון בלי שם משתמש
-      if (e.code === "permission-denied") msg("שם המשתמש נתפס כרגע או שהכללים ב-Firebase לא מעודכנים – נסו שם אחר");
-      else { authErr(e); if (e.code === "auth/email-already-in-use") setStep(2); }
+      if (e.code === "auth/email-already-in-use") {
+        // כבר יש חשבון עם המייל (למשל מהאתר הראשי) – אם הסיסמה נכונה, מצרפים אותו לפורום
+        try {
+          const c = await auth.signInWithEmailAndPassword(email, pass);
+          const p = await db.collection("forum_profiles").doc(c.user.uid).get();
+          if (p.exists) { profile = p.data(); $("loginOverlay").classList.add("hidden"); toast("✔ כבר רשומים לפורום – התחברתם בהצלחה"); }
+          else {
+            await claimProfile(c.user.uid, name);
+            await c.user.updateProfile({ displayName: name }).catch(() => {});
+            profile = { username: name, terms: true };
+            $("loginOverlay").classList.add("hidden"); toast("🎉 ברוכים הבאים, " + name + "! החשבון שלכם צורף לפורום.");
+          }
+          profileReady = true; registering = false; $("regGo").disabled = false;
+          renderUside(); lastRoute = ""; route(); return;
+        } catch (x) {
+          setStep(2);
+          msg(x.code === "permission-denied" ? "שם המשתמש נתפס כרגע או שהכללים ב-Firebase לא מעודכנים"
+            : "כבר יש חשבון עם האימייל הזה, והסיסמה שכתבתם לא מתאימה לו. עברו ל\"התחברות\" (או \"שכחתי סיסמה\"), או כתבו אימייל אחר.");
+        }
+      } else {
+        if (cred) { try { await cred.user.delete(); } catch (x) {} } // לא משאירים חשבון בלי שם משתמש
+        if (e.code === "permission-denied") msg("שם המשתמש נתפס כרגע או שהכללים ב-Firebase לא מעודכנים – נסו שם אחר");
+        else if (e.code === "auth/invalid-email") { setStep(2); authErr(e); }
+        else authErr(e);
+      }
     }
     registering = false; $("regGo").disabled = false;
   };
