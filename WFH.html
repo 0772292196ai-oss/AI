@@ -107,6 +107,11 @@
   .pill { display: inline-flex; align-items: center; gap: 4px; font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 20px; background: var(--soft); color: var(--primary); }
   .pill.pin { background: #fff4d6; color: #a16207; }
   .pill.lock { background: #fde2e4; color: #b42318; }
+  .pill.wait { background: #fff1c2; color: #92400e; }
+  .rep { font-size: .78rem; font-weight: 800; color: #a16207; background: #fff7dc; border-radius: 6px; padding: 1px 7px; }
+  .post.pending { background: #fffbeb; }
+  .pend-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #fff7dc; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; font-size: .92rem; }
+  .pend-note .sp { flex: 1; }
   .num { text-align: center; }
   .num b { display: block; }
   .num small { color: var(--muted); font-size: .8rem; }
@@ -331,6 +336,7 @@
   <a class="nav" href="#/recent" data-view="recent"><i>🕒</i><span>פוסטים אחרונים</span></a>
   <a class="nav" href="#/popular" data-view="popular"><i>🔥</i><span>פופולרי</span></a>
   <a class="nav" href="#/unsolved" data-view="unsolved"><i>❓</i><span>לא נפתר</span><em class="cnt soft hidden" id="cntUnsolved"></em></a>
+  <a class="nav hidden" href="#/queue" data-view="queue" id="navQueue"><i>⏳</i><span>ממתין לאישור</span><em class="cnt hidden" id="cntQueue"></em></a>
   <a class="nav" href="#/users" data-view="users"><i>👤</i><span>משתמשים</span></a>
   <a class="nav" href="#/groups" data-view="groups"><i>👥</i><span>קבוצות</span></a>
   <a class="nav" href="#/search" data-view="search"><i>🔍</i><span>חיפוש</span></a>
@@ -511,6 +517,21 @@
   let profile = null, profileReady = false; // פרופיל בפורום: שם משתמש + אישור תקנון
   const myName = () => (profile && profile.username || me && (me.displayName || (me.email || "").split("@")[0]) || "משתמש/ת").slice(0, 40);
 
+  // מוניטין: כל 👍 שמישהו אחר נותן לפוסט שלך = נקודה אחת.
+  // מי שיש לו פחות מ-20 – הנושאים והתגובות שלו ממתינים לאישור מנהל.
+  const REP_MIN = 20;
+  let profiles = {}, allTopics = [];
+  const repOf = uid => (profiles[uid] && profiles[uid].rep) || 0;
+  const myRep = () => (profile && profile.rep) || 0;
+  const needsApproval = () => !isAdmin && myRep() < REP_MIN;
+  const canSee = x => !x.pending || isAdmin || (me && x.uid === me.uid);
+  const refilter = () => { topics = allTopics.filter(canSee); };
+  const queue = () => isAdmin ? allTopics.filter(t => t.pending || t.pendingPosts > 0) : [];
+  const repEl = uid => profiles[uid] ? h("span", { class: "rep", title: "מוניטין" }, "⭐ " + repOf(uid)) : null;
+  const brief = t => String(t || "").replace(/^> .*$/gm, "").replace(/\s+/g, " ").trim().slice(0, 140);
+  const waitNote = what => h("p", { class: "pend-note" }, "⏳ " + what + " יופיע אחרי אישור מנהל, עד שתגיעו ל-" + REP_MIN +
+    " מוניטין (יש לכם " + myRep() + "). מוניטין מקבלים כשאחרים עושים 👍 לפוסטים שלכם.");
+
   // טקסט של פוסט: שורות שמתחילות ב-"> " הן ציטוט, וקישורי https לחיצים (בלי HTML – בטוח)
   function renderText(text) {
     const box = h("div", { class: "content" });
@@ -550,8 +571,9 @@
         h("button", { class: "btn sm primary", onclick: () => openLogin(true) }, "הרשמה"));
     }
     listenDms();
+    refilter(); trySeed();
     renderUside();
-    route();
+    lastRoute = ""; route();
   });
 
   /* ===== תגיות, "נקרא/לא נקרא", טיוטות ===== */
@@ -578,6 +600,9 @@
     const un = topics.filter(isUnread).length, uq = topics.filter(isOpenQ).length;
     $("cntUnread").textContent = un > 99 ? "+99" : un; $("cntUnread").classList.toggle("hidden", !un);
     $("cntUnsolved").textContent = uq; $("cntUnsolved").classList.toggle("hidden", !uq);
+    const qn = queue().length;
+    $("navQueue").classList.toggle("hidden", !isAdmin);
+    $("cntQueue").textContent = qn; $("cntQueue").classList.toggle("hidden", !qn);
     renderUside();
   }
 
@@ -587,7 +612,7 @@
     const draft = load("wfhDraft", null), n = notifs().length;
     const cnt = x => x ? h("em", { class: "cnt" }, x) : null;
     put(u, me
-      ? [h("a", { class: "me-row", href: "#/users" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : null),
+      ? [h("a", { class: "me-row", href: "#/users" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : (profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + myRep()) : null)),
          h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש")),
          h("a", { href: "#/notifications" }, "🔔", h("span", {}, "התראות"), cnt(n)),
          h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
@@ -784,14 +809,44 @@
 
   // ===== נתונים: קטגוריות ונושאים (מתעדכנים בזמן אמת) =====
   db.collection("forum_cats").orderBy("order").onSnapshot(s => {
-    cats = s.docs.map(d => Object.assign({ id: d.id }, d.data())); catsReady = true; route(true);
+    cats = s.docs.map(d => Object.assign({ id: d.id }, d.data())); catsReady = true; trySeed(); route(true);
   }, e => { catsReady = true; showError(e); });
   db.collection("forum_groups").onSnapshot(s => {
     groups = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); route(true);
   }, () => {});
   db.collection("forum_topics").orderBy("lastTs", "desc").limit(500).onSnapshot(s => {
-    topics = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); topicsReady = true; route(true);
+    allTopics = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); refilter(); topicsReady = true; route(true);
   }, e => { topicsReady = true; showError(e); });
+  db.collection("forum_profiles").onSnapshot(s => {
+    profiles = {}; s.docs.forEach(d => profiles[d.id] = d.data());
+    if (me && profiles[me.uid]) profile = profiles[me.uid];
+    route(true);
+  }, () => {});
+
+  // קטגוריות קבועות – נוצרות פעם אחת כשהמנהל נכנס (אם נמחקו – לא חוזרות)
+  const SEED_CATS = [
+    { id: "donations",   name: "תרומות",       icon: "🎁", color: "#f59e0b", desc: "מציעים ומבקשים תרומות: ציוד, מחשבים, תוכנות חינמיות ועזרה למי שצריך" },
+    { id: "mutual-help", name: "עזרה הדדית",   icon: "🤝", color: "#16a34a", desc: "צריכים עזרה או יכולים לעזור? כאן עוזרים אחד לשני בכל נושא" },
+    { id: "install",     name: "התקנת תוכנות", icon: "💿", color: "#4f7cff", desc: "שאלות ועזרה בהתקנת תוכנות, הגדרות, שגיאות ועדכונים" }
+  ];
+  let seeding = false;
+  async function trySeed() {
+    if (!isAdmin || !catsReady || seeding) return;
+    seeding = true;
+    try {
+      const metaRef = db.collection("forum_meta").doc("setup");
+      const m = await metaRef.get(), done = (m.exists && m.data().seeded) || [];
+      const todo = SEED_CATS.filter(c => !done.includes(c.id) && !cats.some(x => x.id === c.id || x.name === c.name));
+      if (!todo.length) return;
+      const b = db.batch();
+      let order = cats.reduce((mx, c) => Math.max(mx, c.order || 0), 0);
+      todo.forEach(c => b.set(db.collection("forum_cats").doc(c.id),
+        { name: c.name, desc: c.desc, icon: c.icon, color: c.color, order: order += 10, writeGroup: "" }));
+      b.set(metaRef, { seeded: firebase.firestore.FieldValue.arrayUnion(...SEED_CATS.map(c => c.id)) }, { merge: true });
+      await b.commit();
+      toast("✔ נוספו הקטגוריות: " + todo.map(c => c.name).join(", "));
+    } catch (e) {} finally { seeding = false; }
+  }
   function showError(e) {
     if (e.code === "permission-denied")
       $("view").replaceChildren(h("div", { class: "card empty" }, h("div", { class: "big" }, "🔒"),
@@ -835,6 +890,7 @@
     if (parts[0] === "unread") return renderList(v, "📥 לא נקרא", "נושאים עם תוכן חדש שעוד לא ראיתם", topics.filter(isUnread), true);
     if (parts[0] === "unsolved") return renderList(v, "❓ לא נפתר", "שאלות ובקשות עזרה שעוד מחכות לתשובה – אולי אתם יודעים?", topics.filter(isOpenQ));
     if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות חדשות בנושאים שפתחתם", notifs(), true);
+    if (parts[0] === "queue") return renderList(v, "⏳ ממתין לאישור", "נושאים ותגובות של משתמשים עם פחות מ-" + REP_MIN + " מוניטין – פתחו נושא כדי לאשר או לדחות", queue());
     if (parts[0] === "users") return renderUsers(v);
     if (parts[0] === "rules") return renderRules(v);
     if (parts[0] === "chats") return renderChats(v, parts[1] || "");
@@ -944,6 +1000,8 @@
           h("div", { class: "sub" },
             t.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
             t.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
+            t.pending ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור") : null,
+            isAdmin && t.pendingPosts > 0 ? h("span", { class: "pill wait" }, "⏳ " + t.pendingPosts + " תגובות לאישור") : null,
             c ? h("a", { href: "#/category/" + c.id }, c.name) : null,
             h("span", {}, t.name + " · " + ago(t.ts)))),
         h("div", { class: "boxes" },
@@ -960,17 +1018,25 @@
   // ----- משתמשים (מי שכתב בפורום) -----
   function renderUsers(v) {
     const map = {};
+    Object.keys(profiles).forEach(uid => map[uid] = { uid, name: profiles[uid].username, topics: 0 });
     topics.forEach(t => {
-      (map[t.uid] = map[t.uid] || { uid: t.uid, name: t.name, topics: 0, admin: t.admin }).topics++;
+      (map[t.uid] = map[t.uid] || { uid: t.uid, name: t.name, topics: 0 }).topics++;
+      if (t.admin) map[t.uid].admin = true;
       if (t.lastUid && !map[t.lastUid]) map[t.lastUid] = { uid: t.lastUid, name: t.lastName, topics: 0 };
     });
-    const users = Object.values(map).sort((a, b) => b.topics - a.topics);
-    put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים שכתבו בפורום"))),
+    const users = Object.values(map).sort((a, b) => repOf(b.uid) - repOf(a.uid) || b.topics - a.topics);
+    const setRep = u => {
+      const n = prompt("כמה מוניטין לתת ל-" + u.name + "? (" + REP_MIN + " ומעלה = מפרסם בלי אישור)", repOf(u.uid));
+      if (n === null || !/^\d+$/.test(n.trim())) return;
+      db.collection("forum_profiles").doc(u.uid).update({ rep: Number(n) }).then(() => toast("✔ המוניטין עודכן")).catch(() => toast("העדכון נכשל"));
+    };
+    put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים רשומים · ⭐ = מוניטין (" + REP_MIN + " ומעלה – מפרסמים בלי אישור מנהל)"))),
       users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, avatar(u.name, u.uid, "l"),
-          h("div", {}, h("b", {}, u.name || "משתמש/ת", u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : null),
+          h("div", {}, h("b", {}, u.name || "משתמש/ת", u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : [" ", repEl(u.uid)]),
             h("small", {}, u.topics + " נושאים"), " ", chatBtn(u.uid, u.name),
+            isAdmin && profiles[u.uid] ? [" ", h("button", { class: "btn sm", onclick: () => setRep(u) }, "⭐ מוניטין")] : null,
             h("div", {}, groupsOf(u.uid).slice(0, 2).map(g => { const b = h("span", { class: "grp-badge" }, g.name); b.style.background = g.color || "#a855f7"; return b; }))))))
-        : h("div", { class: "card empty" }, h("div", { class: "big" }, "👤"), h("h3", {}, "עוד אין משתמשים שכתבו בפורום")));
+        : h("div", { class: "card empty" }, h("div", { class: "big" }, "👤"), h("h3", {}, "עוד אין משתמשים רשומים")));
   }
 
   // ----- חוקי הפורום -----
@@ -1012,8 +1078,15 @@
         ta.oninput = () => draftReply = ta.value;
         const send = h("button", { class: "btn primary" }, "שליחת תגובה");
         send.onclick = () => reply(topic, ta, send);
-        composer.append(h("h3", {}, "✍️ תגובה"), ta, h("div", { class: "row" }, h("span", { class: "hint" }, "קישורים נהיים לחיצים אוטומטית"), send));
+        composer.append(h("h3", {}, "✍️ תגובה"), needsApproval() ? waitNote("התגובה שלכם") : "", ta,
+          h("div", { class: "row" }, h("span", { class: "hint" }, "קישורים נהיים לחיצים אוטומטית"), send));
       }
+      const pendBar = topic.pending ? h("div", { class: "pend-note" },
+        h("span", {}, "⏳ הנושא ממתין לאישור מנהל – עד אז רק " + (isAdmin ? "את/ה ומי שכתב/ה אותו" : "את/ה") + " רואים אותו."),
+        h("span", { class: "sp" }),
+        isAdmin ? [h("button", { class: "btn sm primary", onclick: () => ref.update({ pending: false, lastTs: NOW() }).then(() => toast("✔ הנושא אושר ופורסם")).catch(() => toast("האישור נכשל")) }, "✔ אישור"),
+                   h("button", { class: "btn sm danger", onclick: () => delTopic(topic) }, "✖ דחייה ומחיקה")] : null) : null;
+      const shownPosts = posts.filter(canSee);
       const mineOrAdmin = isAdmin || (me && me.uid === topic.uid);
       const adminBar = mineOrAdmin ? h("div", { class: "post-foot", style: "margin:0 0 12px" },
         ASK_TAGS.includes(topic.tag) ? h("button", { class: "btn sm" + (topic.solved ? "" : " primary"), onclick: () => ref.update({ solved: !topic.solved }).then(() => toast(topic.solved ? "סומן כלא נפתר" : "✔ סומן כנפתר – תודה!")) }, topic.solved ? "↩ סימון כלא נפתר" : "✔ סימון כנפתר") : null,
@@ -1028,15 +1101,18 @@
           topic.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
           topic.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
           h("span", {}, "💬 " + (topic.replies || 0) + " תגובות · 👁 " + (topic.views || 0) + " צפיות")),
+        pendBar,
         adminBar,
         h("div", { class: "card" },
           postEl(topic, ref, true),
-          posts.map(p => postEl(p, ref.collection("posts").doc(p.id), false, topic))),
+          shownPosts.map(p => postEl(p, ref.collection("posts").doc(p.id), false, topic))),
         composer);
     };
     stopTopic = ref.onSnapshot(d => {
       if (!d.exists) return put(v, notFound("הנושא לא נמצא – אולי הוא נמחק"));
-      topic = Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" })); draw();
+      topic = Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }));
+      if (!canSee(topic)) return put(v, notFound("הנושא ממתין לאישור מנהל"));
+      draw();
     }, () => put(v, notFound("אין גישה לנושא")));
     stopPosts = ref.collection("posts").orderBy("ts").onSnapshot(s => {
       posts = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); draw();
@@ -1052,20 +1128,30 @@
     const likeBtn = h("button", { class: "btn sm like" + (liked ? " on" : ""), title: "אהבתי" }, "👍 " + likes.length);
     likeBtn.onclick = () => {
       if (needLogin("כדי לסמן \"אהבתי\" צריך להתחבר")) return;
-      ref.update({ likes: liked ? firebase.firestore.FieldValue.arrayRemove(me.uid) : firebase.firestore.FieldValue.arrayUnion(me.uid) })
-        .catch(e => toast(e.code === "permission-denied" ? "אין הרשאה" : "שגיאה"));
+      const FV = firebase.firestore.FieldValue, b = db.batch();
+      b.update(ref, { likes: liked ? FV.arrayRemove(me.uid) : FV.arrayUnion(me.uid) });
+      // 👍 מאדם אחר = נקודת מוניטין לכותב/ת (repT/repP – על איזה פוסט, כדי שהכללים יבדקו)
+      if (profiles[p.uid] && p.uid !== me.uid) {
+        const seg = ref.path.split("/");
+        b.update(db.collection("forum_profiles").doc(p.uid), { rep: FV.increment(liked ? -1 : 1), repT: seg[1], repP: seg[3] || "" });
+      }
+      b.commit().catch(e => toast(e.code === "permission-denied" ? "אין הרשאה" : "שגיאה"));
     };
     foot.append(likeBtn);
+    if (p.pending && !isOp && isAdmin) foot.append(
+      h("button", { class: "btn sm primary", onclick: () => approvePost(p, ref, topic) }, "✔ אישור התגובה"),
+      h("button", { class: "btn sm danger", onclick: () => rejectPost(ref, topic) }, "✖ דחייה"));
     if (me) foot.append(h("button", { class: "btn sm", onclick: () => quote(p) }, "💬 ציטוט"));
     if (me && (me.uid === p.uid || isAdmin)) {
       foot.append(h("button", { class: "btn sm", onclick: () => editPost(p, ref, isOp, text) }, "✏️ עריכה"));
       if (!isOp) foot.append(h("button", { class: "btn sm danger", onclick: () => delPost(p, ref, topic) }, "🗑 מחיקה"));
     }
-    return h("div", { class: "post" + (isOp ? " op" : "") },
+    return h("div", { class: "post" + (isOp ? " op" : "") + (p.pending && !isOp ? " pending" : "") },
       avatar(p.name, p.uid, "l"),
       h("div", {},
         h("div", { class: "who" }, h("b", {}, p.name || "משתמש/ת"),
-          p.admin ? h("span", { class: "badge-admin" }, "מנהל") : null,
+          p.admin ? h("span", { class: "badge-admin" }, "מנהל") : repEl(p.uid),
+          p.pending && !isOp ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
           h("small", {}, ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name)),
         text, foot));
@@ -1083,11 +1169,12 @@
     if (!text) return toast("כתבו תגובה");
     btn.disabled = true;
     const tRef = db.collection("forum_topics").doc(topic.id);
-    const batch = db.batch();
-    batch.set(tRef.collection("posts").doc(), { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [] });
-    batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-      lastText: text.replace(/^> .*$/gm, "").replace(/\s+/g, " ").trim().slice(0, 140) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
-    try { await batch.commit(); draftReply = ""; ta.value = ""; toast("✔ התגובה פורסמה"); }
+    const batch = db.batch(), pend = needsApproval();
+    batch.set(tRef.collection("posts").doc(), { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [], pending: pend });
+    if (pend) batch.update(tRef, { pendingPosts: firebase.firestore.FieldValue.increment(1) }); // המנהל יראה שיש תגובה לאישור
+    else batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
+      lastText: brief(text) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
+    try { await batch.commit(); draftReply = ""; ta.value = ""; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
     catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
     btn.disabled = false;
   }
@@ -1111,8 +1198,26 @@
     if (!confirm("למחוק את התגובה?")) return;
     const batch = db.batch();
     batch.delete(ref);
-    batch.update(db.collection("forum_topics").doc(topic.id), { replies: firebase.firestore.FieldValue.increment(-1) });
+    batch.update(db.collection("forum_topics").doc(topic.id), p.pending
+      ? { pendingPosts: firebase.firestore.FieldValue.increment(-1) }
+      : { replies: firebase.firestore.FieldValue.increment(-1) });
     batch.commit().then(() => toast("התגובה נמחקה")).catch(() => toast("המחיקה נכשלה"));
+  }
+
+  // מנהל: אישור / דחייה של תגובה שממתינה
+  function approvePost(p, ref, topic) {
+    const FV = firebase.firestore.FieldValue, b = db.batch();
+    b.update(ref, { pending: false });
+    b.update(db.collection("forum_topics").doc(topic.id), { replies: FV.increment(1), pendingPosts: FV.increment(-1),
+      lastTs: NOW(), lastName: p.name || "", lastUid: p.uid, lastText: brief(p.text) });
+    b.commit().then(() => toast("✔ התגובה אושרה ופורסמה")).catch(() => toast("האישור נכשל"));
+  }
+  function rejectPost(ref, topic) {
+    if (!confirm("לדחות ולמחוק את התגובה?")) return;
+    const b = db.batch();
+    b.delete(ref);
+    b.update(db.collection("forum_topics").doc(topic.id), { pendingPosts: firebase.firestore.FieldValue.increment(-1) });
+    b.commit().then(() => toast("התגובה נדחתה")).catch(() => toast("המחיקה נכשלה"));
   }
 
   async function delTopic(t) {
@@ -1158,17 +1263,20 @@
       if (title.value.trim().length < 3) return toast("כתבו כותרת (לפחות 3 תווים)");
       if (!text.value.trim()) return toast("כתבו את תוכן הנושא");
       go.disabled = true;
+      const pend = needsApproval();
       try {
         const ref = await db.collection("forum_topics").add({
           cat: sel.value, title: title.value.trim().slice(0, 120), text: text.value.trim().slice(0, 10000),
           uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: tagSel.value, solved: false, lastText: ""
+          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: tagSel.value, solved: false, lastText: "",
+          pending: pend, pendingPosts: 0
         });
-        draftTitle = draftText = draftTag = ""; saveDraft(); toast("✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
+        draftTitle = draftText = draftTag = ""; saveDraft(); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
       } catch (e) { go.disabled = false; toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
     };
     put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "page-head" }, h("h1", {}, "✏️ נושא חדש")),
       h("div", { class: "card composer" },
+        needsApproval() ? waitNote("הנושא שלכם") : null,
         h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:10px" },
           h("div", { class: "field" }, h("label", {}, "קטגוריה"), sel),
           h("div", { class: "field" }, h("label", {}, "תגית (לא חובה)"), tagSel)),
