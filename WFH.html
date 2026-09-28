@@ -292,7 +292,7 @@
     .dmenu.cat { width: min(320px, 86vw); }
     .dtitle { order: 5; flex-basis: 100%; }
   }
-  .rep { font-size: .78rem; font-weight: 800; color: #a16207; background: #fff7dc; border-radius: 6px; padding: 1px 7px; }
+  .rep { white-space: nowrap; font-size: .78rem; font-weight: 800; color: #a16207; background: #fff7dc; border-radius: 6px; padding: 1px 7px; }
   .post.pending { background: #fffbeb; }
   .pend-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #fff7dc; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; font-size: .92rem; }
   .pend-note .sp { flex: 1; }
@@ -711,7 +711,7 @@
   const canSee = x => !x.pending || isAdmin || (me && x.uid === me.uid);
   const refilter = () => { topics = allTopics.filter(canSee); };
   const queue = () => isAdmin ? allTopics.filter(t => t.pending || t.pendingPosts > 0) : [];
-  const repEl = uid => profiles[uid] ? h("span", { class: "rep", title: "מוניטין" }, "⭐ " + repOf(uid)) : null;
+  const repEl = uid => profiles[uid] ? h("span", { class: "rep", title: repOf(uid).toLocaleString("he-IL") + " מוניטין" }, "⭐ " + short(repOf(uid))) : null;
   const brief = t => String(t || "").replace(/^>.*$/gm, "").replace(/```[\s\S]*?```/g, " ").replace(/!\[[^\]]*\]\([^)]*\)/g, "🖼")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*~`#]/g, "").replace(/\s+/g, " ").trim().slice(0, 140);
   const waitNote = what => h("p", { class: "pend-note" }, "⏳ " + what + " יופיע אחרי אישור מנהל, עד שתגיעו ל-" + REP_MIN +
@@ -877,7 +877,7 @@
     const draft = load("wfhDraft", null), n = notifs().length;
     const cnt = x => x ? h("em", { class: "cnt" }, x) : null;
     put(u, me
-      ? [h("a", { class: "me-row", href: "#/user/" + me.uid, title: "הפרופיל שלי" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : (profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + myRep()) : null)),
+      ? [h("a", { class: "me-row", href: "#/user/" + me.uid, title: "הפרופיל שלי" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : null, profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + short(myRep())) : null),
          h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש")),
          h("a", { href: "#/notifications", id: "ntToggle", onclick: e => { if (innerWidth >= 1280) { e.preventDefault(); e.stopPropagation(); toggleNtPanel(); } } }, "🔔", h("span", {}, "התראות"), cnt(n)),
          h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
@@ -1300,7 +1300,7 @@
     const users = Object.values(map).sort((a, b) => repOf(b.uid) - repOf(a.uid) || b.topics - a.topics);
     put(v, crumbs({ t: "משתמשים" }), h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "👤 משתמשים"), h("p", {}, users.length + " משתמשים רשומים · ⭐ = מוניטין (" + REP_MIN + " ומעלה – מפרסמים בלי אישור מנהל)"))),
       users.length ? h("div", { class: "ulist" }, users.map(u => h("div", { class: "card ucard" }, h("a", { href: "#/user/" + u.uid }, avatar(u.name, u.uid, "l")),
-          h("div", {}, h("a", { class: "uname", href: "#/user/" + u.uid }, h("b", {}, u.name || "משתמש/ת")), u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : [" ", repEl(u.uid)],
+          h("div", {}, h("a", { class: "uname", href: "#/user/" + u.uid }, h("b", {}, u.name || "משתמש/ת")), u.admin ? [" ", h("span", { class: "badge-admin" }, "מנהל")] : null, " ", repEl(u.uid),
             h("small", {}, u.topics + " נושאים"), " ", chatBtn(u.uid, u.name),
             isAdmin && profiles[u.uid] ? [" ", h("button", { class: "btn sm", onclick: () => setRep(u) }, "⭐ מוניטין")] : null,
             h("div", {}, groupsOf(u.uid).slice(0, 2).map(g => { const b = h("span", { class: "grp-badge" }, g.name); b.style.background = g.color || "#a855f7"; return b; }))))))
@@ -1384,12 +1384,13 @@
             row("עוקבים", followers.length),
             row("עוקב/ת אחרי", following),
             groupsOf(uid).length ? h("div", { class: "pgroups" }, groupsOf(uid).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; })) : null,
-            !self && me ? h("div", { class: "pacts" },
-              h("a", { href: "#", class: "danger", onclick: e => { e.preventDefault(); report(); } }, "🚩 דיווח על משתמש"),
-              isAdmin ? blockBtn : null,
-              isAdmin && pr ? h("a", { href: "#", onclick: e => { e.preventDefault(); setRep({ uid, name }); } }, "⭐ שינוי מוניטין") : null) : null),
+            me && (!self || isAdmin) ? h("div", { class: "pacts" },
+              !self ? h("a", { href: "#", class: "danger", onclick: e => { e.preventDefault(); report(); } }, "🚩 דיווח על משתמש") : null,
+              isAdmin && !self ? blockBtn : null,
+              isAdmin && pr ? h("a", { href: "#", onclick: e => { e.preventDefault(); setRep({ uid, name }); } }, "⭐ שינוי מוניטין") : null,
+              isAdmin && self && !pr ? h("a", { href: "#", onclick: e => { e.preventDefault(); openFinish(); } }, "📝 השלמת הרשמה לפורום (כדי שיהיה לך מוניטין)") : null) : null),
           h("div", { class: "pstats" },
-            stat("⭐", "מוניטין", pr ? repOf(uid) : "—"),
+            stat("⭐", "מוניטין", pr ? repOf(uid).toLocaleString("he-IL") : "—"),
             stat("👁", "צפיות בפרופיל", short((pr && pr.views) || 0)),
             stat("👤", "תאריך הצטרפות", fullDate(pr && pr.created), true),
             stat("🕒", "נראה לאחרונה", pr && pr.lastSeen ? ago(pr.lastSeen) : "—", true)))),
@@ -1563,7 +1564,7 @@
       h("div", {},
         toLine,
         h("div", { class: "who" }, h("a", { class: "uname", href: "#/user/" + p.uid }, p.name || "משתמש/ת"),
-          p.admin ? h("span", { class: "badge-admin" }, "מנהל") : repEl(p.uid),
+          p.admin ? h("span", { class: "badge-admin" }, "מנהל") : null, repEl(p.uid),
           p.pending && !isOp ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
           h("small", {}, "כתב/ה " + ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name),
