@@ -44,6 +44,34 @@
     --glow: 0 0 60px -12px rgba(120,100,255,.55);
     --wrap: 1220px;
   }
+  /* מצב בהיר – נשמר לפי בחירה (localStorage) */
+  :root[data-theme="light"] {
+    --bg: #f3f5fb; --bg2: #e9edf9;
+    --paper: #ffffff; --card: #ffffff; --card2: #eef1fa;
+    --line: rgba(40,50,90,.1); --line2: rgba(40,50,90,.18);
+    --ink: #10142a; --ink2: #3a4468; --muted: #6b759c;
+    --glass: rgba(20,30,70,.035); --glass2: rgba(20,30,70,.07);
+    --sh: 0 16px 36px -20px rgba(30,40,90,.28);
+    --sh-lg: 0 30px 70px -26px rgba(30,40,90,.32);
+  }
+  :root[data-theme="light"] body::before {
+    background:
+      radial-gradient(900px 620px at 82% -8%, rgba(91,124,255,.16), transparent 62%),
+      radial-gradient(760px 560px at 8% 6%, rgba(168,85,247,.12), transparent 62%),
+      radial-gradient(900px 700px at 50% 108%, rgba(34,211,238,.09), transparent 62%),
+      linear-gradient(180deg, var(--bg2), var(--bg) 55%);
+  }
+  :root[data-theme="light"] body::after { background-image: linear-gradient(rgba(20,30,70,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(20,30,70,.035) 1px, transparent 1px); }
+  :root[data-theme="light"] .hero-kicker { color: #6d28d9; }
+  :root[data-theme="light"] .modal { background: linear-gradient(180deg, #ffffff, #f6f7fc); }
+  :root[data-theme="light"] input, :root[data-theme="light"] textarea, :root[data-theme="light"] select { background: #f6f7fc; color: var(--ink); }
+  :root[data-theme="light"] input::placeholder, :root[data-theme="light"] textarea::placeholder { color: #94a0c4; }
+  :root[data-theme="light"] .panel, :root[data-theme="light"] .review, :root[data-theme="light"] .app-row, :root[data-theme="light"] .review-form { background: #f6f7fc; }
+  :root[data-theme="light"] .chat-list, :root[data-theme="light"] .chat-msgs, :root[data-theme="light"] .chat-send, :root[data-theme="light"] .ai-note { background: #f6f7fc; }
+  :root[data-theme="light"] .bubble.them { background: #eef1fa; }
+  :root[data-theme="light"] select option, :root[data-theme="light"] #appSort option { background: #ffffff; color: #10142a; }
+  .theme-btn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--glass); border: 1px solid var(--line2); color: var(--ink); font-size: 1.05rem; transition: background .2s, transform .2s; flex: none; }
+  .theme-btn:hover { background: var(--glass2); transform: rotate(15deg); }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 110px; }
   body {
@@ -252,6 +280,15 @@
   .step .n { width: 62px; height: 62px; margin: 0 auto 16px; border-radius: 20px; display: grid; place-items: center; font-family: "Heebo", sans-serif; font-weight: 900; font-size: 1.5rem; color: #fff; background: var(--grad); box-shadow: 0 16px 34px -12px rgba(120,90,255,1), inset 0 1px 0 rgba(255,255,255,.3); }
   .step h3 { margin: 0 0 8px; font-size: 1.25rem; }
   .step p { margin: 0; color: var(--ink2); line-height: 1.65; }
+
+  /* ===== קהילה ===== */
+  .community { max-width: var(--wrap); margin: 0 auto; padding: 10px 20px 90px; }
+  .community-box { position: relative; overflow: hidden; border: 1px solid var(--line2); border-radius: 28px; padding: 54px 40px; text-align: center; background: linear-gradient(135deg, rgba(91,124,255,.16), rgba(168,85,247,.13) 55%, rgba(34,211,238,.1)); box-shadow: var(--sh-lg), inset 0 1px 0 rgba(255,255,255,.09); }
+  .community-glow { position: absolute; top: -40%; left: 50%; transform: translateX(-50%); width: 620px; height: 620px; background: radial-gradient(circle, rgba(168,85,247,.4), transparent 62%); pointer-events: none; }
+  .community-content { position: relative; }
+  .community-box h2 { margin: 6px 0 12px; font-size: clamp(1.9rem, 4.4vw, 2.9rem); font-weight: 900; letter-spacing: -1.4px; }
+  .community-box p { margin: 0 auto 26px; max-width: 560px; color: var(--ink2); font-size: 1.12rem; line-height: 1.7; }
+  .community-cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
 
   /* ===== שאלות נפוצות ===== */
   .faq { max-width: 860px; margin: 0 auto; padding: 0 20px 100px; }
@@ -558,6 +595,7 @@
         <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
       <div class="auth">
+        <button type="button" class="theme-btn" id="themeBtn" title="מצב בהיר / כהה" aria-label="החלפת ערכת נושא">🌙</button>
         <span class="live-pill hidden" id="livePill" title="כמה אנשים באתר עכשיו"><i></i><b id="liveNum"></b><span class="lbl"> מחוברים עכשיו</span></span>
         <span class="who hidden" id="who"></span>
         <button class="small-btn" id="openLogin">התחברות</button>
@@ -769,6 +807,21 @@
   </section>
 
   <!-- ===== שאלות נפוצות (נבנה מאותו מידע שהעוזר AI משתמש בו) ===== -->
+  <section class="community home-only" id="community">
+    <div class="community-box">
+      <div class="community-glow" aria-hidden="true"></div>
+      <div class="community-content">
+        <span class="eyebrow">הקהילה שלנו</span>
+        <h2>יש שאלה? הצטרפו לפורום 🗣️</h2>
+        <p>אלפי משתמשים עוזרים אחד לשני: שאלות והתקנות, טיפים, בקשות עזרה ותרומות. אפשר לשאול, לענות, ולצבור מוניטין.</p>
+        <div class="community-cta">
+          <a href="WFH.html" class="cta-main">🗣️ כניסה לפורום עזרה ותמיכה</a>
+          <button type="button" class="cta-alt" onclick="document.getElementById('aiFab').click()">🤖 או שאלו את העוזר</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="faq home-only" id="faq">
     <div class="sec-head"><span class="eyebrow">עזרה</span><h2>שאלות נפוצות</h2></div>
     <div class="faq-list" id="faqList"></div>
@@ -1962,8 +2015,8 @@
   loadDynCards();
 
   // ----- התקנה דרך חנות "תוכנה בקליק" -----
-  // ↓ כאן מדביקים את קישור ההורדה של החנות (מ-Google Drive). כל עוד ריק – מוצגת הודעת "בקרוב" ↓
-  const STORE_URL = "https://drive.google.com/uc?export=download&id=1X2ufaDLSjEoAA9mYiKogLt2dLXRONVkj";
+  // ↓ קישור ההורדה של החנות ↓
+  const STORE_URL = "https://e7163323-art.github.io/2/%D7%AA%D7%95%D7%9B%D7%A0%D7%94_%D7%91%D7%A7%D7%9C%D7%99%D7%A7.exe";
   document.querySelectorAll(".store-download").forEach(a => a.href = STORE_URL); // כפתורי ההורדה בדף החנות
   $("apStore").onclick = () => {
     $("storeAppName").textContent = APP.name;
@@ -2792,11 +2845,55 @@
   (function () {
     if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
-    const watch = () => document.querySelectorAll(".card:not(.reveal), .step:not(.reveal), .steps h2:not(.reveal), .store-how:not(.reveal)").forEach((el, i) => {
+    const watch = () => document.querySelectorAll(".card:not(.reveal), .step:not(.reveal), .perk:not(.reveal), .steps h2:not(.reveal), .sec-head:not(.reveal), .store-how:not(.reveal), .community-box:not(.reveal)").forEach((el, i) => {
       el.classList.add("reveal"); el.style.transitionDelay = (i % 3) * 80 + "ms"; io.observe(el);
     });
     watch();
     new MutationObserver(watch).observe(document.querySelector("#download .grid"), { childList: true });
+  })();
+
+  // מצב בהיר / כהה – נשמר במחשב, ברירת מחדל כהה
+  (function () {
+    const KEY = "wfhTheme"; // (משותף עם שם המפתח בפורום, פשוט שם ייחודי)
+    const btn = document.getElementById("themeBtn");
+    const apply = t => {
+      document.documentElement.setAttribute("data-theme", t);
+      if (btn) btn.textContent = t === "light" ? "☀️" : "🌙";
+    };
+    let saved = "dark";
+    try { saved = localStorage.getItem("tcTheme") || "dark"; } catch (e) {}
+    apply(saved);
+    if (btn) btn.onclick = () => {
+      const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+      apply(next);
+      try { localStorage.setItem("tcTheme", next); } catch (e) {}
+    };
+  })();
+
+  // אנימציית ספירה עולה למספרים בראש הדף (רץ פעם אחת כשהם נכנסים למסך)
+  (function () {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const seen = new WeakSet();
+    const run = el => {
+      if (seen.has(el)) return;
+      const raw = (el.textContent || "").replace(/[^\d]/g, "");
+      const end = parseInt(raw, 10);
+      if (!end || end < 2) return;
+      seen.add(el);
+      const t0 = performance.now(), dur = 1100;
+      const step = t => {
+        const p = Math.min((t - t0) / dur, 1), val = Math.round(end * (1 - Math.pow(1 - p, 3)));
+        el.textContent = val.toLocaleString("he-IL");
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    if (!("IntersectionObserver" in window)) return;
+    const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) run(e.target); }), { threshold: .5 });
+    ["stApps", "stDl", "stLive"].forEach(id => { const el = document.getElementById(id); if (el) io2.observe(el); });
+    // כשהמספר מתעדכן מ-Firebase אחרי שכבר נספר – מריצים שוב
+    new MutationObserver(() => ["stApps", "stDl", "stLive"].forEach(id => { const el = document.getElementById(id); if (el && !seen.has(el)) run(el); }))
+      .observe(document.querySelector(".hero-stats"), { childList: true, subtree: true, characterData: true });
   })();
 </script>
 </body>

@@ -44,6 +44,34 @@
     --glow: 0 0 60px -12px rgba(120,100,255,.55);
     --wrap: 1220px;
   }
+  /* מצב בהיר – נשמר לפי בחירה (localStorage) */
+  :root[data-theme="light"] {
+    --bg: #f3f5fb; --bg2: #e9edf9;
+    --paper: #ffffff; --card: #ffffff; --card2: #eef1fa;
+    --line: rgba(40,50,90,.1); --line2: rgba(40,50,90,.18);
+    --ink: #10142a; --ink2: #3a4468; --muted: #6b759c;
+    --glass: rgba(20,30,70,.035); --glass2: rgba(20,30,70,.07);
+    --sh: 0 16px 36px -20px rgba(30,40,90,.28);
+    --sh-lg: 0 30px 70px -26px rgba(30,40,90,.32);
+  }
+  :root[data-theme="light"] body::before {
+    background:
+      radial-gradient(900px 620px at 82% -8%, rgba(91,124,255,.16), transparent 62%),
+      radial-gradient(760px 560px at 8% 6%, rgba(168,85,247,.12), transparent 62%),
+      radial-gradient(900px 700px at 50% 108%, rgba(34,211,238,.09), transparent 62%),
+      linear-gradient(180deg, var(--bg2), var(--bg) 55%);
+  }
+  :root[data-theme="light"] body::after { background-image: linear-gradient(rgba(20,30,70,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(20,30,70,.035) 1px, transparent 1px); }
+  :root[data-theme="light"] .hero-kicker { color: #6d28d9; }
+  :root[data-theme="light"] .modal { background: linear-gradient(180deg, #ffffff, #f6f7fc); }
+  :root[data-theme="light"] input, :root[data-theme="light"] textarea, :root[data-theme="light"] select { background: #f6f7fc; color: var(--ink); }
+  :root[data-theme="light"] input::placeholder, :root[data-theme="light"] textarea::placeholder { color: #94a0c4; }
+  :root[data-theme="light"] .panel, :root[data-theme="light"] .review, :root[data-theme="light"] .app-row, :root[data-theme="light"] .review-form { background: #f6f7fc; }
+  :root[data-theme="light"] .chat-list, :root[data-theme="light"] .chat-msgs, :root[data-theme="light"] .chat-send, :root[data-theme="light"] .ai-note { background: #f6f7fc; }
+  :root[data-theme="light"] .bubble.them { background: #eef1fa; }
+  :root[data-theme="light"] select option, :root[data-theme="light"] #appSort option { background: #ffffff; color: #10142a; }
+  .theme-btn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--glass); border: 1px solid var(--line2); color: var(--ink); font-size: 1.05rem; transition: background .2s, transform .2s; flex: none; }
+  .theme-btn:hover { background: var(--glass2); transform: rotate(15deg); }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 110px; }
   body {
@@ -567,6 +595,7 @@
         <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
       <div class="auth">
+        <button type="button" class="theme-btn" id="themeBtn" title="מצב בהיר / כהה" aria-label="החלפת ערכת נושא">🌙</button>
         <span class="live-pill hidden" id="livePill" title="כמה אנשים באתר עכשיו"><i></i><b id="liveNum"></b><span class="lbl"> מחוברים עכשיו</span></span>
         <span class="who hidden" id="who"></span>
         <button class="small-btn" id="openLogin">התחברות</button>
@@ -724,7 +753,7 @@
           <div class="card-stats" data-app="TEL"></div>
           <div class="card-actions">
             <div class="dl-pair">
-              <a class="btn" href="https://e7163323-art.github.io/2/%D7%AA%D7%95%D7%9B%D7%A0%D7%94_%D7%91%D7%A7%D7%9C%D7%99%D7%A7.exe">🖥 למחשב</a>
+              <a class="btn" href="https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA">🖥 למחשב</a>
               <a class="btn apk-btn" href="https://drive.google.com/uc?export=download&id=1HIpJz3G6adExSzB0pwKi8GQHezpQSpH1">📱 לאנדרואיד</a>
             </div>
             <div class="card-sub">
@@ -1618,7 +1647,7 @@
       tag: "📶 בלי אינטרנט · 1.7MB",
       version: "1.0.0",
       downloadsBefore: 0,
-      download: "https://e7163323-art.github.io/2/%D7%AA%D7%95%D7%9B%D7%A0%D7%94_%D7%91%D7%A7%D7%9C%D7%99%D7%A7.exe",
+      download: "https://drive.google.com/uc?export=download&id=1F6Pa_FLT6A6KfYHkbv_Ld4Lz8jfeo0lA",
       desc: "כל ספר הטלפונים של 2026-27 – ישר במחשב, ובלי אינטרנט. יותר מ-8,000 מספרי טלפון בכ-800 עמודים, עם חיפוש מהיר לפי שם, רחוב, עיר או מספר טלפון. מוצאים כל מספר בשניות, מעתיקים בלחיצה, ורואים את העמוד המלא מהספר. בלי התקנה – פותחים את הקובץ ומחפשים.",
       changesTitle: "מה אפשר לעשות",
       changes: [
@@ -1986,8 +2015,8 @@
   loadDynCards();
 
   // ----- התקנה דרך חנות "תוכנה בקליק" -----
-  // ↓ כאן מדביקים את קישור ההורדה של החנות (מ-Google Drive). כל עוד ריק – מוצגת הודעת "בקרוב" ↓
-  const STORE_URL = "https://drive.google.com/uc?export=download&id=1X2ufaDLSjEoAA9mYiKogLt2dLXRONVkj";
+  // ↓ קישור ההורדה של החנות ↓
+  const STORE_URL = "https://e7163323-art.github.io/2/%D7%AA%D7%95%D7%9B%D7%A0%D7%94_%D7%91%D7%A7%D7%9C%D7%99%D7%A7.exe";
   document.querySelectorAll(".store-download").forEach(a => a.href = STORE_URL); // כפתורי ההורדה בדף החנות
   $("apStore").onclick = () => {
     $("storeAppName").textContent = APP.name;
@@ -2821,6 +2850,24 @@
     });
     watch();
     new MutationObserver(watch).observe(document.querySelector("#download .grid"), { childList: true });
+  })();
+
+  // מצב בהיר / כהה – נשמר במחשב, ברירת מחדל כהה
+  (function () {
+    const KEY = "wfhTheme"; // (משותף עם שם המפתח בפורום, פשוט שם ייחודי)
+    const btn = document.getElementById("themeBtn");
+    const apply = t => {
+      document.documentElement.setAttribute("data-theme", t);
+      if (btn) btn.textContent = t === "light" ? "☀️" : "🌙";
+    };
+    let saved = "dark";
+    try { saved = localStorage.getItem("tcTheme") || "dark"; } catch (e) {}
+    apply(saved);
+    if (btn) btn.onclick = () => {
+      const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+      apply(next);
+      try { localStorage.setItem("tcTheme", next); } catch (e) {}
+    };
   })();
 
   // אנימציית ספירה עולה למספרים בראש הדף (רץ פעם אחת כשהם נכנסים למסך)
