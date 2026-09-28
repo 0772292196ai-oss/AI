@@ -232,6 +232,71 @@
   .install-steps b { color: var(--ink); }
   .install-os { font-weight: 900; margin: 14px 0 4px; }
 
+  /* ===== פס התקדמות גלילה + פס עליון שמתכווץ ===== */
+  .scroll-bar { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 60; transform-origin: right; transform: scaleX(0); background: var(--grad); box-shadow: 0 0 12px rgba(168,85,247,.8); pointer-events: none; }
+  .topbar { transition: height .25s, top .25s, box-shadow .25s, background .25s; }
+  .topbar.scrolled { top: 8px; height: 60px; background: rgba(10,15,32,.9); box-shadow: 0 18px 40px -20px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,.08); }
+  :root[data-theme="light"] .topbar.scrolled { background: rgba(255,255,255,.94); }
+  .topbar.scrolled .logo .mark { width: 36px; height: 36px; }
+
+  /* ===== כפתורי קיצור ===== */
+  .quick { max-width: var(--wrap); margin: 0 auto; padding: 10px 20px 60px; }
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .qa {
+    position: relative; overflow: hidden; display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; column-gap: 14px; align-items: center;
+    padding: 16px 18px; border-radius: 18px; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+    backdrop-filter: blur(12px); box-shadow: var(--sh); transition: transform .22s, border-color .22s, box-shadow .22s;
+  }
+  .qa::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .25s; background: linear-gradient(120deg, var(--c1), var(--c2)); z-index: -1; }
+  .qa:hover { transform: translateY(-4px); border-color: transparent; box-shadow: 0 24px 48px -20px var(--c1); color: #fff; }
+  .qa:hover::before { opacity: .92; }
+  .qa:hover small { color: rgba(255,255,255,.85); }
+  .qa-ic { grid-row: 1 / 3; width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; font-size: 1.5rem; color: #fff; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 10px 24px -10px var(--c1); transition: transform .25s; }
+  .qa:hover .qa-ic { transform: scale(1.08) rotate(-6deg); background: rgba(255,255,255,.2); }
+  .qa b { font-family: "Heebo", sans-serif; font-size: 1.1rem; align-self: end; }
+  .qa small { color: var(--muted); font-weight: 700; align-self: start; transition: color .25s; }
+  .qa-go { grid-row: 1 / 3; grid-column: 3; font-style: normal; font-size: 1.3rem; font-weight: 900; opacity: .45; transition: transform .25s, opacity .25s; }
+  .qa:hover .qa-go { opacity: 1; transform: translateX(-5px); }
+
+  /* ===== כפתורים: לחיצה, גל, מסגרת צבעונית ===== */
+  .btn, .cta-main, .cta-alt, .small-btn, .primary-btn, .qa, .share-btn, .filters button { -webkit-tap-highlight-color: transparent; }
+  .btn:active, .cta-main:active, .cta-alt:active, .small-btn:active, .primary-btn:active, .share-btn:active { transform: scale(.97) !important; }
+  .btn.alt, .cta-alt { position: relative; }
+  .btn.alt::before, .cta-alt::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0; transition: opacity .25s;
+    background: var(--grad); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  .btn.alt:hover::before, .cta-alt:hover::before { opacity: 1; }
+  .btn:not(.alt):hover, .primary-btn:hover { box-shadow: 0 20px 40px -14px rgba(130,90,255,1), 0 0 0 3px rgba(168,85,247,.18), inset 0 1px 0 rgba(255,255,255,.3); }
+  .btn.icon:hover { transform: rotate(-8deg); }
+  .ripple { position: absolute; border-radius: 50%; pointer-events: none; background: rgba(255,255,255,.35); transform: scale(0); animation: ripple .6s ease-out forwards; }
+  @keyframes ripple { to { transform: scale(2.6); opacity: 0; } }
+  .card-sub .btn.alt { font-size: .95rem; }
+  .card-sub .btn.alt:not(.icon)::after { content: " ←"; transition: margin .2s; }
+  .card-sub .btn.alt:not(.icon):hover::after { margin-inline-start: 4px; }
+
+  /* ===== חזרה למעלה עם טבעת התקדמות ===== */
+  .to-top {
+    border-radius: 50% !important; width: 52px !important; height: 52px !important; border: 0 !important; font-weight: 900;
+    background: radial-gradient(closest-side, rgba(16,22,44,.96) 78%, transparent 80% 100%), conic-gradient(#a855f7 calc(var(--p, 0) * 1%), rgba(148,170,255,.2) 0) !important;
+  }
+  :root[data-theme="light"] .to-top { background: radial-gradient(closest-side, #fff 78%, transparent 80% 100%), conic-gradient(#a855f7 calc(var(--p, 0) * 1%), rgba(40,50,90,.15) 0) !important; color: var(--ink); }
+
+  /* ===== שיתוף בתחתית ===== */
+  .foot-share { max-width: var(--wrap); margin: 28px auto 0; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; color: var(--muted); font-weight: 700; }
+  .share-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 12px; font-weight: 800; font-size: .93rem; text-decoration: none; color: var(--ink); background: var(--glass); border: 1px solid var(--line2); transition: transform .18s, background .2s, border-color .2s; }
+  .share-btn:hover { transform: translateY(-2px); background: var(--glass2); border-color: rgba(168,85,247,.5); }
+  .share-btn.wa:hover { border-color: rgba(37,211,102,.6); background: rgba(37,211,102,.12); }
+
+  /* ===== מפרידים בין אזורים ===== */
+  .quick, .products, .steps, .plans, .community, .faq { position: relative; }
+  .products::before, .steps::before, .plans::before, .faq::before {
+    content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: min(420px, 60%); height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,.55), rgba(34,211,238,.55), transparent);
+  }
+  .products { padding-top: 56px; } .steps, .plans, .faq { padding-top: 56px; }
+
   /* ===== הזמנת תוכנה אישית ===== */
   .plans { max-width: var(--wrap); margin: 0 auto; padding: 10px 20px 80px; }
   .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: stretch; }
@@ -659,6 +724,7 @@
 </style>
 </head>
 <body>
+  <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
   <header class="topbar">
     <div class="inner">
       <a class="logo" href="#top">
@@ -751,6 +817,19 @@
       <div class="perk"><div class="pi">🇮🇱</div><h3>הכל בעברית</h3><p>תוכנות בעברית מלאה, פשוטות וברורות לכל אחד.</p></div>
       <div class="perk"><div class="pi">🛡️</div><h3>בטוח ונקי</h3><p>כל תוכנה נבדקת לפני שהיא עולה לאתר. בלי וירוסים ובלי הפתעות.</p></div>
       <div class="perk"><div class="pi">💬</div><h3>תמיכה אמיתית</h3><p>נתקעתם? יש עוזר חכם, צ'אט עם הצוות ופורום קהילה.</p></div>
+    </div>
+  </section>
+
+  <!-- ===== כפתורי קיצור: מה תרצו לעשות? ===== -->
+  <section class="quick home-only" id="quick">
+    <div class="sec-head"><span class="eyebrow">קיצורי דרך</span><h2>מה תרצו לעשות?</h2></div>
+    <div class="quick-grid">
+      <a class="qa" href="#download" style="--c1:#5b7cff;--c2:#7c3aed"><span class="qa-ic">⬇</span><b>להוריד תוכנה</b><small>כל התוכנות בחינם</small><i class="qa-go">←</i></a>
+      <a class="qa" href="store.html" style="--c1:#a855f7;--c2:#d946ef"><span class="qa-ic">⚡</span><b>החנות למחשב</b><small>התקנה בלחיצה אחת</small><i class="qa-go">←</i></a>
+      <a class="qa order-link" href="#" style="--c1:#f59e0b;--c2:#f97316"><span class="qa-ic">🛠️</span><b>להזמין תוכנה</b><small>בונים לכם לפי מידה</small><i class="qa-go">←</i></a>
+      <a class="qa" href="WFH.html" style="--c1:#10b981;--c2:#22d3ee"><span class="qa-ic">🗣️</span><b>פורום עזרה</b><small>שאלות ותשובות מהקהילה</small><i class="qa-go">←</i></a>
+      <a class="qa" href="#" onclick="document.getElementById('aiFab').click();return false" style="--c1:#ec4899;--c2:#a855f7"><span class="qa-ic">🤖</span><b>לשאול את העוזר</b><small>תשובה מיידית, 24/7</small><i class="qa-go">←</i></a>
+      <a class="qa" href="#dev" style="--c1:#0ea5e9;--c2:#5b7cff"><span class="qa-ic">🧑‍💻</span><b>להעלות תוכנה</b><small>מפתחים? פרסמו אצלנו</small><i class="qa-go">←</i></a>
     </div>
   </section>
 
@@ -1051,6 +1130,12 @@
         <a href="#" class="order-link">🛠️ הזמנת תוכנה אישית</a>
         <a href="#" class="install-link">📲 התקנת האתר כאפליקציה</a>
       </div>
+    </div>
+    <div class="foot-share">
+      <span>אהבתם? שתפו את האתר:</span>
+      <a class="share-btn wa" id="footWa" target="_blank" rel="noopener" href="#">🟢 וואטסאפ</a>
+      <button type="button" class="share-btn" id="footCopy">🔗 העתקת קישור</button>
+      <a class="share-btn" href="#top" id="footTop">⬆ לראש הדף</a>
     </div>
     <div class="foot-bottom">© 2026 תוכנה בקליק · כל הזכויות שמורות</div>
   </footer>
@@ -2299,6 +2384,12 @@
         const a = document.createElement("a"); a.className = "btn"; a.target = "_blank"; a.rel = "noopener";
         a.href = httpsUrl(o.delivery) || "#"; a.textContent = "⬇ הורדת התוכנה שלכם"; ex.appendChild(a);
       }
+      if (o.status !== "rejected") { // שאלה על ההזמנה – צ'אט עם המנהל
+        const q = document.createElement("button"); q.type = "button"; q.className = "small-btn alt"; q.textContent = "💬 צ'אט עם המנהל";
+        q.style.marginTop = "10px";
+        q.onclick = () => { $("orderOverlay").classList.add("hidden"); openHelp(); };
+        ex.appendChild(q);
+      }
       if (o.status === "pending") {
         const c = document.createElement("button"); c.type = "button"; c.className = "report-link"; c.textContent = "ביטול ההזמנה";
         c.onclick = async () => { if (!confirm("לבטל את ההזמנה?")) return; try { await d.ref.delete(); renderMyOrders(box); } catch (e) { toast("הביטול נכשל"); } };
@@ -2362,6 +2453,11 @@
         if (!url) return alert("צריך קישור שמתחיל ב-https://");
         await d.ref.update({ status: "done", delivery: url });
         mailCustomer(o, d.id, "🎉 התוכנה שלך מוכנה!", "אפשר להוריד אותה כאן:\n" + url + "\n\nאו באתר: \"הזמנת תוכנה\" ← \"ההזמנות שלי\"."); renderAdmin();
+      });
+      btn("💬 צ'אט עם הלקוח", "alt", async () => { // פותח את צ'אט העזרה עם הלקוח הזה
+        $("adminOverlay").classList.add("hidden");
+        $("chatBox").classList.remove("hidden"); $("chatFab").classList.add("hidden");
+        openChat(o.uid, "💬 " + (o.name || o.email || "לקוח") + " · הזמנה " + orderNo(d.id), o.email || "", o.name || "");
       });
       btn("🗑", "alt del-btn", async () => { if (!confirm("למחוק את ההזמנה לגמרי?")) return; await d.ref.delete(); renderAdmin(); });
       body.appendChild(r);
@@ -3263,6 +3359,43 @@
     if (e.key === "/" && !typing) { e.preventDefault(); s.scrollIntoView({ behavior: "smooth", block: "center" }); s.focus(); }
     else if (e.key === "Escape" && document.activeElement === s && s.value) { s.value = ""; s.dispatchEvent(new Event("input")); }
   });
+
+  // פס התקדמות בגלילה, פס עליון שמתכווץ, וטבעת בכפתור "חזרה למעלה"
+  (function () {
+    const bar = $("scrollBar"), top = document.querySelector(".topbar"), tt = $("toTop");
+    let ticking = false;
+    const upd = () => {
+      ticking = false;
+      const h = document.documentElement.scrollHeight - innerHeight, p = h > 0 ? Math.min(scrollY / h, 1) : 0;
+      if (bar) bar.style.transform = "scaleX(" + p + ")";
+      if (top) top.classList.toggle("scrolled", scrollY > 30);
+      if (tt) tt.style.setProperty("--p", Math.round(p * 100));
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    addEventListener("resize", upd); upd();
+  })();
+
+  // אפקט גל בלחיצה על כפתורים
+  document.addEventListener("pointerdown", e => {
+    const b = e.target.closest && e.target.closest(".btn, .cta-main, .cta-alt, .primary-btn, .qa, .small-btn.primary");
+    if (!b || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), w = document.createElement("span");
+    w.className = "ripple";
+    w.style.cssText = "width:" + s + "px;height:" + s + "px;left:" + (e.clientX - r.left - s / 2) + "px;top:" + (e.clientY - r.top - s / 2) + "px";
+    if (getComputedStyle(b).position === "static") b.style.position = "relative";
+    b.style.overflow = "hidden";
+    b.appendChild(w); setTimeout(() => w.remove(), 650);
+  });
+
+  // שיתוף האתר מהתחתית
+  (function () {
+    const url = location.origin + location.pathname.replace(/[^/]*$/, "");
+    const wa = $("footWa"); if (wa) wa.href = "https://wa.me/?text=" + encodeURIComponent("תוכנות למחשב בחינם ובעברית – תוכנה בקליק 👇\n" + url);
+    const cp = $("footCopy"); if (cp) cp.onclick = async () => {
+      try { await navigator.clipboard.writeText(url); toast("🔗 הקישור הועתק!"); } catch (e) { prompt("העתיקו את הקישור:", url); }
+    };
+    const ft = $("footTop"); if (ft) ft.onclick = e => { e.preventDefault(); scrollTo({ top: 0, behavior: "smooth" }); };
+  })();
 
   // מצב בהיר / כהה – נשמר במחשב, ברירת מחדל כהה
   (function () {
