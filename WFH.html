@@ -109,6 +109,63 @@
   .pill.lock { background: #fde2e4; color: #b42318; }
   .pill.wait { background: #fff1c2; color: #92400e; }
   .crumbs .sp { flex: 1; }
+  /* דף נושא: סטטיסטיקה, סרגל, מספור, "בתגובה ל", תגובות לפוסט */
+  .tpill { border: 1px solid var(--line2); border-radius: 8px; padding: 1px 9px; font-size: .84rem; background: var(--card); color: var(--muted); }
+  .tpill b { color: var(--ink); }
+  .ttools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 12px; margin-bottom: 14px; }
+  .ttools .sp { flex: 1; }
+  .ttools .tl { background: none; border: 0; border-radius: 8px; padding: 7px 10px; font-weight: 700; color: var(--ink); cursor: pointer; }
+  .ttools .tl:hover { background: var(--soft); }
+  .ttools .tl.on { color: var(--primary); }
+  .tsel { width: auto !important; max-width: 220px; border: 0; background: none; font: inherit; font-weight: 700; color: var(--ink); padding: 7px 6px; border-radius: 8px; cursor: pointer; }
+  .tsel:hover { background: var(--soft); }
+  .pnum { margin-inline-start: auto; color: var(--muted); font-size: .82rem; font-weight: 700; }
+  .to-line { display: inline-flex; gap: 4px; align-items: center; font-size: .84rem; color: var(--muted); margin-bottom: 4px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .to-line b { color: var(--primary); }
+  .post.flash { animation: flash 1.6s ease; }
+  @keyframes flash { 0%, 40% { background: #fff5cc; } 100% { background: transparent; } }
+  .kids-wrap { margin-top: 10px; }
+  .kids-btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line2); background: var(--card); border-radius: 8px; padding: 5px 10px; font: inherit; font-size: .86rem; color: var(--muted); cursor: pointer; }
+  .kids-btn b { color: var(--ink); }
+  .kids-btn i { font-style: normal; transition: transform .2s; }
+  .kids-btn.open i { transform: rotate(180deg); }
+  .kids { border-inline-start: 3px solid var(--line2); margin: 8px 6px 0; padding-inline-start: 10px; display: flex; flex-direction: column; gap: 2px; }
+  .kid { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; color: var(--ink); font-size: .9rem; }
+  .kid:hover { background: var(--soft); }
+  .kid > span:not(.av) { flex: 1; min-width: 0; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .kid small { color: var(--muted); }
+
+  /* חלונית התראות */
+  .nt-panel { position: fixed; left: calc(var(--uside) + 6px); width: 370px; max-height: 540px; z-index: 45; background: var(--card); border: 1px solid var(--line2);
+    border-radius: 12px; box-shadow: 0 20px 50px -14px rgba(20,30,60,.35); display: flex; flex-direction: column; overflow: hidden; }
+  .nt-tabs { display: flex; gap: 6px; padding: 8px; border-bottom: 1px solid var(--line); }
+  .nt-tabs button { border: 0; background: none; border-radius: 8px; padding: 6px 16px; font: inherit; font-weight: 700; color: var(--ink); cursor: pointer; }
+  .nt-tabs button.on { background: var(--bg); box-shadow: inset 0 0 0 1px var(--line2); }
+  .nt-list { overflow-y: auto; flex: 1; padding: 6px; }
+  .nt-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px; border-radius: 10px; color: var(--ink); border-bottom: 1px solid var(--line); }
+  .nt-item:hover { background: var(--soft); }
+  .nt-item.unread { background: #f4f7ff; }
+  .nt-item .mid { flex: 1; min-width: 0; }
+  .nt-item p { margin: 0 0 4px; font-size: .92rem; line-height: 1.5; }
+  .nt-item .nt-text { color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .nt-item small { color: var(--muted); font-size: .8rem; }
+  .nt-dot { width: 12px; height: 12px; min-width: 12px; margin-top: 6px; border-radius: 50%; border: 2px solid var(--muted); background: none; padding: 0; cursor: pointer; }
+  .nt-dot.new { background: var(--primary); border-color: var(--primary); }
+  .nt-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px; border-top: 1px solid var(--line); }
+  .nt-foot .btn { text-align: center; }
+
+  /* חלון צ'אט צף */
+  .chat-win { position: fixed; bottom: 0; left: calc(var(--uside) + 20px); z-index: 44; width: 380px; height: 520px; max-height: 80vh; background: var(--card);
+    border: 1px solid var(--line2); border-radius: 14px 14px 0 0; box-shadow: 0 -10px 40px -12px rgba(20,30,60,.35); display: flex; flex-direction: column; overflow: hidden; }
+  .cw-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .cw-head .sp { flex: 1; }
+  .cw-title { color: var(--ink); font-size: .95rem; }
+  .cw-title b { color: var(--primary); }
+  .cw-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .cw-body .conv-msgs { flex: 1; }
+  .cw-body .conv-send textarea { min-height: 40px; }
+  .conv-send .emo { top: auto; bottom: 100%; }
+  .bub .md p { margin: 0; }
   a.uname { color: var(--ink); font-weight: 800; }
   a.uname:hover { color: var(--primary); }
 
@@ -799,7 +856,10 @@
   const markSeen = t => { seen[t.id] = Math.max(ms(t.lastTs), Date.now()); store("wfhSeen", seen); updateCounts(); };
   const isOpenQ = t => ASK_TAGS.includes(t.tag) && !t.solved;
   // התראות: תגובות של אחרים בנושאים שלי שעוד לא ראיתי
-  const notifs = () => me ? topics.filter(t => t.uid === me.uid && t.lastUid !== me.uid && t.replies > 0 && isUnread(t)) : [];
+  // התראות: תגובות של אחרים בנושאים שלי או בנושאים שאני עוקב/ת אחריהם (מי שמגיב בנושא – עוקב אוטומטית)
+  const watching = t => !!me && (t.uid === me.uid || (t.watchers || []).includes(me.uid));
+  const notifAll = () => me ? topics.filter(t => watching(t) && t.replies > 0 && t.lastUid && t.lastUid !== me.uid) : [];
+  const notifs = () => notifAll().filter(isUnread);
 
   function updateCounts() {
     const un = topics.filter(isUnread).length, uq = topics.filter(isOpenQ).length;
@@ -808,7 +868,7 @@
     const qn = queue().length;
     $("navQueue").classList.toggle("hidden", !isAdmin);
     $("cntQueue").textContent = qn; $("cntQueue").classList.toggle("hidden", !qn);
-    renderUside();
+    renderUside(); drawNt();
   }
 
   // סרגל המשתמש (משמאל)
@@ -819,7 +879,7 @@
     put(u, me
       ? [h("a", { class: "me-row", href: "#/user/" + me.uid, title: "הפרופיל שלי" }, avatar(myName(), me.uid, "s"), h("b", {}, myName()), isAdmin ? h("span", { class: "badge-admin" }, "מנהל") : (profile ? h("span", { class: "rep", title: "המוניטין שלך" }, "⭐ " + myRep()) : null)),
          h("a", { href: "#/search" }, "🔍", h("span", {}, "חיפוש")),
-         h("a", { href: "#/notifications" }, "🔔", h("span", {}, "התראות"), cnt(n)),
+         h("a", { href: "#/notifications", id: "ntToggle", onclick: e => { if (innerWidth >= 1280) { e.preventDefault(); e.stopPropagation(); toggleNtPanel(); } } }, "🔔", h("span", {}, "התראות"), cnt(n)),
          h("a", { href: "#/new" }, "✏️", h("span", {}, "נושא חדש")),
          h("a", { href: "#/new" }, "📝", h("span", {}, "טיוטות"), cnt(draft && (draft.title || draft.text) ? 1 : 0)),
          h("button", { type: "button", id: "dmToggle", onclick: e => { e.stopPropagation(); toggleDmPanel(); } }, "💬", h("span", {}, "צ'אטים"), cnt(dms.filter(dmUnread).length)),
@@ -1102,7 +1162,7 @@
       topics.slice().sort((a, b) => score(b) - score(a)));
     if (parts[0] === "unread") return renderList(v, "📥 לא נקרא", "נושאים עם תוכן חדש שעוד לא ראיתם", topics.filter(isUnread), true);
     if (parts[0] === "unsolved") return renderList(v, "❓ לא נפתר", "שאלות ובקשות עזרה שעוד מחכות לתשובה – אולי אתם יודעים?", topics.filter(isOpenQ));
-    if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות חדשות בנושאים שפתחתם", notifs(), true);
+    if (parts[0] === "notifications") return renderList(v, "🔔 התראות", "תגובות בנושאים שפתחתם ובנושאים שאתם עוקבים אחריהם", notifAll(), true);
     if (parts[0] === "queue") return renderList(v, "⏳ ממתין לאישור", "נושאים ותגובות של משתמשים עם פחות מ-" + REP_MIN + " מוניטין – פתחו נושא כדי לאשר או לדחות", queue());
     if (parts[0] === "users") return renderUsers(v);
     if (parts[0] === "user") return renderProfile(v, parts[1] || "");
@@ -1314,7 +1374,7 @@
           h("span", { class: "sp" }),
           self ? h("span", { class: "hint" }, "👋 זה הפרופיל שלך")
             : [h("button", { class: "btn" + (iFollow ? "" : " primary"), onclick: follow }, iFollow ? "✔ במעקב" : "➕ מעקב"),
-               h("button", { class: "btn", onclick: () => { if (!needLogin("כדי לשלוח הודעה צריך להתחבר")) location.hash = "#/chat-with/" + uid + "?n=" + encodeURIComponent(name); } }, "💬 צ'אט")]),
+               h("button", { class: "btn", onclick: () => openChatWin(uid, name) }, "💬 צ'אט")]),
         h("div", { class: "pgrid" },
           h("aside", { class: "pabout" },
             h("div", { class: "phd" }, "אודות"),
@@ -1375,13 +1435,36 @@
       else if (!canReply) composer.append(h("p", { style: "margin:0" }, "🔒 הנושא נעול – אי אפשר להגיב בו."));
       else composer.append(h("button", { type: "button", class: "reply-fake", onclick: () => openReply(topic) },
         avatar(myName(), me.uid, "s"), h("span", {}, replyTopicId === topic.id && draftReply.trim() ? "📝 יש לכם טיוטת תגובה – לחצו להמשך" : "כתבו תגובה...")));
-      const replyBtn = canReply ? h("button", { class: "btn primary", onclick: () => openReply(topic) }, "↩ תגובה") : null;
       const pendBar = topic.pending ? h("div", { class: "pend-note" },
         h("span", {}, "⏳ הנושא ממתין לאישור מנהל – עד אז רק " + (isAdmin ? "את/ה ומי שכתב/ה אותו" : "את/ה") + " רואים אותו."),
         h("span", { class: "sp" }),
         isAdmin ? [h("button", { class: "btn sm primary", onclick: () => ref.update({ pending: false, lastTs: NOW() }).then(() => toast("✔ הנושא אושר ופורסם")).catch(() => toast("האישור נכשל")) }, "✔ אישור"),
                    h("button", { class: "btn sm danger", onclick: () => delTopic(topic) }, "✖ דחייה ומחיקה")] : null) : null;
       const shownPosts = posts.filter(canSee);
+      // מספור (#), תגובות לפוסט מסוים, ומיון
+      const num = {}, kids = {}, byId = {};
+      shownPosts.forEach((p, i) => { num[p.id] = i + 2; byId[p.id] = p; if (p.toPid) (kids[p.toPid] = kids[p.toPid] || []).push(p); });
+      const sc = p => (p.likes || []).length - (p.dislikes || []).length;
+      const sorted = postSort === "new" ? shownPosts.slice().reverse() : postSort === "votes" ? shownPosts.slice().sort((a, b) => sc(b) - sc(a)) : shownPosts;
+      const writers = new Set([topic.uid].concat(shownPosts.map(p => p.uid))).size;
+      const watchers = topic.watchers || [];
+      const iWatch = watching(topic);
+      const pill = (n, t) => h("span", { class: "tpill" }, h("b", {}, short(n)), " " + t);
+      const sortSel = h("select", { class: "tsel", title: "מיון" },
+        [["old", "⇅ מהישן לחדש"], ["new", "⇅ מהחדש לישן"], ["votes", "⇅ הכי הרבה הצבעות"]].map(([k, t]) => h("option", { value: k }, t)));
+      sortSel.value = postSort; sortSel.onchange = () => { postSort = sortSel.value; store("wfhSort", postSort); draw(); };
+      const toolbar = h("div", { class: "card ttools" },
+        me ? h("button", { class: "tl", onclick: () => { seen[topic.id] = 0; store("wfhSeen", seen); updateCounts(); toast("סומן כלא נקרא"); location.hash = c ? "#/category/" + c.id : "#/"; } }, "📭 סימון כלא נקרא") : null,
+        me ? h("button", { class: "tl" + (iWatch ? " on" : ""), title: topic.uid === me.uid ? "את/ה תמיד מקבל/ת התראות על הנושאים שלך" : "",
+          onclick: () => { if (topic.uid === me.uid) return toast("🔔 זה הנושא שלך – תמיד תקבלו עליו התראות");
+            const FV = firebase.firestore.FieldValue;
+            ref.update({ watchers: iWatch ? FV.arrayRemove(me.uid) : FV.arrayUnion(me.uid) })
+              .then(() => toast(iWatch ? "🔕 הפסקתם לעקוב אחרי הנושא" : "🔔 תקבלו התראות על תגובות חדשות"))
+              .catch(e => toast(e.code === "permission-denied" ? "אין הרשאה (אולי צריך לעדכן את הכללים ב-Firebase)" : "שגיאה")); } },
+          iWatch ? "🔔 במעקב" : "🔕 לא במעקב") : null,
+        sortSel,
+        h("span", { class: "sp" }),
+        canReply ? h("button", { class: "btn primary", onclick: () => openReply(topic) }, "↩ תגובה") : null);
       const mineOrAdmin = isAdmin || (me && me.uid === topic.uid);
       const adminBar = mineOrAdmin ? h("div", { class: "post-foot", style: "margin:0 0 12px" },
         ASK_TAGS.includes(topic.tag) ? h("button", { class: "btn sm" + (topic.solved ? "" : " primary"), onclick: () => ref.update({ solved: !topic.solved }).then(() => toast(topic.solved ? "סומן כלא נפתר" : "✔ סומן כנפתר – תודה!")) }, topic.solved ? "↩ סימון כלא נפתר" : "✔ סימון כנפתר") : null,
@@ -1395,14 +1478,15 @@
         h("div", { class: "crumbs" },
           topic.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
           topic.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
-          h("span", {}, "💬 " + (topic.replies || 0) + " תגובות · 👁 " + (topic.views || 0) + " צפיות"),
-          (topic.tags || []).map(tagChip),
-          h("span", { class: "sp" }), replyBtn),
+          c ? h("a", { href: "#/category/" + c.id }, (c.icon || "") + " " + c.name) : null,
+          pill(shownPosts.length + 1, "פוסטים"), pill(writers, "כותבים"), pill(topic.views || 0, "צפיות"), pill(watchers.length, "עוקבים"),
+          (topic.tags || []).map(tagChip)),
+        toolbar,
         pendBar,
         adminBar,
         h("div", { class: "card" },
-          postEl(topic, ref, true),
-          shownPosts.map(p => postEl(p, ref.collection("posts").doc(p.id), false, topic))),
+          postEl(topic, ref, true, undefined, { num: 1 }),
+          sorted.map(p => postEl(p, ref.collection("posts").doc(p.id), false, topic, { num: num[p.id], kids: kids[p.id], parent: byId[p.toPid] }))),
         composer);
     };
     stopTopic = ref.onSnapshot(d => {
@@ -1415,9 +1499,9 @@
       posts = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" }))); draw();
     }, () => {});
   }
-  let draftReply = "";
+  let draftReply = "", postSort = load("wfhSort", "old");
 
-  function postEl(p, ref, isOp, topic) {
+  function postEl(p, ref, isOp, topic, ex) {
     const likes = p.likes || [], dislikes = p.dislikes || [];
     const liked = !!me && likes.includes(me.uid), disliked = !!me && dislikes.includes(me.uid);
     const text = renderText(p.text);
@@ -1452,21 +1536,39 @@
       h("button", { class: "btn sm danger", onclick: () => rejectPost(ref, topic) }, "✖ דחייה"));
     const t = topic || p; // בפוסט הראשון – הנושא עצמו
     if (!t.locked || isAdmin) foot.append(
-      h("button", { class: "btn sm", title: "תגובה ל" + (p.name || ""), onclick: () => openReply(t, "@" + (p.name || "") + " ") }, "↩ תגובה"),
+      h("button", { class: "btn sm", title: "תגובה ל" + (p.name || ""),
+        onclick: () => openReply(t, "@" + (p.name || "") + " ", isOp ? null : { id: p.id, name: p.name || "", uid: p.uid }) }, "↩ תגובה"),
       h("button", { class: "btn sm", onclick: () => quote(p, t) }, "💬 ציטוט"));
     if (me && (me.uid === p.uid || isAdmin)) {
       foot.append(h("button", { class: "btn sm", onclick: () => editPost(p, ref, isOp, text) }, "✏️ עריכה"));
       if (!isOp) foot.append(h("button", { class: "btn sm danger", onclick: () => delPost(p, ref, topic) }, "🗑 מחיקה"));
     }
-    return h("div", { class: "post" + (isOp ? " op" : "") + (p.pending && !isOp ? " pending" : "") },
+    // ex: מספר הפוסט (#), הפוסט שעליו הגיבו, והתגובות לפוסט הזה
+    ex = ex || {};
+    const jump = pid => { const el = document.getElementById("p-" + pid); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600); } };
+    const toLine = p.toPid ? h("a", { href: "#", class: "to-line", onclick: e => { e.preventDefault(); jump(p.toPid); } },
+      "↩ בתגובה ל", h("b", {}, "@" + (p.toName || "")), ex.parent ? ": " + brief(ex.parent.text).slice(0, 70) : null) : null;
+    let kidsBox = null;
+    if (ex.kids && ex.kids.length) {
+      const list = h("div", { class: "kids hidden" }, ex.kids.map(k => h("a", { href: "#", class: "kid", onclick: e => { e.preventDefault(); jump(k.id); } },
+        avatar(k.name, k.uid, "s"), h("b", {}, k.name), h("span", {}, brief(k.text).slice(0, 90)), h("small", {}, ago(k.ts)))));
+      const last = ex.kids[ex.kids.length - 1];
+      kidsBox = h("div", { class: "kids-wrap" },
+        h("button", { type: "button", class: "kids-btn", onclick: e => { list.classList.toggle("hidden"); e.currentTarget.classList.toggle("open"); } },
+          avatar(last.name, last.uid, "s"), h("b", {}, ex.kids.length === 1 ? "תגובה אחת" : ex.kids.length + " תגובות"),
+          h("span", {}, "תגובה אחרונה " + ago(last.ts)), h("i", {}, "▾")), list);
+    }
+    return h("div", { class: "post" + (isOp ? " op" : "") + (p.pending && !isOp ? " pending" : ""), id: "p-" + (isOp ? "op" : p.id) },
       h("a", { href: "#/user/" + p.uid, title: "לפרופיל" }, avatar(p.name, p.uid, "l")),
       h("div", {},
+        toLine,
         h("div", { class: "who" }, h("a", { class: "uname", href: "#/user/" + p.uid }, p.name || "משתמש/ת"),
           p.admin ? h("span", { class: "badge-admin" }, "מנהל") : repEl(p.uid),
           p.pending && !isOp ? h("span", { class: "pill wait" }, "⏳ ממתין לאישור מנהל") : null,
           groupsOf(p.uid).slice(0, 3).map(g => { const b = h("a", { class: "grp-badge", href: "#/group/" + g.id }, (g.icon || "") + " " + g.name); b.style.background = g.color || "#a855f7"; return b; }),
-          h("small", {}, ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name)),
-        text, foot));
+          h("small", {}, "כתב/ה " + ago(p.ts)), p.edited ? h("span", { class: "edited" }, "· נערך") : null, chatBtn(p.uid, p.name),
+          ex.num ? h("span", { class: "pnum" }, "#" + ex.num) : null),
+        text, foot, kidsBox));
   }
 
   function quote(p, t) {
@@ -1474,6 +1576,9 @@
     openReply(t, "> @" + (p.name || "") + " כתב/ה:\n" + lines + "\n\n");
   }
 
+  // 5 השמות האחרונים שהגיבו (להתראות: "X, Y ו-3 אחרים הגיבו ל...")
+  const withReplier = (topic, name) => [name].concat((topic.repliers || []).filter(n => n !== name)).slice(0, 10);
+  let replyParent = null;
   async function reply(topic, ta, btn) {
     const text = ta.value.trim();
     if (!text) return toast("כתבו תגובה");
@@ -1481,15 +1586,20 @@
     const tRef = db.collection("forum_topics").doc(topic.id);
     const batch = db.batch(), pend = needsApproval();
     const pRef = tRef.collection("posts").doc();
-    batch.set(pRef, { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [], dislikes: [], pending: pend });
+    const post = { text: text.slice(0, 10000), uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), likes: [], dislikes: [], pending: pend };
+    const par = replyParent && replyParent.topic === topic.id ? replyParent : null; // "בתגובה ל..." – פוסט מסוים
+    if (par) Object.assign(post, { toPid: par.id, toName: par.name, toUid: par.uid });
+    batch.set(pRef, post);
+    const FV = firebase.firestore.FieldValue;
     // מונה הפוסטים בפרופיל (postT/postP – איזה פוסט נוסף, כדי שהכללים יבדקו)
     if (profile && profiles[me.uid]) batch.update(db.collection("forum_profiles").doc(me.uid),
-      { postCount: firebase.firestore.FieldValue.increment(1), postT: topic.id, postP: pRef.id });
-    if (pend) batch.update(tRef, { pendingPosts: firebase.firestore.FieldValue.increment(1) }); // המנהל יראה שיש תגובה לאישור
-    else batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-      lastText: brief(text) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
+      { postCount: FV.increment(1), postT: topic.id, postP: pRef.id });
+    // מי שמגיב – עוקב אחרי הנושא (יקבל התראות)
+    if (pend) batch.update(tRef, { pendingPosts: FV.increment(1), watchers: FV.arrayUnion(me.uid) }); // המנהל יראה שיש תגובה לאישור
+    else batch.update(tRef, { replies: FV.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
+      lastText: brief(text), repliers: withReplier(topic, myName()), watchers: FV.arrayUnion(me.uid) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
     let ok = false;
-    try { await batch.commit(); draftReply = ""; ta.value = ""; ok = true; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
+    try { await batch.commit(); draftReply = ""; replyParent = null; ta.value = ""; ok = true; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
     catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
     btn.disabled = false;
     return ok;
@@ -1525,7 +1635,8 @@
     const FV = firebase.firestore.FieldValue, b = db.batch();
     b.update(ref, { pending: false });
     b.update(db.collection("forum_topics").doc(topic.id), { replies: FV.increment(1), pendingPosts: FV.increment(-1),
-      lastTs: NOW(), lastName: p.name || "", lastUid: p.uid, lastText: brief(p.text) });
+      lastTs: NOW(), lastName: p.name || "", lastUid: p.uid, lastText: brief(p.text),
+      repliers: withReplier(topic, p.name || ""), watchers: FV.arrayUnion(p.uid) });
     b.commit().then(() => toast("✔ התגובה אושרה ופורסמה")).catch(() => toast("האישור נכשל"));
   }
   function rejectPost(ref, topic) {
@@ -1575,11 +1686,13 @@
   }
   // תגובה בנושא – אותה חלונית, בלי קטגוריה/כותרת. add = טקסט להוספה (@שם או ציטוט)
   let replyTopicId = "";
-  function openReply(topic, add) {
+  function openReply(topic, add, parent) {
     if (needLogin("כדי להגיב צריך להתחבר")) return;
     if (topic.locked && !isAdmin) return toast("🔒 הנושא נעול – אי אפשר להגיב בו");
     if (!dock) dock = buildDock();
-    if (replyTopicId !== topic.id) { if (replyTopicId) draftReply = ""; replyTopicId = topic.id; }
+    if (replyTopicId !== topic.id) { if (replyTopicId) draftReply = ""; replyTopicId = topic.id; replyParent = null; }
+    if (parent) replyParent = Object.assign({ topic: topic.id }, parent);
+    else if (!add) replyParent = null;
     if (add) draftReply = (draftReply.trim() ? draftReply.replace(/\s*$/, "\n\n") : "") + add;
     dock.sync(topic);
     showDock();
@@ -1592,7 +1705,7 @@
   function closeComposer(clear) {
     if (!dock) return;
     dock.el.classList.add("hidden"); dock.mini.classList.add("hidden"); document.body.classList.remove("docked");
-    if (clear) { if (dock.topic) draftReply = ""; else { draft = EMPTY_DRAFT(); saveDraft(); } }
+    if (clear) { if (dock.topic) { draftReply = ""; replyParent = null; } else { draft = EMPTY_DRAFT(); saveDraft(); } }
   }
 
   function buildDock() {
@@ -1677,6 +1790,7 @@
           cat: draft.cat, title: title.value.trim().slice(0, 120), text: ta.value.trim().slice(0, 10000), tags: draft.tags.slice(0, 5),
           uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
           replies: 0, views: 0, likes: [], dislikes: [], pinned: false, locked: false, tag: draft.tag || "", solved: false, lastText: "",
+          watchers: [me.uid], repliers: [],
           pending: pend, pendingPosts: 0
         });
         closeComposer(true); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
@@ -1707,7 +1821,7 @@
       api.topic = topic; el.classList.toggle("reply", !!topic);
       el.setAttribute("aria-label", topic ? "תגובה" : "נושא חדש");
       if (topic) {
-        put(replyHead, "↩ תגובה ל", h("b", {}, "\"" + topic.title + "\""));
+        put(replyHead, "↩ תגובה ל", replyParent ? [h("b", { class: "mention" }, "@" + replyParent.name), " ב"] : null, h("b", {}, "\"" + topic.title + "\""));
         ta.value = draftReply; ta.placeholder = "כתבו את התגובה כאן...";
       } else {
         title.value = draft.title; ta.value = draft.text; tagIn.value = "";
@@ -1885,7 +1999,7 @@
   function chatBtn(uid, name) {
     if (!uid || (me && uid === me.uid)) return null;
     return h("button", { class: "chat-btn", type: "button", title: "שליחת הודעה פרטית",
-      onclick: () => { if (!needLogin("כדי לשלוח הודעה פרטית צריך להתחבר")) location.hash = "#/chat-with/" + uid + "?n=" + encodeURIComponent(name || ""); } }, "💬 צ'אט");
+      onclick: () => openChatWin(uid, name) }, "💬 צ'אט");
   }
 
   async function openDm(uid, name) {
@@ -1907,7 +2021,8 @@
       h("p", {}, "עוד אין צ'אטים. אפשר להתחיל צ'אט מהכפתור \"💬 צ'אט\" ליד שם של משתמש.")));
     put(box, dms.map(r => {
       const who = otherName(r), unread = dmUnread(r);
-      return h("a", { class: "dm-item" + (r.id === active ? " on" : ""), href: "#/chats/" + r.id },
+      return h("a", { class: "dm-item" + (r.id === active ? " on" : ""), href: "#/chats/" + r.id,
+          onclick: box.id === "dmPanelList" ? e => { e.preventDefault(); openChatWin(otherOf(r), who, r.id); } : null },
         avatar(who, otherOf(r)),
         h("div", { class: "mid" }, h("b", {}, who),
           r.lastText ? h("p", {}, (r.lastUid === me.uid ? "את/ה" : who) + ": " + r.lastText) : h("p", { style: "color:var(--muted)" }, "שיחה חדשה"),
@@ -1946,13 +2061,18 @@
     drawDmList(list, id);
     if (!id) return put(conv, h("div", { class: "empty", style: "margin:auto" }, h("div", { class: "big" }, "💬"), h("h3", {}, "בחרו צ'אט מהרשימה")));
     if (!id.split("_").includes(me.uid)) return put(conv, notFound("הצ'אט לא נמצא"));
+    if (chatWin && chatWin.id === id) closeChatWin(); // אותה שיחה פתוחה בחלון קטן – עוברים לדף המלא
+    stopConv = mountConv(conv, id, false);
+  }
 
+  // שיחה אחת: כותרת, הודעות, תיבת כתיבה. משמש גם בדף הצ'אטים וגם בחלון הצ'אט הצף. מחזיר פונקציית עצירה
+  function mountConv(conv, id, small) {
     const ref = db.collection("forum_dms").doc(id);
     const other = id.split("_").find(u => u !== me.uid) || me.uid;
     const room = () => dms.find(r => r.id === id) || { users: id.split("_"), names: {} };
     const msgs = h("div", { class: "conv-msgs" }, h("p", { class: "hint", style: "margin:auto" }, "טוען..."));
-    const ta = h("textarea", { maxlength: "2000", placeholder: "כתבו הודעה... (Enter לשליחה, Shift+Enter לשורה חדשה)" });
-    const send = h("button", { class: "btn primary" }, "שליחה");
+    const ta = h("textarea", { maxlength: "2000", rows: small ? "1" : "2", placeholder: small ? "הקלידו הודעת צ'אט" : "כתבו הודעה... (Enter לשליחה, Shift+Enter לשורה חדשה)" });
+    const send = h("button", { class: "btn primary", title: "שליחה" }, small ? "➤" : "שליחה");
     const doSend = async () => {
       const text = ta.value.trim(); if (!text) return;
       ta.value = ""; send.disabled = true;
@@ -1964,20 +2084,116 @@
     };
     send.onclick = doSend;
     ta.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); } };
+    const emo = h("div", { class: "emo hidden" }, EMOJIS.map(x => h("button", { type: "button",
+      onclick: () => { ta.setRangeText(x, ta.selectionStart, ta.selectionEnd, "end"); emo.classList.add("hidden"); ta.focus(); } }, x)));
+    const emoBtn = h("span", { class: "emo-wrap" }, h("button", { type: "button", class: "tbtn", title: "סמיילי", onclick: () => emo.classList.toggle("hidden") }, "😀"), emo);
+    const nameEl = h("a", { class: "uname", href: "#/user/" + other }, otherName(room()));
     put(conv,
-      h("div", { class: "conv-head" }, h("a", { href: "#/chats", class: "btn sm", style: "padding:2px 10px" }, "→"), avatar(otherName(room()), other, "s"), h("span", { id: "convName" }, otherName(room()))),
-      msgs, h("div", { class: "conv-send" }, ta, send));
+      small ? null : h("div", { class: "conv-head" }, h("a", { href: "#/chats", class: "btn sm", style: "padding:2px 10px" }, "→"),
+        avatar(otherName(room()), other, "s"), h("span", { id: "convName" }, nameEl)),
+      msgs, h("div", { class: "conv-send" }, emoBtn, ta, send));
     ta.focus();
-    stopConv = ref.collection("msgs").orderBy("ts").limitToLast(300).onSnapshot(s => {
+    let lastDay = "";
+    const stop = ref.collection("msgs").orderBy("ts").limitToLast(300).onSnapshot(s => {
       const atBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 80;
+      lastDay = "";
       put(msgs, s.empty ? h("p", { class: "hint", style: "margin:auto" }, "עוד אין הודעות – כתבו את הראשונה 👋") :
-        s.docs.map(d => { const m = d.data({ serverTimestamps: "estimate" }); return h("div", { class: "bub " + (m.uid === me.uid ? "me" : "them") }, m.text, h("time", {}, ago(m.ts))); }));
+        s.docs.map(d => {
+          const m = d.data({ serverTimestamps: "estimate" }), mine = m.uid === me.uid;
+          return h("div", { class: "bub " + (mine ? "me" : "them") }, renderText(m.text), h("time", {}, ago(m.ts)));
+        }));
       if (atBottom || s.docChanges().some(c => c.type === "added")) msgs.scrollTop = msgs.scrollHeight;
       // סימון כנקרא כשהשיחה פתוחה מול העיניים
       const r = room();
       if (!document.hidden && r.lastUid && r.lastUid !== me.uid && ms(r.lastTs) > ms((r.read || {})[me.uid]))
         ref.update({ ["read." + me.uid]: NOW() }).catch(() => {});
     }, () => put(msgs, h("p", { class: "hint", style: "margin:auto" }, "אין גישה לצ'אט הזה")));
+    return stop;
+  }
+
+  // ----- חלונית התראות (הכל / לא נקרא) -----
+  let ntTab = "all", ntEl = null;
+  function notifItem(t) {
+    const un = isUnread(t), others = (t.repliers || []).filter(n => n && n !== myName());
+    const names = others.length ? others.slice(0, 2) : [t.lastName || "משתמש/ת"];
+    const more = Math.max(0, others.length - 2);
+    const tg = TAGS[t.tag];
+    const dot = h("button", { type: "button", class: "nt-dot" + (un ? " new" : ""), title: un ? "סימון כנקרא" : "סימון כלא נקרא",
+      onclick: e => { e.preventDefault(); e.stopPropagation();
+        if (un) markSeen(t); else { seen[t.id] = 0; store("wfhSeen", seen); updateCounts(); }
+        drawNt(); } });
+    return h("a", { class: "nt-item" + (un ? " unread" : ""), href: "#/topic/" + t.id, onclick: () => { markSeen(t); ntEl.classList.add("hidden"); } },
+      avatar(t.lastName, t.lastUid),
+      h("div", { class: "mid" },
+        h("p", {}, names.map((n, i) => [i ? (i === names.length - 1 && !more ? " ו" : ", ") : "", h("b", {}, n)]),
+          more ? [" ו-" + more + " אחרים"] : null, names.length > 1 || more ? " הגיבו ל: " : " הגיב/ה ל: ",
+          h("b", {}, (tg ? tg.t + " | " : "") + t.title)),
+        t.lastText ? h("p", { class: "nt-text" }, t.lastText) : null,
+        h("small", {}, ago(t.lastTs))),
+      dot);
+  }
+  function drawNt() {
+    if (!ntEl || ntEl.classList.contains("hidden")) return;
+    const list = (ntTab === "unread" ? notifs() : notifAll()).slice(0, 40);
+    ntEl.querySelectorAll(".nt-tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === ntTab));
+    put(ntEl.querySelector(".nt-list"), list.length ? list.map(notifItem)
+      : h("div", { class: "empty", style: "padding:34px 14px" }, h("div", { class: "big" }, "🔔"),
+          h("p", {}, ntTab === "unread" ? "אין התראות חדשות 🎉" : "עוד אין התראות. כשיגיבו בנושאים שלכם או בנושאים שאתם עוקבים אחריהם – זה יופיע כאן.")));
+  }
+  function toggleNtPanel() {
+    if (!me) return openLogin(false, "כדי לראות התראות צריך להתחבר");
+    if (!ntEl) {
+      const tab = (t, label) => h("button", { type: "button", "data-t": t, onclick: e => { e.stopPropagation(); ntTab = t; drawNt(); } }, label);
+      ntEl = h("div", { class: "nt-panel hidden" },
+        h("div", { class: "nt-tabs" }, tab("all", "הכל"), tab("unread", "לא נקרא")),
+        h("div", { class: "nt-list" }),
+        h("div", { class: "nt-foot" },
+          h("button", { type: "button", class: "btn", onclick: () => {
+            const l = notifs(); if (!l.length) return toast("אין התראות שלא נקראו");
+            l.forEach(t => seen[t.id] = Math.max(ms(t.lastTs), Date.now())); store("wfhSeen", seen); updateCounts(); drawNt(); toast("✔ הכל סומן כנקרא"); } }, "✔ סימון הכל כנקרא"),
+          h("a", { class: "btn primary", href: "#/notifications", onclick: () => ntEl.classList.add("hidden") }, "☰ כל ההתראות")));
+      document.body.append(ntEl);
+      document.addEventListener("click", e => { if (ntEl && !e.target.closest(".nt-panel") && !e.target.closest("#ntToggle")) ntEl.classList.add("hidden"); });
+    }
+    const open = ntEl.classList.toggle("hidden") === false;
+    if (open) {
+      $("dmPanel").classList.add("hidden");
+      const t = $("ntToggle"); if (t) ntEl.style.top = Math.max(10, Math.min(t.getBoundingClientRect().top, innerHeight - 560)) + "px";
+      drawNt();
+    }
+  }
+
+  // ----- חלון צ'אט צף (בפינת המסך, בלי לעזוב את הדף) -----
+  let chatWin = null;
+  function closeChatWin() {
+    if (!chatWin) return;
+    chatWin.stop(); chatWin.el.remove(); chatWin = null;
+  }
+  async function openChatWin(uid, name, roomKey) {
+    if (needLogin("כדי לשלוח הודעה פרטית צריך להתחבר")) return;
+    const id = roomKey || roomId(me.uid, uid);
+    if (!uid) uid = id.split("_").find(u => u !== me.uid) || me.uid;
+    if (uid === me.uid) return toast("זה החשבון שלך 🙂");
+    if (innerWidth < 700) { location.hash = roomKey ? "#/chats/" + id : "#/chat-with/" + uid + "?n=" + encodeURIComponent(name || ""); return; } // בטלפון – דף מלא
+    $("dmPanel").classList.add("hidden");
+    if (chatWin && chatWin.id === id) { chatWin.el.querySelector("textarea").focus(); return; }
+    closeChatWin();
+    try {
+      if (!dms.some(r => r.id === id)) // שיחה חדשה – יוצרים אותה
+        await db.collection("forum_dms").doc(id).set({ users: [me.uid, uid].sort(), names: { [me.uid]: myName(), [uid]: (name || "משתמש/ת").slice(0, 40) } }, { merge: true });
+    } catch (e) { return toast(e.code === "permission-denied" ? "אין הרשאה (אולי צריך להשלים הרשמה לפורום)" : "לא הצלחתי לפתוח צ'אט"); }
+    const r = dms.find(x => x.id === id);
+    const who = (r && otherName(r)) || name || "משתמש/ת";
+    const body = h("div", { class: "cw-body" });
+    const el = h("div", { class: "chat-win", role: "dialog", "aria-label": "צ'אט עם " + who },
+      h("div", { class: "cw-head" },
+        avatar(who, uid, "s"), h("a", { class: "cw-title", href: "#/user/" + uid }, "צ'אט עם ", h("b", {}, who)),
+        h("span", { class: "sp" }),
+        h("button", { type: "button", class: "tbtn", title: "פתיחה במסך מלא", onclick: () => { closeChatWin(); location.hash = "#/chats/" + id; } }, "⤢"),
+        h("button", { type: "button", class: "tbtn", title: "סגירה", onclick: closeChatWin }, "✕")),
+      body);
+    document.body.append(el);
+    chatWin = { id, el, stop: mountConv(body, id, true) };
   }
 
   // "לפני X דקות" מתעדכן לבד
