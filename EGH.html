@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>דירות לשבתות וחגים – תוכנה בקליק</title>
+<meta name="description" content="לוח דירות לשבתות, חגים ובין הזמנים: מפרסמים דירה בחינם ומוצאים מקום לנפוש.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏡%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060c; --bg2: #0a0c18; --paper: #0e1122; --card: #0f1326; --card2: #161b33;
+    --line: rgba(160,170,255,.11); --line2: rgba(160,170,255,.22);
+    --ink: #f5f7ff; --ink2: #c9d0ee; --muted: #8a93b8;
+    --v: #7c5cff; --c: #22d3ee; --p: #f472b6; --gold: #fbbf24; --green: #34d399; --red: #fb7185;
+    --grad: linear-gradient(115deg, #7c5cff 0%, #b15cff 45%, #22d3ee 100%);
+    --warm: linear-gradient(115deg, #f59e0b, #f472b6);
+    --glass: rgba(255,255,255,.04); --glass2: rgba(255,255,255,.075);
+    --pill: 999px; --r: 24px;
+    --sh: 0 24px 50px -26px rgba(0,0,0,.95); --sh-lg: 0 44px 100px -34px rgba(0,0,0,1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; min-height: 100vh; padding-top: 100px; font-family: "Assistant", "Heebo", Arial, sans-serif; font-size: 16px; line-height: 1.65; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background: radial-gradient(900px 650px at 88% -10%, rgba(245,158,11,.18), transparent 60%), radial-gradient(800px 600px at 0% 12%, rgba(124,92,255,.22), transparent 60%),
+      radial-gradient(900px 700px at 60% 115%, rgba(244,114,182,.12), transparent 60%), linear-gradient(180deg, var(--bg2), var(--bg) 60%); }
+  h1, h2, h3, .logo, .price, .btn { font-family: "Heebo", "Assistant", Arial, sans-serif; }
+  a { color: inherit; } button { font: inherit; cursor: pointer; } img { max-width: 100%; }
+  .hidden { display: none !important; }
+  ::selection { background: rgba(124,92,255,.45); }
+  :focus-visible { outline: 2px solid var(--c); outline-offset: 3px; border-radius: 10px; }
+
+  /* פס עליון */
+  .top { position: fixed; top: 14px; right: 14px; left: 14px; z-index: 30; height: 66px; max-width: 1260px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 0 10px 0 16px;
+    background: rgba(10,12,26,.7); backdrop-filter: blur(20px) saturate(170%); -webkit-backdrop-filter: blur(20px) saturate(170%); border: 1px solid var(--line2); border-radius: var(--pill); box-shadow: 0 26px 60px -30px #000; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 900; font-size: 1.25rem; letter-spacing: -.4px; margin-inline-end: auto; min-width: 0; }
+  .logo .mk { width: 42px; height: 42px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 1.35rem; background: var(--warm); box-shadow: 0 10px 24px -8px rgba(245,158,11,.9); }
+  .logo b { background: var(--warm); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .logo small { display: block; font-size: .72rem; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+  .tb { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--pill); font-weight: 800; font-size: .93rem; color: var(--ink); background: var(--glass); border: 1px solid var(--line2); text-decoration: none; white-space: nowrap; transition: background .2s, transform .15s, border-color .2s; }
+  .tb:hover { background: var(--glass2); border-color: rgba(124,92,255,.55); }
+  .tb.hot { color: #fff; border-color: transparent; background: var(--warm); box-shadow: 0 10px 26px -10px rgba(245,158,11,1); }
+  .tb.hot:hover { transform: translateY(-1px); }
+  .tb .n { background: var(--p); color: #fff; border-radius: var(--pill); padding: 0 7px; font-size: .75rem; }
+
+  /* ראש הדף + חיפוש */
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  .hero { text-align: center; padding: 40px 0 26px; }
+  .hero h1 { margin: 0 0 12px; font-size: clamp(2.3rem, 6vw, 4.2rem); font-weight: 900; letter-spacing: -2px; line-height: 1.05; }
+  .hero h1 span { background: linear-gradient(90deg, #fbbf24, #f472b6, #a78bfa, #fbbf24); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 8s linear infinite; }
+  @keyframes shine { to { background-position: 300% 0; } }
+  .hero p { margin: 0 auto; max-width: 620px; color: var(--ink2); font-size: 1.15rem; }
+  .finder { margin: 28px auto 0; max-width: 980px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 8px; padding: 8px; border-radius: 28px; border: 1px solid transparent;
+    background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, rgba(245,158,11,.6), rgba(160,170,255,.14) 45%, rgba(124,92,255,.55)) border-box; box-shadow: var(--sh-lg); }
+  .finder input, .finder select { width: 100%; font: inherit; font-weight: 700; color: var(--ink); padding: 13px 16px; border-radius: 20px; border: 1px solid var(--line); background: rgba(0,0,0,.28); }
+  .finder input:focus, .finder select:focus { outline: none; border-color: var(--v); }
+  select option { background: var(--paper); color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0 0; }
+  .chip { padding: 8px 16px; border-radius: var(--pill); font-weight: 800; font-size: .92rem; color: var(--ink2); background: var(--glass); border: 1px solid var(--line); transition: all .2s; }
+  .chip:hover { border-color: var(--line2); color: var(--ink); }
+  .chip.on { color: #fff; border-color: transparent; background: var(--warm); box-shadow: 0 10px 24px -10px rgba(245,158,11,1); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 30px 0 16px; }
+  .bar b { font-size: 1.1rem; }
+  .bar select { font: inherit; font-weight: 800; color: var(--ink); padding: 10px 16px; border-radius: var(--pill); border: 1px solid var(--line2); background: var(--glass); }
+
+  /* כרטיסי דירות */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; padding-bottom: 60px; }
+  .card { position: relative; display: flex; flex-direction: column; overflow: hidden; cursor: pointer; border-radius: var(--r); border: 1px solid transparent;
+    background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, rgba(245,158,11,.45), rgba(160,170,255,.1) 45%, rgba(124,92,255,.45)) border-box;
+    box-shadow: var(--sh); transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px -30px rgba(245,158,11,.5); }
+  .thumb { position: relative; margin: 9px 9px 0; aspect-ratio: 16 / 10; border-radius: 18px; overflow: hidden; display: grid; place-items: center; font-size: 3.4rem; background: linear-gradient(135deg, #3b2a6b, #1b3a4f); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s; }
+  .card:hover .thumb img { transform: scale(1.06); }
+  .fav { position: absolute; top: 10px; left: 10px; z-index: 2; width: 38px; height: 38px; border-radius: 50%; border: 0; display: grid; place-items: center; font-size: 1.05rem; background: rgba(5,6,12,.6); backdrop-filter: blur(8px); transition: transform .2s; }
+  .fav:hover { transform: scale(1.12); }
+  .tags { position: absolute; bottom: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { font-size: .76rem; font-weight: 900; color: #fff; padding: 3px 10px; border-radius: var(--pill); background: rgba(5,6,12,.62); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.15); }
+  .cb { padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .cb h3 { margin: 0; font-size: 1.18rem; line-height: 1.3; }
+  .where { color: var(--muted); font-weight: 800; font-size: .92rem; }
+  .facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .facts span { font-size: .82rem; font-weight: 800; color: var(--ink2); background: var(--glass2); border-radius: var(--pill); padding: 3px 11px; }
+  .cfoot { margin-top: auto; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .price { font-weight: 900; font-size: 1.25rem; background: var(--warm); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .price small { font-size: .8rem; color: var(--muted); -webkit-text-fill-color: var(--muted); font-weight: 700; }
+  .when { font-size: .82rem; color: var(--muted); font-weight: 700; }
+  .mine-badge { position: absolute; top: 10px; right: 10px; z-index: 2; font-size: .75rem; font-weight: 900; padding: 3px 10px; border-radius: var(--pill); color: #06210f; background: var(--green); }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+  .empty .big { font-size: 3.4rem; }
+  .empty h3 { color: var(--ink); margin: 8px 0; }
+
+  /* כפתורים וחלונות */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: var(--pill); font-weight: 800; font-size: 1rem; border: 1px solid transparent; text-decoration: none; color: #fff; background: var(--grad); background-size: 200% 100%; box-shadow: 0 14px 30px -14px rgba(124,92,255,1); transition: transform .15s, background-position .35s; cursor: pointer; }
+  .btn:hover { transform: translateY(-2px); background-position: 100% 0; }
+  .btn:active { transform: scale(.97); }
+  .btn.warm { background: var(--warm); box-shadow: 0 14px 30px -14px rgba(245,158,11,1); }
+  .btn.wa { background: linear-gradient(115deg, #16a34a, #25d366); box-shadow: 0 14px 30px -14px rgba(37,211,102,1); }
+  .btn.alt { color: var(--ink); background: var(--glass); border-color: var(--line2); box-shadow: none; }
+  .btn.danger { color: var(--red); background: rgba(251,113,133,.1); border-color: rgba(251,113,133,.35); box-shadow: none; }
+  .btn:disabled { opacity: .6; cursor: default; transform: none; }
+  .overlay { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(3,4,10,.74); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .modal { width: 100%; max-width: 720px; max-height: calc(100vh - 28px); overflow-y: auto; border-radius: 28px; padding: 26px; border: 1px solid transparent;
+    background: linear-gradient(var(--paper), var(--paper)) padding-box, linear-gradient(135deg, rgba(245,158,11,.55), rgba(160,170,255,.12) 45%, rgba(124,92,255,.55)) border-box; box-shadow: var(--sh-lg); animation: pop .25s cubic-bezier(.2,.9,.3,1.2); }
+  .modal.sm { max-width: 430px; }
+  @keyframes pop { from { opacity: 0; transform: scale(.95) translateY(10px); } }
+  .mhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+  .mhead h2 { margin: 0; font-size: 1.4rem; letter-spacing: -.5px; }
+  .x { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--glass); border: 1px solid var(--line); color: var(--muted); }
+  .x:hover { color: var(--ink); }
+  .field { margin-bottom: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 12px; }
+  label { display: block; font-weight: 800; margin-bottom: 6px; color: var(--ink2); }
+  .hint { font-weight: 400; color: var(--muted); font-size: .84rem; }
+  input, textarea, select { width: 100%; font: inherit; font-size: 1rem; color: var(--ink); padding: 12px 15px; border: 1px solid var(--line2); border-radius: 16px; background: rgba(0,0,0,.3); }
+  textarea { resize: vertical; min-height: 100px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--v); box-shadow: 0 0 0 4px rgba(124,92,255,.18); }
+  .picks { display: flex; flex-wrap: wrap; gap: 7px; }
+  .picks label { display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 7px 13px; border-radius: var(--pill); font-weight: 800; font-size: .9rem; color: var(--ink2); background: var(--glass); border: 1px solid var(--line); cursor: pointer; }
+  .picks input { width: auto; accent-color: #f59e0b; }
+  .picks label:has(input:checked) { color: #fff; border-color: rgba(245,158,11,.7); background: rgba(245,158,11,.18); }
+  .msg { min-height: 1.3em; margin: 8px 0 0; font-weight: 800; color: var(--red); }
+  .photos-in { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .photos-in div { position: relative; width: 92px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line2); }
+  .photos-in img { width: 100%; height: 100%; object-fit: cover; }
+  .photos-in button { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: rgba(0,0,0,.7); color: #fff; font-size: .7rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+  /* דף דירה */
+  .gal { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .gal img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; cursor: zoom-in; aspect-ratio: 4 / 3; }
+  .gal .side { display: grid; gap: 8px; }
+  .gal.one { grid-template-columns: 1fr; }
+  .gal.one img { aspect-ratio: 16 / 9; }
+  .dfacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin: 14px 0; }
+  .dfacts div { padding: 12px; border-radius: 16px; background: var(--glass2); text-align: center; }
+  .dfacts b { display: block; font-family: "Heebo", sans-serif; font-size: 1.3rem; }
+  .dfacts span { color: var(--muted); font-weight: 800; font-size: .85rem; }
+  .feat { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .feat span { font-size: .86rem; font-weight: 800; padding: 5px 12px; border-radius: var(--pill); background: rgba(34,211,238,.1); color: #a5f3fc; border: 1px solid rgba(34,211,238,.25); }
+  .desc { white-space: pre-wrap; color: var(--ink2); line-height: 1.8; margin: 10px 0; }
+  .contact { margin-top: 16px; padding: 16px; border-radius: 20px; background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.3); }
+  .contact h3 { margin: 0 0 8px; }
+  .phone { font-family: "Heebo", sans-serif; font-size: 1.5rem; font-weight: 900; direction: ltr; unicode-bidi: embed; }
+  .lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(0,0,0,.94); cursor: zoom-out; }
+  .lightbox img { max-width: 94vw; max-height: 92vh; border-radius: 12px; }
+  .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 60; max-width: calc(100vw - 32px); text-align: center; color: #fff; font-weight: 800; padding: 12px 24px; border-radius: var(--pill); background: linear-gradient(#141833, #141833) padding-box, var(--warm) border-box; border: 1.5px solid transparent; box-shadow: var(--sh-lg); animation: pop .3s ease; }
+  .foot { text-align: center; color: var(--muted); padding: 30px 20px 50px; border-top: 1px solid var(--line); font-size: .9rem; }
+  .foot a { color: var(--ink2); }
+  @media (max-width: 860px) {
+    body { padding-top: 88px; }
+    .top { top: 10px; right: 10px; left: 10px; height: 60px; gap: 6px; padding: 0 6px 0 10px; }
+    .logo small { display: none; }
+    .tb .lbl { display: none; }
+    .tb { padding: 9px 12px; }
+    .finder { grid-template-columns: 1fr 1fr; }
+    .finder input { grid-column: 1 / -1; }
+    .row3 { grid-template-columns: 1fr 1fr; }
+    .gal { grid-template-columns: 1fr; }
+    .gal .side { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } .logo { font-size: 1.05rem; } .logo .mk { width: 36px; height: 36px; } }
+</style>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="#"><span class="mk">🏡</span><span>דירות <b>לחגים</b><small>שבתות · חגים · בין הזמנים</small></span></a>
+    <button type="button" class="tb" id="favBtn" title="דירות ששמרתי">❤️<span class="lbl"> שמורים</span> <span class="n hidden" id="favN"></span></button>
+    <button type="button" class="tb" id="mineBtn" title="המודעות שלי">📋<span class="lbl"> שלי</span></button>
+    <span id="authBox"></span>
+    <button type="button" class="tb hot" id="postBtn">➕<span class="lbl"> פרסום דירה</span></button>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>דירות לשבתות <span>וחגים</span></h1>
+      <p>מפרסמים דירה בחינם, או מוצאים מקום נעים לשבת, לחג או לבין הזמנים – ישר מול בעל הדירה.</p>
+      <div class="finder">
+        <input id="fCity" type="search" placeholder="🔍 עיר, שכונה או מילה (למשל: צפת, מרפסת)" aria-label="חיפוש">
+        <select id="fWhen" aria-label="מתי"><option value="">📅 כל התאריכים</option></select>
+        <select id="fBeds" aria-label="מיטות">
+          <option value="0">🛏 כל מספר מיטות</option><option value="2">2+ מיטות</option><option value="4">4+ מיטות</option>
+          <option value="6">6+ מיטות</option><option value="8">8+ מיטות</option><option value="12">12+ מיטות</option>
+        </select>
+        <select id="fPrice" aria-label="מחיר">
+          <option value="0">💰 כל מחיר</option><option value="300">עד 300 ₪</option><option value="600">עד 600 ₪</option>
+          <option value="1000">עד 1,000 ₪</option><option value="2000">עד 2,000 ₪</option>
+        </select>
+      </div>
+      <div class="chips" id="fFeat"></div>
+    </section>
+
+    <div class="bar">
+      <b id="count">טוען דירות...</b>
+      <select id="sort" aria-label="מיון">
+        <option value="new">🆕 הכי חדשות</option><option value="cheap">💰 מהזולה ליקרה</option><option value="beds">🛏 הכי הרבה מיטות</option><option value="soon">📅 הכי קרובות בזמן</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="foot">🏡 דירות לחגים · חלק מ<a href="./">תוכנה בקליק</a> · האתר רק מחבר בין מפרסמים למחפשים – סגרו את כל הפרטים ישירות מול בעל הדירה.</footer>
+
+  <!-- דף דירה -->
+  <div class="overlay hidden" id="viewOv"><div class="modal" id="viewBody"></div></div>
+  <!-- פרסום / עריכה -->
+  <div class="overlay hidden" id="postOv"><div class="modal">
+    <div class="mhead"><h2 id="postTitle">➕ פרסום דירה</h2><button type="button" class="x" data-close="postOv" aria-label="סגירה">✕</button></div>
+    <div class="field"><label for="pTitle">כותרת</label><input id="pTitle" maxlength="80" placeholder="למשל: דירת 4 חדרים עם מרפסת ונוף, קרוב לבית כנסת"></div>
+    <div class="row2">
+      <div class="field"><label for="pCity">עיר / יישוב</label><input id="pCity" maxlength="40" placeholder="למשל: צפת"></div>
+      <div class="field"><label for="pHood">שכונה / אזור <span class="hint">(לא חובה)</span></label><input id="pHood" maxlength="40"></div>
+    </div>
+    <div class="row3">
+      <div class="field"><label for="pRooms">חדרים</label><input id="pRooms" type="number" min="1" max="30" inputmode="numeric"></div>
+      <div class="field"><label for="pBeds">מיטות</label><input id="pBeds" type="number" min="1" max="80" inputmode="numeric"></div>
+      <div class="field"><label for="pGuests">עד כמה אורחים</label><input id="pGuests" type="number" min="1" max="100" inputmode="numeric"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="pPrice">מחיר (₪) <span class="hint">ריק = בתיאום</span></label><input id="pPrice" type="number" min="0" max="100000" inputmode="numeric"></div>
+      <div class="field"><label for="pUnit">המחיר הוא</label><select id="pUnit"><option value="לילה">ללילה</option><option value="שבת">לשבת</option><option value="חג">לחג</option><option value="שבוע">לשבוע</option><option value="תקופה">לכל התקופה</option></select></div>
+    </div>
+    <div class="field"><label>מתי הדירה פנויה?</label><div class="picks" id="pWhen"></div></div>
+    <div class="row2">
+      <div class="field"><label for="pFrom">מתאריך <span class="hint">(לא חובה)</span></label><input id="pFrom" type="date"></div>
+      <div class="field"><label for="pTo">עד תאריך <span class="hint">– אחריו המודעה תרד לבד</span></label><input id="pTo" type="date"></div>
+    </div>
+    <div class="field"><label>מה יש בדירה?</label><div class="picks" id="pFeat"></div></div>
+    <div class="field"><label for="pDesc">תיאור</label><textarea id="pDesc" maxlength="2000" placeholder="ספרו על הדירה: קומה, נוף, מרחק מבית כנסת, מה חשוב לדעת..."></textarea></div>
+    <div class="field"><label>תמונות <span class="hint">(עד 4 – מוקטנות אוטומטית)</span></label>
+      <input id="pPhotos" type="file" accept="image/*" multiple><div class="photos-in" id="pPrev"></div></div>
+    <div class="row2">
+      <div class="field"><label for="pName">שם ליצירת קשר</label><input id="pName" maxlength="40"></div>
+      <div class="field"><label for="pPhone">טלפון <span class="hint">– נחשף רק למחוברים</span></label><input id="pPhone" type="tel" dir="ltr" maxlength="20" placeholder="050-0000000"></div>
+    </div>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-weight:700"><input type="checkbox" id="pOk" style="width:auto;margin-top:6px"> אני בעל/ת הדירה או מורשה לפרסם אותה, והפרטים נכונים</label>
+    <div class="actions"><button type="button" class="btn warm" id="pSave">📢 פרסום</button><button type="button" class="btn alt" data-close="postOv">ביטול</button></div>
+    <p class="msg" id="pMsg"></p>
+  </div></div>
+  <!-- התחברות -->
+  <div class="overlay hidden" id="loginOv"><div class="modal sm">
+    <div class="mhead"><h2>🔑 התחברות</h2><button type="button" class="x" data-close="loginOv" aria-label="סגירה">✕</button></div>
+    <p class="hint" id="loginWhy" style="margin-top:0"></p>
+    <button type="button" class="btn alt" id="gBtn" style="width:100%;background:#fff;color:#1f1f1f">המשך עם Google</button>
+    <p class="hint" style="text-align:center">או עם אימייל וסיסמה (אותו חשבון כמו באתר תוכנה בקליק)</p>
+    <div class="field"><input id="lEmail" type="email" dir="ltr" placeholder="אימייל"></div>
+    <div class="field"><input id="lPass" type="password" dir="ltr" placeholder="סיסמה (6 תווים לפחות)"></div>
+    <div class="actions"><button type="button" class="btn" id="lIn">התחברות</button><button type="button" class="btn alt" id="lUp">הרשמה חדשה</button></div>
+    <p class="msg" id="lMsg"></p>
+  </div></div>
+  <div class="toast hidden" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  // אותו Firebase של האתר – אותם חשבונות
+  firebase.initializeApp({
+    apiKey: "AIzaSyAKq6cEtOiw2q__8W8lN-zUaQprSMG1vmw",
+    authDomain: "project-6009216979838534734.firebaseapp.com",
+    projectId: "project-6009216979838534734",
+    appId: "1:135251714538:web:db532e77bb5665b4205293"
+  });
+  const auth = firebase.auth(), db = firebase.firestore();
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  const NOW = () => firebase.firestore.FieldValue.serverTimestamp();
+  const $ = id => document.getElementById(id);
+  let me = null, isAdmin = false, all = [], mode = "all"; // mode: all / fav / mine
+
+  // ↓ רשימות שאפשר לערוך ↓
+  const WHEN = ["שבתות", "ראש השנה", "יום כיפור", "סוכות", "חנוכה", "פורים", "פסח", "שבועות", "בין הזמנים", "כל השנה"];
+  const FEAT = ["❄️ מזגן", "🛗 מעלית", "🍲 פלטה", "♨️ מיחם", "🕍 קרוב לבית כנסת", "🌿 מרפסת", "🌳 גינה", "🏊 בריכה", "🅿️ חניה", "♿ נגיש", "👶 מתאים לילדים", "📶 בלי אינטרנט"];
+  // ↑ עד כאן ↑
+
+  // ===== כלים =====
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    for (const k in attrs || {}) { if (k === "class") el.className = attrs[k]; else if (k.startsWith("on")) el[k] = attrs[k]; else if (attrs[k] != null) el.setAttribute(k, attrs[k]); }
+    kids.flat(Infinity).forEach(c => c != null && c !== false && el.append(c.nodeType ? c : String(c)));
+    return el;
+  };
+  const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
+  function toast(t) { $("toast").textContent = t; $("toast").classList.remove("hidden"); clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").classList.add("hidden"), 2600); }
+  const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+  const today = () => new Date().toISOString().slice(0, 10);
+  const fmtDate = s => s ? s.split("-").reverse().join("/") : "";
+  const expired = l => l.to && l.to < today();
+  const money = n => Number(n).toLocaleString("he-IL");
+  let favs = load("eghFavs", []);
+  const isFav = id => favs.includes(id);
+
+  // חלונות: סגירה ב-✕, ב-Esc ובלחיצה על הרקע
+  document.addEventListener("click", e => { const c = e.target.closest("[data-close]"); if (c) $(c.dataset.close).classList.add("hidden"); if (e.target.classList.contains("overlay")) closeOv(e.target); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { const o = [...document.querySelectorAll(".overlay:not(.hidden)")].pop(); if (o) closeOv(o); } });
+  function closeOv(o) { o.classList.add("hidden"); if (o.id === "viewOv" && location.hash) history.replaceState(null, "", location.pathname); }
+
+  // ===== התחברות =====
+  function needLogin(why) { if (me) return false; $("loginWhy").textContent = why || ""; $("lMsg").textContent = ""; $("loginOv").classList.remove("hidden"); return true; }
+  const authErr = e => $("lMsg").textContent = ({ "auth/invalid-email": "האימייל לא תקין", "auth/weak-password": "הסיסמה צריכה לפחות 6 תווים",
+    "auth/email-already-in-use": "כבר יש חשבון עם האימייל הזה – לחצו \"התחברות\"", "auth/invalid-credential": "אימייל או סיסמה שגויים",
+    "auth/popup-closed-by-user": "", "auth/unauthorized-domain": "האתר עוד לא מאושר ב-Firebase",
+    "auth/operation-not-supported-in-this-environment": "ההתחברות עובדת רק כשהדף פתוח מהאתר ברשת (github.io), לא כקובץ מהמחשב",
+    "auth/network-request-failed": "אין חיבור לשרת ההתחברות – ייתכן שהסינון חוסם אותו" })[e.code] || "שגיאה: " + (e.code || e.message);
+  $("gBtn").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  $("lIn").onclick = () => auth.signInWithEmailAndPassword($("lEmail").value.trim(), $("lPass").value).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  $("lUp").onclick = () => auth.createUserWithEmailAndPassword($("lEmail").value.trim(), $("lPass").value).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  auth.onAuthStateChanged(u => {
+    me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    put($("authBox"), u ? h("button", { type: "button", class: "tb", title: u.email || "", onclick: () => auth.signOut() }, "🚪", h("span", { class: "lbl" }, " יציאה"))
+                        : h("button", { type: "button", class: "tb", onclick: () => needLogin("") }, "🔑", h("span", { class: "lbl" }, " התחברות")));
+    render();
+  });
+
+  // ===== טעינת הדירות (בזמן אמת) =====
+  db.collection("egh_listings").orderBy("ts", "desc").limit(400).onSnapshot(s => {
+    all = s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" })));
+    render(); openFromHash();
+  }, e => { put($("grid"), h("div", { class: "empty" }, h("div", { class: "big" }, "🔒"), h("h3", {}, "הלוח עוד לא הופעל"),
+    h("p", {}, e.code === "permission-denied" ? "צריך להוסיף את הכללים של \"דירות לחגים\" ב-Firebase." : "שגיאה בטעינה – נסו לרענן."))); $("count").textContent = ""; });
+
+  // ===== סינון =====
+  WHEN.forEach(w => $("fWhen").append(h("option", { value: w }, "📅 " + w)));
+  let featOn = [];
+  FEAT.slice(0, 8).forEach(f => $("fFeat").append(h("button", { type: "button", class: "chip", onclick: e => {
+    featOn = featOn.includes(f) ? featOn.filter(x => x !== f) : featOn.concat(f); e.currentTarget.classList.toggle("on"); render(); } }, f)));
+  ["fCity", "fWhen", "fBeds", "fPrice", "sort"].forEach(id => $(id).addEventListener("input", render));
+  $("favBtn").onclick = () => { mode = mode === "fav" ? "all" : "fav"; render(); scrollTo({ top: $("count").offsetTop - 110, behavior: "smooth" }); };
+  $("mineBtn").onclick = () => { if (needLogin("כדי לראות את המודעות שלכם צריך להתחבר")) return; mode = mode === "mine" ? "all" : "mine"; render(); scrollTo({ top: $("count").offsetTop - 110, behavior: "smooth" }); };
+
+  function filtered() {
+    const q = $("fCity").value.trim().toLowerCase(), when = $("fWhen").value, beds = +$("fBeds").value, maxP = +$("fPrice").value;
+    let list = all.filter(l => mode === "mine" ? (me && l.uid === me.uid) : !expired(l));
+    if (mode === "fav") list = list.filter(l => isFav(l.id));
+    if (q) list = list.filter(l => [l.title, l.city, l.hood, l.desc].join(" ").toLowerCase().includes(q));
+    if (when) list = list.filter(l => (l.when || []).includes(when) || (l.when || []).includes("כל השנה"));
+    if (beds) list = list.filter(l => (l.beds || 0) >= beds);
+    if (maxP) list = list.filter(l => l.price && l.price <= maxP);
+    if (featOn.length) list = list.filter(l => featOn.every(f => (l.feat || []).includes(f)));
+    const s = $("sort").value;
+    if (s === "cheap") list.sort((a, b) => (a.price || 1e9) - (b.price || 1e9));
+    if (s === "beds") list.sort((a, b) => (b.beds || 0) - (a.beds || 0));
+    if (s === "soon") list.sort((a, b) => (a.from || "9999") < (b.from || "9999") ? -1 : 1);
+    return list;
+  }
+
+  function render() {
+    favs = load("eghFavs", []);
+    $("favN").textContent = favs.length; $("favN").classList.toggle("hidden", !favs.length);
+    $("favBtn").classList.toggle("hot", mode === "fav"); $("mineBtn").classList.toggle("hot", mode === "mine");
+    const list = filtered();
+    $("count").textContent = (mode === "fav" ? "❤️ שמורים · " : mode === "mine" ? "📋 המודעות שלי · " : "") + (list.length === 1 ? "דירה אחת" : list.length + " דירות");
+    if (!list.length) return put($("grid"), h("div", { class: "empty" }, h("div", { class: "big" }, mode === "fav" ? "🤍" : "🏡"),
+      h("h3", {}, mode === "fav" ? "עוד לא שמרתם דירות" : mode === "mine" ? "עוד לא פרסמתם דירה" : "לא נמצאו דירות"),
+      h("p", {}, mode === "all" ? "נסו לשנות את החיפוש – או פרסמו דירה משלכם!" : ""),
+      mode !== "fav" ? h("button", { type: "button", class: "btn warm", onclick: () => openPost() }, "➕ פרסום דירה") : null));
+    put($("grid"), list.map(cardEl));
+  }
+
+  function whenTags(l) { return (l.when || []).slice(0, 3).map(w => h("span", { class: "tag" }, w)); }
+  function priceEl(l) { return l.price ? h("div", { class: "price" }, "₪" + money(l.price), h("small", {}, " / " + (l.unit || "לילה"))) : h("div", { class: "price" }, "בתיאום"); }
+  function cardEl(l) {
+    const fav = h("button", { type: "button", class: "fav", title: "שמירה", onclick: e => { e.stopPropagation(); toggleFav(l.id); } }, isFav(l.id) ? "❤️" : "🤍");
+    return h("article", { class: "card", onclick: () => openView(l.id) },
+      h("div", { class: "thumb" }, l.thumb ? h("img", { src: l.thumb, alt: "", loading: "lazy" }) : "🏡", fav,
+        me && l.uid === me.uid ? h("span", { class: "mine-badge" }, expired(l) ? "⏰ פג תוקף" : "✔ שלי") : null, h("div", { class: "tags" }, whenTags(l))),
+      h("div", { class: "cb" },
+        h("h3", {}, l.title || "דירה"),
+        h("div", { class: "where" }, "📍 " + (l.city || "") + (l.hood ? " · " + l.hood : "")),
+        h("div", { class: "facts" }, l.rooms ? h("span", {}, "🚪 " + l.rooms + " חדרים") : null, l.beds ? h("span", {}, "🛏 " + l.beds + " מיטות") : null, l.guests ? h("span", {}, "👥 עד " + l.guests) : null),
+        h("div", { class: "cfoot" }, priceEl(l), l.from || l.to ? h("span", { class: "when" }, "📅 " + [fmtDate(l.from), fmtDate(l.to)].filter(Boolean).join(" – ")) : null)));
+  }
+  function toggleFav(id) { favs = isFav(id) ? favs.filter(x => x !== id) : favs.concat(id); store("eghFavs", favs); toast(isFav(id) ? "❤️ נשמר בשמורים" : "הוסר מהשמורים"); render(); if (!$("viewOv").classList.contains("hidden")) openView(id); }
+
+  // ===== דף דירה =====
+  function openFromHash() { const id = decodeURIComponent(location.hash.slice(1)); if (id && all.some(l => l.id === id) && $("viewOv").classList.contains("hidden")) openView(id); }
+  window.addEventListener("hashchange", openFromHash);
+  async function openView(id) {
+    const l = all.find(x => x.id === id); if (!l) return;
+    history.replaceState(null, "", "#" + id);
+    const box = $("viewBody"), owner = me && (me.uid === l.uid || isAdmin);
+    const gal = h("div", { class: "gal one" }, l.thumb ? h("img", { src: l.thumb, alt: "" }) : null);
+    const contact = h("div", { class: "contact" });
+    put(box,
+      h("div", { class: "mhead" }, h("h2", {}, l.title || "דירה"), h("button", { type: "button", class: "x", "aria-label": "סגירה", onclick: () => closeOv($("viewOv")) }, "✕")),
+      gal,
+      h("div", { class: "where" }, "📍 " + (l.city || "") + (l.hood ? " · " + l.hood : "")),
+      h("div", { class: "dfacts" },
+        l.rooms ? h("div", {}, h("b", {}, l.rooms), h("span", {}, "חדרים")) : null,
+        l.beds ? h("div", {}, h("b", {}, l.beds), h("span", {}, "מיטות")) : null,
+        l.guests ? h("div", {}, h("b", {}, l.guests), h("span", {}, "אורחים")) : null,
+        h("div", {}, h("b", {}, l.price ? "₪" + money(l.price) : "בתיאום"), h("span", {}, l.price ? "ל" + (l.unit || "לילה") : "מחיר"))),
+      (l.when || []).length ? h("div", { class: "feat" }, l.when.map(w => h("span", { style: "background:rgba(245,158,11,.12);color:#fde68a;border-color:rgba(245,158,11,.35)" }, "📅 " + w))) : null,
+      l.from || l.to ? h("p", { class: "where" }, "🗓 פנוי: " + [fmtDate(l.from), fmtDate(l.to)].filter(Boolean).join(" עד ")) : null,
+      (l.feat || []).length ? h("div", { class: "feat" }, l.feat.map(f => h("span", {}, f))) : null,
+      l.desc ? h("p", { class: "desc" }, l.desc) : null,
+      contact,
+      h("div", { class: "actions" },
+        h("button", { type: "button", class: "btn alt", onclick: () => toggleFav(l.id) }, isFav(l.id) ? "❤️ שמור" : "🤍 שמירה"),
+        h("button", { type: "button", class: "btn alt", onclick: async () => { const u = location.href.split("#")[0] + "#" + l.id; try { await navigator.clipboard.writeText(u); toast("🔗 הקישור הועתק"); } catch (e) { prompt("העתיקו:", u); } } }, "🔗 העתקת קישור"),
+        owner ? h("button", { type: "button", class: "btn alt", onclick: () => { closeOv($("viewOv")); openPost(l); } }, "✏️ עריכה") : null,
+        owner ? h("button", { type: "button", class: "btn danger", onclick: () => delListing(l) }, "🗑 מחיקה") : null));
+    $("viewOv").classList.remove("hidden");
+    // פרטי קשר – רק למחוברים
+    if (!me) put(contact, h("h3", {}, "📞 יצירת קשר"), h("p", { style: "margin:0 0 10px" }, "כדי לראות את הטלפון של בעל הדירה צריך להתחבר (כך מונעים ספאם)."),
+      h("button", { type: "button", class: "btn warm", onclick: () => needLogin("כדי לראות את פרטי הקשר צריך להתחבר") }, "🔑 התחברות להצגת הטלפון"));
+    else {
+      put(contact, h("p", { class: "hint", style: "margin:0" }, "טוען פרטי קשר..."));
+      try {
+        const c = await db.collection("egh_contacts").doc(l.id).get(), x = c.exists ? c.data() : {};
+        const digits = String(x.phone || "").replace(/\D/g, ""), intl = digits.startsWith("0") ? "972" + digits.slice(1) : digits;
+        const waText = encodeURIComponent("שלום, ראיתי את הדירה \"" + (l.title || "") + "\" בלוח דירות לחגים. היא עוד פנויה?");
+        put(contact, h("h3", {}, "📞 " + (x.name || "בעל הדירה")),
+          digits ? [h("div", { class: "phone" }, x.phone), h("div", { class: "actions" },
+            h("a", { class: "btn wa", href: "https://wa.me/" + intl + "?text=" + waText, target: "_blank", rel: "noopener" }, "🟢 וואטסאפ"),
+            h("a", { class: "btn warm", href: "tel:" + digits }, "📞 חיוג"))] : h("p", {}, "לא נמסר טלפון."));
+      } catch (e) { put(contact, h("p", { class: "msg" }, "לא ניתן לטעון את פרטי הקשר (אולי צריך לעדכן את הכללים ב-Firebase)")); }
+    }
+    // תמונות מלאות
+    try {
+      const p = await db.collection("egh_photos").doc(l.id).get(), imgs = p.exists ? (p.data().imgs || []) : [];
+      if (imgs.length) {
+        const big = h("img", { src: imgs[0], alt: "" }); big.onclick = () => lightbox(big.src);
+        const side = h("div", { class: "side" }, imgs.slice(1).map(src => { const i = h("img", { src, alt: "" }); i.onclick = () => { const t = big.src; big.src = src; i.src = t; }; return i; }));
+        put(gal, big, imgs.length > 1 ? side : null); gal.className = "gal" + (imgs.length > 1 ? "" : " one");
+      }
+    } catch (e) {}
+  }
+  function lightbox(src) { const lb = h("div", { class: "lightbox", onclick: () => lb.remove() }, h("img", { src, alt: "" })); document.body.append(lb); }
+  async function delListing(l) {
+    if (!confirm("למחוק את המודעה \"" + (l.title || "") + "\"?")) return;
+    try { const b = db.batch(); ["egh_listings", "egh_contacts", "egh_photos"].forEach(c => b.delete(db.collection(c).doc(l.id))); await b.commit(); closeOv($("viewOv")); toast("🗑 המודעה נמחקה"); }
+    catch (e) { toast("המחיקה נכשלה"); }
+  }
+
+  // ===== פרסום / עריכה =====
+  WHEN.forEach(w => $("pWhen").append(h("label", {}, h("input", { type: "checkbox", value: w }), w)));
+  FEAT.forEach(f => $("pFeat").append(h("label", {}, h("input", { type: "checkbox", value: f }), f)));
+  let editing = null, photos = [];
+  $("postBtn").onclick = () => openPost();
+  async function openPost(l) {
+    if (needLogin("כדי לפרסם דירה צריך להתחבר")) return;
+    editing = l || null; photos = [];
+    $("postTitle").textContent = l ? "✏️ עריכת מודעה" : "➕ פרסום דירה";
+    $("pSave").textContent = l ? "💾 שמירה" : "📢 פרסום";
+    const v = (id, x) => $(id).value = x == null ? "" : x;
+    v("pTitle", l && l.title); v("pCity", l && l.city); v("pHood", l && l.hood); v("pRooms", l && l.rooms); v("pBeds", l && l.beds); v("pGuests", l && l.guests);
+    v("pPrice", l && l.price); $("pUnit").value = (l && l.unit) || "לילה"; v("pFrom", l && l.from); v("pTo", l && l.to); v("pDesc", l && l.desc);
+    v("pName", me.displayName || ""); v("pPhone", ""); $("pOk").checked = !!l; $("pMsg").textContent = ""; $("pPhotos").value = "";
+    document.querySelectorAll("#pWhen input").forEach(i => i.checked = !!l && (l.when || []).includes(i.value));
+    document.querySelectorAll("#pFeat input").forEach(i => i.checked = !!l && (l.feat || []).includes(i.value));
+    drawPrev();
+    $("postOv").classList.remove("hidden");
+    if (l) {
+      try { const c = await db.collection("egh_contacts").doc(l.id).get(); if (c.exists) { v("pName", c.data().name); v("pPhone", c.data().phone); } } catch (e) {}
+      try { const p = await db.collection("egh_photos").doc(l.id).get(); if (p.exists) { photos = (p.data().imgs || []).slice(0, 4); drawPrev(); } } catch (e) {}
+    }
+  }
+  function drawPrev() {
+    put($("pPrev"), photos.map((src, i) => h("div", {}, h("img", { src, alt: "" }), h("button", { type: "button", title: "הסרה", onclick: () => { photos.splice(i, 1); drawPrev(); } }, "✕"))));
+  }
+  // הקטנת תמונה בדפדפן: מקסימום max פיקסלים, JPEG
+  const shrink = (file, max, q) => new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => { const s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg", q)); };
+    img.onerror = rej; img.src = url;
+  });
+  $("pPhotos").onchange = async e => {
+    const files = [...e.target.files].filter(f => f.type.startsWith("image/")).slice(0, 4 - photos.length);
+    for (const f of files) { try { photos.push(await shrink(f, 1000, .62)); } catch (x) {} } // ~100-150KB לתמונה, כדי ש-4 ייכנסו
+    if (e.target.files.length > files.length) toast("אפשר עד 4 תמונות");
+    e.target.value = ""; drawPrev();
+  };
+  $("pSave").onclick = async () => {
+    const msg = t => $("pMsg").textContent = t;
+    const title = $("pTitle").value.trim(), city = $("pCity").value.trim(), phone = $("pPhone").value.trim();
+    if (title.length < 4) return msg("כתבו כותרת (לפחות 4 תווים)");
+    if (city.length < 2) return msg("כתבו עיר או יישוב");
+    if (!/\d{9,}/.test(phone.replace(/\D/g, ""))) return msg("כתבו מספר טלפון תקין ליצירת קשר");
+    if (!$("pOk").checked) return msg("צריך לאשר שאתם רשאים לפרסם את הדירה");
+    if ($("pFrom").value && $("pTo").value && $("pFrom").value > $("pTo").value) return msg("\"עד תאריך\" לפני \"מתאריך\" – בדקו את התאריכים");
+    $("pSave").disabled = true; msg("");
+    const num = id => { const n = parseInt($(id).value, 10); return n > 0 ? n : 0; };
+    const data = {
+      uid: me.uid, title: title.slice(0, 80), city: city.slice(0, 40), hood: $("pHood").value.trim().slice(0, 40),
+      rooms: num("pRooms"), beds: num("pBeds"), guests: num("pGuests"), price: num("pPrice"), unit: $("pUnit").value,
+      when: [...document.querySelectorAll("#pWhen input:checked")].map(i => i.value),
+      feat: [...document.querySelectorAll("#pFeat input:checked")].map(i => i.value),
+      from: $("pFrom").value || "", to: $("pTo").value || "", desc: $("pDesc").value.trim().slice(0, 2000)
+    };
+    try {
+      data.thumb = photos[0] ? await (async () => { const img = new Image(); img.src = photos[0]; await img.decode(); const s = Math.min(1, 480 / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", .7); })() : "";
+      const ref = editing ? db.collection("egh_listings").doc(editing.id) : db.collection("egh_listings").doc();
+      const b = db.batch();
+      if (editing) { data.uid = editing.uid; data.edited = NOW(); b.update(ref, data); }
+      else { data.ts = NOW(); b.set(ref, data); }
+      b.set(db.collection("egh_contacts").doc(ref.id), { uid: data.uid, name: $("pName").value.trim().slice(0, 40), phone: phone.slice(0, 20) });
+      b.set(db.collection("egh_photos").doc(ref.id), { uid: data.uid, imgs: photos.slice(0, 4) });
+      await b.commit();
+      $("postOv").classList.add("hidden"); toast(editing ? "💾 המודעה עודכנה" : "📢 הדירה פורסמה!");
+      setTimeout(() => openView(ref.id), 500);
+    } catch (e) {
+      msg(e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את הכללים של \"דירות לחגים\" ב-Firebase" :
+          /size|exceed|large/i.test(e.message || "") ? "התמונות גדולות מדי – נסו פחות תמונות" : "השמירה נכשלה, נסו שוב");
+    }
+    $("pSave").disabled = false;
+  };
+</script>
+</body>
+</html>
