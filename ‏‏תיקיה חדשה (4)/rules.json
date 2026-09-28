@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||s3.prog.co.il/prog-www/campaigns/",
+      "resourceTypes": ["sub_frame", "image", "media", "script", "xmlhttprequest", "other"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||prog.co.il/js/prog/renderAd.js",
+      "resourceTypes": ["script"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||prog.co.il/js/prog/adCap.js",
+      "resourceTypes": ["script"]
+    }
+  }
+]

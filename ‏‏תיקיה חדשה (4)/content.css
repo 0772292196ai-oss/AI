@@ -1,0 +1,32 @@
+/* Siropu Ads Manager (sam*) units used by prog.co.il */
+.samUnitWrapper,
+.samCodeUnit,
+.samItem,
+[class*="samBannerUnit"],
+[data-xf-init="sam-unit"],
+[data-xf-init="sam-item"],
+.sam-swiper-container,
+.samCarousel,
+[class*="samPopup"],
+.samOverlay,
+
+/* Site-specific ad containers */
+.progArticleAd,
+.progad2,
+.bottom-page-ad,
+.banner_728x90,
+.ad-banner,
+
+/* Campaign iframes / images */
+iframe[src*="/prog-www/campaigns/"],
+img[src*="/prog-www/campaigns/"] {
+  display: none !important;
+}
+
+/* Side ad columns are part of the page grid (.p-body): keep their space
+   so the content stays centered, just make them invisible. */
+.right-ad-place-wrapper,
+.left-ad-place-wrapper {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
