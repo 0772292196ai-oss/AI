@@ -108,6 +108,85 @@
   .pill.pin { background: #fff4d6; color: #a16207; }
   .pill.lock { background: #fde2e4; color: #b42318; }
   .pill.wait { background: #fff1c2; color: #92400e; }
+  .crumbs .sp { flex: 1; }
+  .tagchip { font-size: .78rem; font-weight: 700; color: var(--primary) !important; background: var(--soft); border-radius: 20px; padding: 1px 9px; margin-inline-start: 4px; }
+  .mention { color: var(--primary); font-weight: 700; }
+
+  /* טקסט מעוצב בפוסטים */
+  .content.md { white-space: normal; }
+  .md p { white-space: pre-wrap; margin: 0 0 .6em; }
+  .md > :last-child { margin-bottom: 0; }
+  .md h3, .md h4, .md h5 { margin: .5em 0 .35em; line-height: 1.35; }
+  .md h3 { font-size: 1.3rem; } .md h4 { font-size: 1.12rem; } .md h5 { font-size: 1rem; }
+  .md ul, .md ol { margin: 0 0 .6em; padding-inline-start: 24px; }
+  .md hr { border: 0; border-top: 1px solid var(--line2); margin: 12px 0; }
+  .md code { background: #f1f3f8; border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-family: Consolas, monospace; font-size: .9em; direction: ltr; unicode-bidi: embed; }
+  .md pre { background: #1e2433; color: #e6e9f2; border-radius: 10px; padding: 12px 14px; overflow-x: auto; direction: ltr; text-align: left; margin: 0 0 .6em; }
+  .md pre code { background: none; border: 0; color: inherit; padding: 0; }
+  .md img { max-width: 100%; max-height: 440px; border-radius: 10px; display: block; margin: 6px 0; }
+  .md blockquote { margin: 0 0 .6em; }
+
+  /* חלונית כתיבה בתחתית המסך */
+  .dock { position: fixed; bottom: 0; right: var(--side); left: var(--uside); z-index: 30; height: min(62vh, 560px);
+    background: var(--card); border-top: 1px solid var(--line2); box-shadow: 0 -14px 40px -18px rgba(20,30,60,.35);
+    display: flex; flex-direction: column; gap: 8px; padding: 10px 14px 12px; }
+  body.docked main { padding-bottom: calc(min(62vh, 560px) + 24px); }
+  .dock.reply .only-topic, .dock:not(.reply) .only-reply { display: none !important; }
+  .drow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .drow .sp { flex: 1; }
+  .dwrap { position: relative; }
+  .dbtn { border: 1px solid var(--line2); background: var(--bg); color: var(--ink); border-radius: 8px; padding: 8px 12px; font-weight: 700; white-space: nowrap; }
+  .dtitle { flex: 1; min-width: 160px; padding: 9px 12px; border: 1px solid var(--line2); border-radius: 8px; font: inherit; }
+  .dtitle:focus, .dta:focus, .dsearch:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,124,255,.15); }
+  .dreply { flex: 1; min-width: 160px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dreply b { color: var(--ink); }
+  .btn.ghost { border-color: transparent; background: none; }
+  .btn.ghost:hover { background: var(--soft); }
+  .dmenu { position: absolute; top: calc(100% + 4px); right: 0; z-index: 5; background: var(--card); border: 1px solid var(--line2); border-radius: 10px;
+    box-shadow: 0 16px 40px -12px rgba(0,0,0,.3); min-width: 190px; max-height: 330px; overflow-y: auto; padding: 6px; }
+  .dmenu.cat { width: 320px; }
+  .dsearch { width: 100%; padding: 8px 10px; border: 1px solid var(--line2); border-radius: 8px; margin-bottom: 6px; font: inherit; }
+  .ditem { display: flex; align-items: center; gap: 9px; width: 100%; text-align: start; background: none; border: 0; padding: 7px 10px; border-radius: 7px; color: var(--ink); font: inherit; cursor: pointer; }
+  .ditem:hover, .ditem.on { background: var(--soft); }
+  .ditem.off { opacity: .45; cursor: not-allowed; }
+  .cat-ic.sm { width: 26px; height: 26px; min-width: 26px; font-size: .85rem; border-radius: 7px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 2px; }
+  .tbtn { background: none; border: 0; min-width: 32px; height: 32px; border-radius: 7px; color: var(--muted); font-weight: 800; font-size: .95rem; cursor: pointer; }
+  .tbtn:hover { background: var(--soft); color: var(--ink); }
+  .tbtn.b { font-weight: 900; } .tbtn.i { font-style: italic; font-family: Georgia, serif; } .tbtn.s { text-decoration: line-through; }
+  .tbtn.wide { padding: 0 10px; font-weight: 700; }
+  .emo-wrap { position: relative; }
+  .emo { position: absolute; top: 100%; right: 0; z-index: 6; background: var(--card); border: 1px solid var(--line2); border-radius: 10px; padding: 6px;
+    display: grid; grid-template-columns: repeat(8, 32px); box-shadow: 0 16px 40px -12px rgba(0,0,0,.3); }
+  .emo.hidden { display: none; }
+  .emo button { background: none; border: 0; font-size: 1.2rem; height: 32px; border-radius: 6px; cursor: pointer; }
+  .emo button:hover { background: var(--soft); }
+  .dhelp { background: var(--bg); border-radius: 8px; padding: 8px 12px; font-size: .86rem; line-height: 1.8; color: var(--muted); }
+  .dnote .pend-note { margin: 0; }
+  .dbody { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dock.nopv .dbody { grid-template-columns: 1fr; }
+  .dock.nopv .dprev { display: none; }
+  .dta { width: 100%; height: 100%; resize: none; border: 1px solid var(--line2); border-radius: 8px; padding: 10px 12px; font: inherit; line-height: 1.7; }
+  .dprev { overflow-y: auto; padding: 6px 10px; border: 1px dashed var(--line2); border-radius: 8px; }
+  .dfoot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .dtag-in { flex: 1; min-width: 180px; border: 0; border-bottom: 1px solid var(--line2); padding: 6px 4px; font: inherit; background: none; }
+  .dtag-in:focus { outline: none; border-color: var(--primary); }
+  .dchips { display: contents; }
+  .dchip { background: var(--soft); color: var(--primary); border-radius: 20px; padding: 2px 6px 2px 10px; font-size: .85rem; font-weight: 700; }
+  .dchip button { background: none; border: 0; color: inherit; font-weight: 900; margin-inline-start: 4px; cursor: pointer; }
+  .dock-mini { position: fixed; bottom: 16px; left: calc(var(--uside) + 20px); z-index: 30; max-width: 70vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    background: linear-gradient(135deg, var(--primary), var(--primary2)); color: #fff; border: 0; border-radius: 12px; padding: 11px 18px; font-weight: 800;
+    box-shadow: 0 12px 30px -10px rgba(79,124,255,.6); cursor: pointer; }
+  .reply-fake { display: flex; align-items: center; gap: 10px; width: 100%; background: var(--bg); border: 1px solid var(--line2); border-radius: 12px; padding: 12px 14px; color: var(--muted); font: inherit; text-align: start; cursor: text; }
+  .reply-fake:hover { border-color: var(--primary); }
+  @media (max-width: 640px) {
+    .dock { height: 92vh; padding: 8px 10px; border-radius: 16px 16px 0 0; }
+    body.docked main { padding-bottom: 20px; }
+    .dbody { grid-template-columns: 1fr !important; }
+    .dprev, .pv-btn { display: none !important; }
+    .dmenu.cat { width: min(320px, 86vw); }
+    .dtitle { order: 5; flex-basis: 100%; }
+  }
   .rep { font-size: .78rem; font-weight: 800; color: #a16207; background: #fff7dc; border-radius: 6px; padding: 1px 7px; }
   .post.pending { background: #fffbeb; }
   .pend-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #fff7dc; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; font-size: .92rem; }
@@ -528,34 +607,98 @@
   const refilter = () => { topics = allTopics.filter(canSee); };
   const queue = () => isAdmin ? allTopics.filter(t => t.pending || t.pendingPosts > 0) : [];
   const repEl = uid => profiles[uid] ? h("span", { class: "rep", title: "מוניטין" }, "⭐ " + repOf(uid)) : null;
-  const brief = t => String(t || "").replace(/^> .*$/gm, "").replace(/\s+/g, " ").trim().slice(0, 140);
+  const brief = t => String(t || "").replace(/^>.*$/gm, "").replace(/```[\s\S]*?```/g, " ").replace(/!\[[^\]]*\]\([^)]*\)/g, "🖼")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*~`#]/g, "").replace(/\s+/g, " ").trim().slice(0, 140);
   const waitNote = what => h("p", { class: "pend-note" }, "⏳ " + what + " יופיע אחרי אישור מנהל, עד שתגיעו ל-" + REP_MIN +
     " מוניטין (יש לכם " + myRep() + "). מוניטין מקבלים כשאחרים עושים 👍 לפוסטים שלכם.");
 
-  // טקסט של פוסט: שורות שמתחילות ב-"> " הן ציטוט, וקישורי https לחיצים (בלי HTML – בטוח)
+  // טקסט של פוסט בעיצוב פשוט (Markdown): **מודגש** *נטוי* ~~קו~~ `קוד` [קישור](https://) ![תמונה](https://)
+  // ## כותרת · > ציטוט · - רשימה · 1. רשימה · ``` קוד ``` · --- קו. בונים אלמנטים ישירות – בלי HTML, בטוח.
+  const ext = (href, ...kids) => h("a", { href, target: "_blank", rel: "noopener nofollow" }, kids);
+  function inline(text) {
+    const out = [], RX = /(`[^`\n]+`)|!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)|\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*\n]+)\*\*|~~([^~\n]+)~~|\*([^*\s][^*\n]*)\*|(https?:\/\/[^\s<]+)|(@[A-Za-z0-9_א-ת-]{2,20})/g;
+    let last = 0, m;
+    while ((m = RX.exec(text))) {
+      if (m.index > last) out.push(text.slice(last, m.index));
+      if (m[1]) out.push(h("code", {}, m[1].slice(1, -1)));
+      else if (m[3]) out.push(ext(m[3], h("img", { src: m[3], alt: m[2] || "תמונה", loading: "lazy", referrerpolicy: "no-referrer" })));
+      else if (m[5]) out.push(ext(m[5], inline(m[4])));
+      else if (m[6]) out.push(h("b", {}, inline(m[6])));
+      else if (m[7]) out.push(h("s", {}, inline(m[7])));
+      else if (m[8]) out.push(h("i", {}, inline(m[8])));
+      else if (m[9]) out.push(ext(m[9], m[9]));
+      else if (m[10]) out.push(h("span", { class: "mention" }, m[10]));
+      last = RX.lastIndex;
+    }
+    if (last < text.length) out.push(text.slice(last));
+    return out;
+  }
   function renderText(text) {
-    const box = h("div", { class: "content" });
-    let quote = null;
-    String(text || "").split("\n").forEach((line, i, arr) => {
-      if (line.startsWith("> ")) {
-        if (!quote) { quote = h("blockquote"); box.append(quote); } else quote.append("\n");
-        quote.append(line.slice(2));
-        return;
+    const box = h("div", { class: "content md" });
+    const lines = String(text || "").replace(/\r/g, "").split("\n");
+    const lines2 = (x, j) => [j ? "\n" : "", inline(x)];
+    let para = [];
+    const flush = () => { if (para.length) box.append(h("p", {}, para.map(lines2))); para = []; };
+    const run = (i, re, strip) => { const it = []; while (i < lines.length && re.test(lines[i])) it.push(lines[i++].replace(strip, "")); return it; };
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      let m, it;
+      if (/^```/.test(l)) {
+        flush(); const code = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
+        box.append(h("pre", {}, h("code", {}, code.join("\n")))); continue;
       }
-      if (quote && line === "") { quote = null; return; } // שורה ריקה אחרי ציטוט – בלי רווח כפול
-      quote = null;
-      line.split(/(https?:\/\/[^\s]+)/).forEach((part, j) => {
-        if (j % 2) box.append(h("a", { href: part, target: "_blank", rel: "noopener nofollow" }, part));
-        else box.append(part);
-      });
-      if (i < arr.length - 1) box.append("\n");
-    });
+      if (l.startsWith(">")) { flush(); it = run(i, /^>/, /^> ?/); i += it.length - 1; box.append(h("blockquote", {}, it.map(lines2))); continue; }
+      if ((m = l.match(/^(#{1,3}) (.+)/))) { flush(); box.append(h("h" + (m[1].length + 2), {}, inline(m[2]))); continue; }
+      if (/^(-{3,}|\*{3,})\s*$/.test(l)) { flush(); box.append(h("hr")); continue; }
+      if (/^[-*] /.test(l)) { flush(); it = run(i, /^[-*] /, /^[-*] /); i += it.length - 1; box.append(h("ul", {}, it.map(x => h("li", {}, inline(x))))); continue; }
+      if (/^\d+[.)] /.test(l)) { flush(); it = run(i, /^\d+[.)] /, /^\d+[.)] /); i += it.length - 1; box.append(h("ol", {}, it.map(x => h("li", {}, inline(x))))); continue; }
+      if (!l.trim()) { flush(); continue; }
+      para.push(l);
+    }
+    flush();
     return box;
   }
 
+  // סרגל עיצוב מעל תיבת כתיבה (מודגש, נטוי, כותרת, ציטוט, רשימות, קוד, קישור, תמונה, סמיילי)
+  const EMOJIS = ["😀", "😂", "😊", "😍", "🤔", "😮", "😢", "😡", "👍", "👎", "🙏", "👏", "💪", "🎉", "❤️", "🔥", "✅", "❌", "⚠️", "💡", "📌", "⭐", "💻", "📱"];
+  function mdToolbar(ta, onChange) {
+    const done = () => { ta.focus(); onChange(); };
+    const wrap = (a, b, ph) => () => {
+      const s = ta.selectionStart, e = ta.selectionEnd, sel = ta.value.slice(s, e) || ph;
+      ta.setRangeText(a + sel + b, s, e, "end");
+      ta.selectionStart = s + a.length; ta.selectionEnd = s + a.length + sel.length; done();
+    };
+    const line = pre => () => {
+      const s = ta.selectionStart, e = ta.selectionEnd, ls = ta.value.lastIndexOf("\n", s - 1) + 1;
+      ta.setRangeText(ta.value.slice(ls, e).split("\n").map((l, i) => (typeof pre === "function" ? pre(i) : pre) + l).join("\n"), ls, e, "end"); done();
+    };
+    const ask = (q, a, b, ph) => () => { const u = prompt(q, "https://"); if (u && /^https?:\/\/\S+$/.test(u.trim())) wrap(a, b + "(" + u.trim() + ")", ph)(); };
+    const bold = wrap("**", "**", "טקסט מודגש"), ital = wrap("*", "*", "טקסט נטוי");
+    ta.addEventListener("keydown", e => {
+      if (!e.ctrlKey) return;
+      const k = e.key.toLowerCase();
+      if (k === "b" || e.code === "KeyB") { e.preventDefault(); bold(); }
+      else if (k === "i" || e.code === "KeyI") { e.preventDefault(); ital(); }
+    });
+    const emo = h("div", { class: "emo hidden" }, EMOJIS.map(x => h("button", { type: "button",
+      onclick: () => { ta.setRangeText(x, ta.selectionStart, ta.selectionEnd, "end"); emo.classList.add("hidden"); done(); } }, x)));
+    document.addEventListener("click", e => { if (!e.target.closest(".emo-wrap")) emo.classList.add("hidden"); });
+    const B = (t, title, fn, cls) => h("button", { type: "button", class: "tbtn" + (cls ? " " + cls : ""), title, onclick: fn }, t);
+    return h("div", { class: "tools" },
+      B("B", "מודגש (Ctrl+B)", bold, "b"), B("I", "נטוי (Ctrl+I)", ital, "i"), B("S", "קו חוצה", wrap("~~", "~~", "טקסט"), "s"),
+      B("H", "כותרת", line("## ")), B("❝", "ציטוט", line("> ")), B("☰", "רשימה", line("- ")), B("1.", "רשימה ממוספרת", line(i => (i + 1) + ". ")),
+      B("</>", "קוד", wrap("\n```\n", "\n```\n", "קוד")),
+      B("🔗", "קישור", ask("כתובת הקישור:", "[", "]", "טקסט הקישור")),
+      B("🖼", "תמונה (קישור לתמונה)", ask("קישור לתמונה (https://...):", "![", "]", "תמונה")),
+      B("―", "קו מפריד", () => { ta.setRangeText("\n---\n", ta.selectionStart, ta.selectionEnd, "end"); done(); }),
+      h("span", { class: "emo-wrap" }, B("😀", "סמיילי", () => emo.classList.toggle("hidden")), emo));
+  }
+
   // ===== חשבון =====
+  let authReady = false;
   auth.onAuthStateChanged(async u => {
-    me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    authReady = true; me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
     if (!registering) { profile = null; profileReady = false; }
     if (u) {
       try { const d = await db.collection("forum_profiles").doc(u.uid).get(); if (d.exists) profile = d.data(); } catch (e) {}
@@ -577,15 +720,26 @@
   });
 
   /* ===== תגיות, "נקרא/לא נקרא", טיוטות ===== */
+  // סוג הנושא (נבחר בחלונית הכתיבה)
   const TAGS = {
-    help:     { t: "עזרה",   ic: "🤝", c: "#4338ca" },
-    question: { t: "שאלה",   ic: "❓", c: "#4338ca" },
-    share:    { t: "שיתוף",  ic: "🔗", c: "#7c3aed" },
-    clarify:  { t: "בירור",  ic: "🔎", c: "#b45309" },
-    guide:    { t: "מדריך",  ic: "📘", c: "#0369a1" },
-    idea:     { t: "רעיון",  ic: "💡", c: "#0f766e" }
+    bug:       { t: "באג",        ic: "🐞", c: "#b91c1c" },
+    clarify:   { t: "בירור",      ic: "🔎", c: "#b45309" },
+    problem:   { t: "בעיה",       ic: "⚠️", c: "#c2410c" },
+    request:   { t: "בקשה",       ic: "🙏", c: "#9333ea" },
+    info:      { t: "בקשת מידע",  ic: "ℹ️", c: "#15803d" },
+    recommend: { t: "המלצה",      ic: "👍", c: "#0f766e" },
+    explain:   { t: "הסבר",       ic: "📖", c: "#0369a1" },
+    improve:   { t: "הצעת ייעול", ic: "🚀", c: "#7c3aed" },
+    download:  { t: "הורדה",      ic: "⬇️", c: "#1d4ed8" },
+    guide:     { t: "מדריך",      ic: "📘", c: "#0369a1" },
+    poll:      { t: "סקר",        ic: "📊", c: "#be185d" },
+    help:      { t: "עזרה",       ic: "🤝", c: "#4338ca" },
+    question:  { t: "שאלה",       ic: "❓", c: "#4338ca" },
+    share:     { t: "שיתוף",      ic: "🔗", c: "#7c3aed" },
+    idea:      { t: "רעיון",      ic: "💡", c: "#0f766e" }
   };
-  const ASK_TAGS = ["help", "question", "clarify"]; // נושאים שאפשר לסמן כ"נפתר"
+  const ASK_TAGS = ["help", "question", "clarify", "bug", "problem", "request", "info"]; // נושאים שאפשר לסמן כ"נפתר"
+  const tagChip = x => h("a", { class: "tagchip", href: "#/search?q=" + encodeURIComponent(x) }, "#" + x);
   const tagEl = key => { const t = TAGS[key]; if (!t) return null; const e = h("span", { class: "tag" }, t.ic + " " + t.t); e.style.color = t.c; return e; };
   const store = (k, v) => { try { v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
@@ -856,7 +1010,7 @@
   const postsOf = t => (t.replies || 0) + 1;
 
   // ===== ניתוב לפי הכתובת (#/...) =====
-  let lastRoute = "";
+  let lastRoute = "", prevHash = "";
   window.addEventListener("hashchange", () => route());
   function route(dataOnly) {
     const hash = location.hash.replace(/^#/, "") || "/";
@@ -867,6 +1021,14 @@
     if (dataOnly && (parts[0] === "topic" || parts[0] === "new") && lastRoute === hash) return;
     if (dataOnly && parts[0] === "chats" && lastRoute === hash) return drawDmList($("chatList"), parts[1]); // לא מוחקים את מה שמקלידים
     if (!catsReady || !topicsReady) return;
+    // "#/new" פותח את חלונית הכתיבה מעל הדף שהיינו בו
+    if (parts[0] === "new") {
+      if (!authReady) return;
+      history.replaceState(null, "", prevHash || "#/");
+      openComposer(q.get("cat") || "");
+      lastRoute = ""; return route();
+    }
+    prevHash = "#" + hash;
     updateCounts();
     // ברשימות נושאים: לא קופצים באמצע קריאה – מציגים "טעינת פוסטים חדשים"
     if (dataOnly && lastRoute === hash && LIST_VIEWS.includes(parts[0] || "") && listShown) {
@@ -898,7 +1060,6 @@
     if (parts[0] === "search") return renderSearch(v, q.get("q") || "");
     if (parts[0] === "groups") return renderGroups(v, q.get("sort") || "name");
     if (parts[0] === "group") return renderGroup(v, parts[1]);
-    if (parts[0] === "new") return renderNew(v, q.get("cat") || "");
     renderHome(v);
   }
   const score = t => (t.replies || 0) * 3 + (t.likes || []).length * 2 + (t.views || 0) / 10;
@@ -996,7 +1157,7 @@
       return h("div", { class: "card tcard" + (me && isUnread(t) ? " unread" : "") },
         avatar(t.name, t.uid),
         h("div", {},
-          h("h3", {}, h("a", { href: "#/topic/" + t.id }, t.title), tagEl(t.tag), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null),
+          h("h3", {}, tagEl(t.tag), " ", h("a", { href: "#/topic/" + t.id }, t.title), t.solved ? h("span", { class: "solved" }, "✔ נפתר") : null, (t.tags || []).slice(0, 3).map(tagChip)),
           h("div", { class: "sub" },
             t.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
             t.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
@@ -1072,15 +1233,9 @@
         h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(false); } }, "להתחבר"), " או ",
         h("a", { href: "#", onclick: e => { e.preventDefault(); openLogin(true); } }, "להירשם"), "."));
       else if (!canReply) composer.append(h("p", { style: "margin:0" }, "🔒 הנושא נעול – אי אפשר להגיב בו."));
-      else {
-        const ta = h("textarea", { id: "replyText", maxlength: "10000", placeholder: "כתבו תגובה... (שורה שמתחילה ב-\"> \" תוצג כציטוט)" });
-        ta.value = draftReply;
-        ta.oninput = () => draftReply = ta.value;
-        const send = h("button", { class: "btn primary" }, "שליחת תגובה");
-        send.onclick = () => reply(topic, ta, send);
-        composer.append(h("h3", {}, "✍️ תגובה"), needsApproval() ? waitNote("התגובה שלכם") : "", ta,
-          h("div", { class: "row" }, h("span", { class: "hint" }, "קישורים נהיים לחיצים אוטומטית"), send));
-      }
+      else composer.append(h("button", { type: "button", class: "reply-fake", onclick: () => openReply(topic) },
+        avatar(myName(), me.uid, "s"), h("span", {}, replyTopicId === topic.id && draftReply.trim() ? "📝 יש לכם טיוטת תגובה – לחצו להמשך" : "כתבו תגובה...")));
+      const replyBtn = canReply ? h("button", { class: "btn primary", onclick: () => openReply(topic) }, "↩ תגובה") : null;
       const pendBar = topic.pending ? h("div", { class: "pend-note" },
         h("span", {}, "⏳ הנושא ממתין לאישור מנהל – עד אז רק " + (isAdmin ? "את/ה ומי שכתב/ה אותו" : "את/ה") + " רואים אותו."),
         h("span", { class: "sp" }),
@@ -1100,7 +1255,9 @@
         h("div", { class: "crumbs" },
           topic.pinned ? h("span", { class: "pill pin" }, "📌 נעוץ") : null,
           topic.locked ? h("span", { class: "pill lock" }, "🔒 נעול") : null,
-          h("span", {}, "💬 " + (topic.replies || 0) + " תגובות · 👁 " + (topic.views || 0) + " צפיות")),
+          h("span", {}, "💬 " + (topic.replies || 0) + " תגובות · 👁 " + (topic.views || 0) + " צפיות"),
+          (topic.tags || []).map(tagChip),
+          h("span", { class: "sp" }), replyBtn),
         pendBar,
         adminBar,
         h("div", { class: "card" },
@@ -1141,7 +1298,10 @@
     if (p.pending && !isOp && isAdmin) foot.append(
       h("button", { class: "btn sm primary", onclick: () => approvePost(p, ref, topic) }, "✔ אישור התגובה"),
       h("button", { class: "btn sm danger", onclick: () => rejectPost(ref, topic) }, "✖ דחייה"));
-    if (me) foot.append(h("button", { class: "btn sm", onclick: () => quote(p) }, "💬 ציטוט"));
+    const t = topic || p; // בפוסט הראשון – הנושא עצמו
+    if (!t.locked || isAdmin) foot.append(
+      h("button", { class: "btn sm", title: "תגובה ל" + (p.name || ""), onclick: () => openReply(t, "@" + (p.name || "") + " ") }, "↩ תגובה"),
+      h("button", { class: "btn sm", onclick: () => quote(p, t) }, "💬 ציטוט"));
     if (me && (me.uid === p.uid || isAdmin)) {
       foot.append(h("button", { class: "btn sm", onclick: () => editPost(p, ref, isOp, text) }, "✏️ עריכה"));
       if (!isOp) foot.append(h("button", { class: "btn sm danger", onclick: () => delPost(p, ref, topic) }, "🗑 מחיקה"));
@@ -1157,11 +1317,9 @@
         text, foot));
   }
 
-  function quote(p) {
-    const ta = $("replyText"); if (!ta) return;
-    const lines = String(p.text || "").split("\n").slice(0, 6).map(l => "> " + l).join("\n");
-    ta.value = (ta.value ? ta.value + "\n\n" : "") + "> @" + (p.name || "") + " כתב/ה:\n" + lines + "\n\n";
-    draftReply = ta.value; ta.focus(); ta.scrollIntoView({ block: "center" });
+  function quote(p, t) {
+    const lines = String(p.text || "").split("\n").filter(l => !l.startsWith(">")).slice(0, 6).map(l => "> " + l).join("\n");
+    openReply(t, "> @" + (p.name || "") + " כתב/ה:\n" + lines + "\n\n");
   }
 
   async function reply(topic, ta, btn) {
@@ -1174,9 +1332,11 @@
     if (pend) batch.update(tRef, { pendingPosts: firebase.firestore.FieldValue.increment(1) }); // המנהל יראה שיש תגובה לאישור
     else batch.update(tRef, { replies: firebase.firestore.FieldValue.increment(1), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
       lastText: brief(text) }); // תקציר לכרטיס ברשימה (בלי הציטוט)
-    try { await batch.commit(); draftReply = ""; ta.value = ""; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
+    let ok = false;
+    try { await batch.commit(); draftReply = ""; ta.value = ""; ok = true; toast(pend ? "⏳ התגובה נשלחה לאישור מנהל" : "✔ התגובה פורסמה"); }
     catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום או שהנושא נעול)" : "התגובה לא נשלחה, נסו שוב"); }
     btn.disabled = false;
+    return ok;
   }
 
   function editPost(p, ref, isOp, textEl) {
@@ -1238,53 +1398,169 @@
     return s;
   }
 
-  // ----- נושא חדש -----
-  // טיוטה נשמרת במחשב – אפשר לסגור ולחזור אליה (סרגל המשתמש ← "טיוטות")
-  let { title: draftTitle = "", text: draftText = "", tag: draftTag = "" } = load("wfhDraft", {}) || {};
-  const saveDraft = () => { store("wfhDraft", draftTitle || draftText ? { title: draftTitle, text: draftText, tag: draftTag } : undefined); renderUside(); };
-  function renderNew(v, catId) {
-    if (!me) {
-      put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "✏️"), h("h3", {}, "כדי לפתוח נושא צריך להתחבר"),
-        h("p", {}, h("button", { class: "btn primary", onclick: () => openLogin(false) }, "התחברות"), " ", h("button", { class: "btn", onclick: () => openLogin(true) }, "הרשמה"))));
-      return;
-    }
-    if (!cats.length) return put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "🗂️"), h("h3", {}, "אין עדיין קטגוריות"), h("p", {}, "אפשר לפתוח נושאים אחרי שהמנהל יוסיף קטגוריות.")));
-    const allowed = cats.filter(canWrite);
-    if (!allowed.length) return put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "card empty" }, h("div", { class: "big" }, "🔒"), h("h3", {}, "אין קטגוריה שאפשר לפתוח בה נושא"), h("p", {}, "אפשר להצטרף לקבוצות בדף ", h("a", { href: "#/groups" }, "הקבוצות"), ".")));
-    const sel = h("select", {}, allowed.map(c => h("option", { value: c.id }, (c.icon || "") + " " + c.name)));
-    sel.value = allowed.some(c => c.id === catId) ? catId : allowed[0].id;
-    const title = h("input", { maxlength: "120", placeholder: "כותרת הנושא – קצרה וברורה" }); title.value = draftTitle;
-    const text = h("textarea", { maxlength: "10000", placeholder: "מה רציתם לשאול או לספר? כמה שיותר פרטים יעזרו לאחרים לעזור לכם." }); text.value = draftText;
-    title.oninput = () => { draftTitle = title.value; saveDraft(); }; text.oninput = () => { draftText = text.value; saveDraft(); };
-    const tagSel = h("select", {}, h("option", { value: "" }, "ללא תגית"), Object.keys(TAGS).map(k => h("option", { value: k }, TAGS[k].ic + " " + TAGS[k].t)));
-    tagSel.value = draftTag; tagSel.onchange = () => { draftTag = tagSel.value; saveDraft(); };
-    const go = h("button", { class: "btn primary" }, "פרסום הנושא");
-    go.onclick = async () => {
-      if (title.value.trim().length < 3) return toast("כתבו כותרת (לפחות 3 תווים)");
-      if (!text.value.trim()) return toast("כתבו את תוכן הנושא");
-      go.disabled = true;
+  // ----- נושא חדש: חלונית כתיבה בתחתית המסך -----
+  // קטגוריה (עם חיפוש) · סוג הנושא · כותרת · סרגל עיצוב · תצוגה מקדימה · תגיות.
+  // הכל נשמר כטיוטה במחשב – אפשר להסתיר ולחזור (סרגל המשתמש ← "טיוטות").
+  const EMPTY_DRAFT = () => ({ title: "", text: "", tag: "", cat: "", tags: [] });
+  let draft = Object.assign(EMPTY_DRAFT(), load("wfhDraft", {}) || {});
+  if (!Array.isArray(draft.tags)) draft.tags = [];
+  const saveDraft = () => { store("wfhDraft", draft.title || draft.text ? draft : undefined); renderUside(); };
+  const TYPE_KEYS = Object.keys(TAGS).filter(k => k !== "idea").sort((a, b) => TAGS[a].t.localeCompare(TAGS[b].t, "he"));
+  let dock = null, dockPreview = load("wfhPreview", true);
+
+  function openComposer(catId) {
+    if (needLogin("כדי לפתוח נושא צריך להתחבר")) return;
+    if (!cats.length) return toast("אין עדיין קטגוריות – המנהל צריך להוסיף");
+    if (!cats.some(canWrite)) return toast("🔒 אין קטגוריה שאפשר לפתוח בה נושא – אפשר להצטרף לקבוצות");
+    if (!dock) dock = buildDock();
+    if (catId && cats.some(c => c.id === catId && canWrite(c))) { draft.cat = catId; saveDraft(); }
+    dock.sync(null);
+    showDock();
+  }
+  // תגובה בנושא – אותה חלונית, בלי קטגוריה/כותרת. add = טקסט להוספה (@שם או ציטוט)
+  let replyTopicId = "";
+  function openReply(topic, add) {
+    if (needLogin("כדי להגיב צריך להתחבר")) return;
+    if (topic.locked && !isAdmin) return toast("🔒 הנושא נעול – אי אפשר להגיב בו");
+    if (!dock) dock = buildDock();
+    if (replyTopicId !== topic.id) { if (replyTopicId) draftReply = ""; replyTopicId = topic.id; }
+    if (add) draftReply = (draftReply.trim() ? draftReply.replace(/\s*$/, "\n\n") : "") + add;
+    dock.sync(topic);
+    showDock();
+    const ta = dock.ta; ta.selectionStart = ta.selectionEnd = ta.value.length;
+  }
+  function showDock() {
+    dock.el.classList.remove("hidden"); dock.mini.classList.add("hidden"); document.body.classList.add("docked");
+    (dock.topic || draft.title ? dock.ta : dock.title).focus();
+  }
+  function closeComposer(clear) {
+    if (!dock) return;
+    dock.el.classList.add("hidden"); dock.mini.classList.add("hidden"); document.body.classList.remove("docked");
+    if (clear) { if (dock.topic) draftReply = ""; else { draft = EMPTY_DRAFT(); saveDraft(); } }
+  }
+
+  function buildDock() {
+    const catBtn = h("button", { type: "button", class: "dbtn" });
+    const typeBtn = h("button", { type: "button", class: "dbtn" });
+    const title = h("input", { class: "dtitle only-topic", maxlength: "120", placeholder: "הכניסו את כותרת הנושא כאן..." });
+    const ta = h("textarea", { class: "dta", maxlength: "10000", placeholder: "כתבו את תוכן הנושא כאן. אפשר לעצב טקסט ולהוסיף קישורים ותמונות מהכפתורים למעלה." });
+    const prev = h("div", { class: "dprev" });
+    const chips = h("span", { class: "dchips" });
+    const tagIn = h("input", { class: "dtag-in", maxlength: "50", placeholder: "הכניסו תגיות, 2 - 50 אותיות (Enter להוספה, עד 5)" });
+    const note = h("div", { class: "dnote" });
+    const catSearch = h("input", { class: "dsearch", placeholder: "הקלידו כדי לחפש" });
+    const catList = h("div", {});
+    const catMenu = h("div", { class: "dmenu cat hidden" }, catSearch, catList);
+    const typeMenu = h("div", { class: "dmenu hidden" });
+    const help = h("div", { class: "dhelp hidden" },
+      h("b", {}, "איך מעצבים:"), " **מודגש** · *נטוי* · ~~קו חוצה~~ · `קוד` · ## כותרת · > ציטוט · - רשימה · 1. רשימה ממוספרת · --- קו מפריד",
+      h("br"), "קישור: [טקסט](https://...) · תמונה: ![](https://קישור-לתמונה) · Ctrl+B מודגש · Ctrl+I נטוי · Ctrl+Enter שליחה");
+    const pvBtn = h("button", { type: "button", class: "tbtn wide pv-btn" });
+    const send = h("button", { type: "button", class: "btn primary" }, "✔ שליחה");
+
+    const api = { topic: null };
+    const replyHead = h("span", { class: "dreply only-reply" });
+    const drawPrev = () => put(prev, ta.value.trim() ? renderText(ta.value) : h("p", { class: "hint" }, "👁 כאן תופיע תצוגה מקדימה של הפוסט"));
+    const upd = () => {
+      if (api.topic) draftReply = ta.value;
+      else { draft.title = title.value; draft.text = ta.value; saveDraft(); }
+      drawPrev();
+    };
+    const drawCat = () => { const c = catOf(draft.cat); put(catBtn, c ? (c.icon || "💬") + " " + c.name : "☰ בחירת קטגוריה", " ▾"); };
+    const drawType = () => { const t = TAGS[draft.tag]; put(typeBtn, t ? t.ic + " " + t.t : "סוג הנושא", " ▾"); };
+    const drawChips = () => put(chips, draft.tags.map(t => h("span", { class: "dchip" }, "#" + t,
+      h("button", { type: "button", title: "הסרה", onclick: () => { draft.tags = draft.tags.filter(x => x !== t); saveDraft(); drawChips(); } }, "×"))));
+    const drawPv = () => { el.classList.toggle("nopv", !dockPreview); put(pvBtn, dockPreview ? "👁 הסתרת תצוגה מקדימה" : "👁 הצגת תצוגה מקדימה"); };
+    const drawCatList = () => {
+      const q = catSearch.value.trim().toLowerCase();
+      const list = cats.filter(c => !q || (c.name + " " + (c.desc || "")).toLowerCase().includes(q));
+      put(catList, list.length ? list.map(c => {
+        const okw = canWrite(c), ic = h("span", { class: "cat-ic sm" }, c.icon || "💬"); ic.style.background = c.color || "#4f7cff";
+        return h("button", { type: "button", class: "ditem" + (okw ? "" : " off") + (c.id === draft.cat ? " on" : ""),
+          title: okw ? c.desc || "" : "רק חברי קבוצה יכולים לפתוח כאן נושאים",
+          onclick: () => { if (!okw) return toast("🔒 רק חברי הקבוצה יכולים לפתוח נושאים בקטגוריה הזאת");
+            draft.cat = c.id; saveDraft(); drawCat(); catMenu.classList.add("hidden"); title.focus(); } }, ic, h("span", {}, c.name));
+      }) : h("p", { class: "hint", style: "padding:6px 10px;margin:0" }, "לא נמצאה קטגוריה"));
+    };
+    const pickType = k => { draft.tag = k; saveDraft(); drawType(); typeMenu.classList.add("hidden"); };
+    put(typeMenu, h("button", { type: "button", class: "ditem", onclick: () => pickType("") }, "— ללא —"),
+      TYPE_KEYS.map(k => h("button", { type: "button", class: "ditem", onclick: () => pickType(k) }, h("span", {}, TAGS[k].ic), h("span", {}, TAGS[k].t))));
+
+    catBtn.onclick = () => { typeMenu.classList.add("hidden"); const open = catMenu.classList.toggle("hidden") === false;
+      if (open) { catSearch.value = ""; drawCatList(); catSearch.focus(); } };
+    typeBtn.onclick = () => { catMenu.classList.add("hidden"); typeMenu.classList.toggle("hidden"); };
+    catSearch.oninput = drawCatList;
+    catSearch.onkeydown = e => { if (e.key === "Enter") { const b = catList.querySelector(".ditem:not(.off)"); if (b) b.click(); } if (e.key === "Escape") catMenu.classList.add("hidden"); };
+    document.addEventListener("click", e => { if (!e.target.closest(".dwrap")) { catMenu.classList.add("hidden"); typeMenu.classList.add("hidden"); } });
+
+    const addTag = () => {
+      const v = tagIn.value.trim().replace(/^#/, "").replace(/\s+/g, "-");
+      if (!v) return;
+      if (v.length < 2 || v.length > 50) return toast("תגית צריכה 2 - 50 אותיות");
+      if (draft.tags.length >= 5) return toast("אפשר עד 5 תגיות");
+      if (!draft.tags.includes(v)) draft.tags.push(v);
+      tagIn.value = ""; saveDraft(); drawChips();
+    };
+    tagIn.onkeydown = e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag(); }
+      if (e.key === "Backspace" && !tagIn.value && draft.tags.length) { draft.tags.pop(); saveDraft(); drawChips(); } };
+    tagIn.onblur = addTag;
+    title.oninput = upd; ta.oninput = upd;
+    [title, ta].forEach(x => x.addEventListener("keydown", e => { if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); send.click(); } }));
+    pvBtn.onclick = () => { dockPreview = !dockPreview; store("wfhPreview", dockPreview); drawPv(); };
+
+    send.onclick = async () => {
+      if (api.topic) { if (await reply(api.topic, ta, send)) closeComposer(true); return; }
+      if (!catOf(draft.cat) || !canWrite(catOf(draft.cat))) { toast("בחרו קטגוריה"); return catBtn.click(); }
+      if (title.value.trim().length < 3) { toast("כתבו כותרת (לפחות 3 תווים)"); return title.focus(); }
+      if (!ta.value.trim()) { toast("כתבו את תוכן הנושא"); return ta.focus(); }
+      addTag();
+      send.disabled = true;
       const pend = needsApproval();
       try {
         const ref = await db.collection("forum_topics").add({
-          cat: sel.value, title: title.value.trim().slice(0, 120), text: text.value.trim().slice(0, 10000),
+          cat: draft.cat, title: title.value.trim().slice(0, 120), text: ta.value.trim().slice(0, 10000), tags: draft.tags.slice(0, 5),
           uid: me.uid, name: myName(), admin: isAdmin, ts: NOW(), lastTs: NOW(), lastName: myName(), lastUid: me.uid,
-          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: tagSel.value, solved: false, lastText: "",
+          replies: 0, views: 0, likes: [], pinned: false, locked: false, tag: draft.tag || "", solved: false, lastText: "",
           pending: pend, pendingPosts: 0
         });
-        draftTitle = draftText = draftTag = ""; saveDraft(); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
-      } catch (e) { go.disabled = false; toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
+        closeComposer(true); toast(pend ? "⏳ הנושא נשלח לאישור מנהל" : "✔ הנושא פורסם"); location.hash = "#/topic/" + ref.id;
+      } catch (e) { toast(e.code === "permission-denied" ? "אין הרשאה לפרסם (אולי החשבון חסום)" : "הפרסום נכשל, נסו שוב"); }
+      send.disabled = false;
     };
-    put(v, crumbs({ t: "נושא חדש" }), h("div", { class: "page-head" }, h("h1", {}, "✏️ נושא חדש")),
-      h("div", { class: "card composer" },
-        needsApproval() ? waitNote("הנושא שלכם") : null,
-        h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:10px" },
-          h("div", { class: "field" }, h("label", {}, "קטגוריה"), sel),
-          h("div", { class: "field" }, h("label", {}, "תגית (לא חובה)"), tagSel)),
-        title, text,
-        draftTitle || draftText ? h("p", { class: "hint", style: "margin:6px 0 0" }, "📝 הטיוטה נשמרת אוטומטית במחשב. ",
-          h("a", { href: "#", onclick: e => { e.preventDefault(); if (confirm("למחוק את הטיוטה?")) { draftTitle = draftText = draftTag = ""; saveDraft(); lastRoute = ""; route(); } } }, "מחיקת הטיוטה")) : null,
-        h("div", { class: "row" }, h("span", { class: "hint" }, "שורה שמתחילה ב-\"> \" תוצג כציטוט · קישורים נהיים לחיצים"), go)));
-    title.focus();
+
+    const el = h("div", { class: "dock hidden", role: "dialog", "aria-label": "נושא חדש" },
+      h("div", { class: "drow" },
+        h("span", { class: "dwrap only-topic" }, catBtn, catMenu),
+        h("span", { class: "dwrap only-topic" }, typeBtn, typeMenu),
+        title, replyHead,
+        h("button", { type: "button", class: "btn ghost", title: "אפשר לחזור לזה אחר כך", onclick: () => {
+          el.classList.add("hidden"); document.body.classList.remove("docked");
+          put(mini, "✏️ ", h("span", {}, api.topic ? "תגובה ל\"" + api.topic.title + "\"" : draft.title.trim() || "נושא חדש"), " – המשך כתיבה");
+          mini.classList.remove("hidden"); } }, "הסתרה ▾"),
+        h("button", { type: "button", class: "btn ghost", onclick: () => {
+          if (ta.value.trim() && !confirm("לבטל ולמחוק את מה שכתבתם?")) return; closeComposer(true); } }, "🗑 ביטול"),
+        send),
+      h("div", { class: "drow" }, mdToolbar(ta, upd), h("span", { class: "sp" }), pvBtn,
+        h("button", { type: "button", class: "tbtn wide", onclick: () => help.classList.toggle("hidden") }, "❔ עזרה")),
+      help, note,
+      h("div", { class: "dbody" }, ta, prev),
+      h("div", { class: "dfoot only-topic" }, h("span", {}, "🏷️"), chips, tagIn));
+    const mini = h("button", { type: "button", class: "dock-mini hidden", onclick: () => { el.classList.remove("hidden"); mini.classList.add("hidden"); document.body.classList.add("docked"); ta.focus(); } });
+    document.body.append(el, mini);
+    return Object.assign(api, { el, mini, ta, title, sync: topic => {
+      api.topic = topic; el.classList.toggle("reply", !!topic);
+      el.setAttribute("aria-label", topic ? "תגובה" : "נושא חדש");
+      if (topic) {
+        put(replyHead, "↩ תגובה ל", h("b", {}, "\"" + topic.title + "\""));
+        ta.value = draftReply; ta.placeholder = "כתבו את התגובה כאן...";
+      } else {
+        title.value = draft.title; ta.value = draft.text; tagIn.value = "";
+        ta.placeholder = "כתבו את תוכן הנושא כאן. אפשר לעצב טקסט ולהוסיף קישורים ותמונות מהכפתורים למעלה.";
+        drawCat(); drawType(); drawChips();
+      }
+      drawPrev(); drawPv();
+      put(note, needsApproval() ? waitNote(topic ? "התגובה שלכם" : "הנושא שלכם") : null);
+    } });
   }
 
   // ----- חיפוש -----
@@ -1292,7 +1568,7 @@
     const input = h("input", { type: "search", value: q, placeholder: "מה לחפש?", style: "width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:12px;font-size:1.05rem" });
     input.onkeydown = e => { if (e.key === "Enter") location.hash = "#/search?q=" + encodeURIComponent(input.value.trim()); };
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-    const res = words.length ? topics.filter(t => { const s = (t.title + " " + t.text + " " + t.name).toLowerCase(); return words.every(w => s.includes(w)); }) : [];
+    const res = words.length ? topics.filter(t => { const s = (t.title + " " + t.text + " " + t.name + " " + (t.tags || []).join(" ")).toLowerCase(); return words.every(w => s.includes(w)); }) : [];
     put(v, crumbs({ t: "חיפוש" }), h("div", { class: "page-head" }, h("h1", {}, "🔍 חיפוש")),
       h("div", { class: "card", style: "padding:14px;margin-bottom:14px" }, input),
       words.length ? [h("p", { class: "hint" }, "נמצאו " + res.length + " נושאים"), topicTable(res, "לא נמצאו תוצאות", "נסו מילים אחרות")] : null);
