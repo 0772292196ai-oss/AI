@@ -507,6 +507,14 @@
     .post > .av { display: none; }
     .topic-title { font-size: 1.35rem; }
   }
+  /* ⬆ חזרה למעלה */
+  .to-top-f { position: fixed; bottom: 22px; right: calc(var(--side) + 20px); z-index: 29; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line2); background: var(--card); color: var(--ink); font-size: 1.25rem; font-weight: 900; cursor: pointer; box-shadow: 0 12px 28px -10px rgba(15,23,42,.35); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
+  .to-top-f.on { opacity: 1; transform: none; pointer-events: auto; }
+  .to-top-f:hover { border-color: var(--primary); color: var(--primary); }
+  body.docked .to-top-f { display: none; }
+  /* קישורים בתוך פוסטים – כחולים וברורים */
+  .md a:not(.mention):not(.btn) { color: #2563eb; text-decoration: underline; text-underline-offset: 3px; word-break: break-word; }
+  .bub.me .md a { color: #dbeafe; }
 </style>
 </head>
 <body>
@@ -872,6 +880,8 @@
 
   function updateCounts() {
     const un = topics.filter(isUnread).length, uq = topics.filter(isOpenQ).length;
+    // מספר ההתראות וההודעות הפרטיות החדשות – גם בכותרת הלשונית בדפדפן, למשל "(3) פורום תוכנה בקליק"
+    try { const n = notifs().length + dms.filter(dmUnread).length; document.title = (n ? "(" + (n > 99 ? "99+" : n) + ") " : "") + "פורום תוכנה בקליק"; } catch (e) {}
     $("cntUnread").textContent = un > 99 ? "+99" : un; $("cntUnread").classList.toggle("hidden", !un);
     $("cntUnsolved").textContent = uq; $("cntUnsolved").classList.toggle("hidden", !uq);
     const qn = queue().length;
@@ -2240,6 +2250,22 @@
 
   // "לפני X דקות" מתעדכן לבד
   setInterval(() => { const p = location.hash; if (!p.startsWith("#/topic") && !p.startsWith("#/new") && !p.startsWith("#/search")) route(true); }, 60000);
+
+  // ⬆ כפתור "חזרה למעלה" – מופיע אחרי גלילה
+  (function () {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "to-top-f"; b.title = "חזרה למעלה"; b.setAttribute("aria-label", "חזרה למעלה"); b.textContent = "↑";
+    b.onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+    document.body.append(b);
+    addEventListener("scroll", () => b.classList.toggle("on", scrollY > 500), { passive: true });
+  })();
+
+  // ⌨️ "/" קופץ לחיפוש בפורום (כשלא מקלידים בתיבה אחרת)
+  addEventListener("keydown", e => {
+    if (e.key !== "/" || /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "") || (document.activeElement || {}).isContentEditable) return;
+    const s = $("topSearch"); if (!s || !s.offsetParent) return;
+    e.preventDefault(); s.focus();
+  });
 </script>
 </body>
 </html>

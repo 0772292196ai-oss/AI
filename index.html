@@ -3416,6 +3416,16 @@
     const ft = $("footTop"); if (ft) ft.onclick = e => { e.preventDefault(); scrollTo({ top: 0, behavior: "smooth" }); };
   })();
 
+  // חלונות קופצים: Esc או לחיצה על הרקע הכהה סוגרים את החלון העליון
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    const open = [...document.querySelectorAll(".overlay:not(.hidden)")];
+    if (open.length) open[open.length - 1].classList.add("hidden");
+  });
+  document.addEventListener("mousedown", e => {
+    if (e.target.classList && e.target.classList.contains("overlay") && !e.target.classList.contains("hidden")) e.target.classList.add("hidden");
+  });
+
   // מצב בהיר / כהה – נשמר במחשב, ברירת מחדל כהה
   (function () {
     const KEY = "wfhTheme"; // (משותף עם שם המפתח בפורום, פשוט שם ייחודי)
