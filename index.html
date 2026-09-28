@@ -2345,6 +2345,10 @@
     renderDev();
   }
   $("navDev").onclick = openDev;
+  // כתובת ישירה לאזור המפתחים: .../AI/#dev
+  const devFromHash = () => { if (location.hash === "#dev") { history.replaceState(null, "", location.pathname + location.search); openDev(); } };
+  window.addEventListener("hashchange", devFromHash);
+  devFromHash();
   document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => $(b.dataset.close).classList.add("hidden"));
 
   let myDev = null; // פרטי המפתח המחובר (אם נרשם)
