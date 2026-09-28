@@ -232,6 +232,17 @@
   .install-steps b { color: var(--ink); }
   .install-os { font-weight: 900; margin: 14px 0 4px; }
 
+  /* ===== חבילות בתשלום ===== */
+  .pkg-hide { display: none !important; }
+  .pkg-btn { background: linear-gradient(120deg, #f59e0b, #f97316) !important; box-shadow: 0 14px 30px -14px rgba(249,115,22,.95) !important; }
+  .card.pkg-locked .art::before { content: "🔒 בחבילה"; position: absolute; top: 12px; left: 12px; z-index: 3; font-family: "Heebo", sans-serif; font-weight: 900; font-size: .82rem; color: #fff; padding: 5px 12px; border-radius: 20px; background: linear-gradient(120deg, #f59e0b, #f97316); box-shadow: 0 8px 20px -8px rgba(249,115,22,.9); }
+  .pkg-lock { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 18px; margin-bottom: 14px; border-radius: 18px; border: 1px solid rgba(251,191,36,.35); background: linear-gradient(135deg, rgba(245,158,11,.14), rgba(249,115,22,.08)); }
+  .pkg-lock-ic { font-size: 2rem; }
+  .pkg-lock-txt { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
+  .pkg-lock-txt span { color: var(--ink2); }
+  .pkg-lock .btn { width: auto; margin: 0; padding: 12px 22px; background: linear-gradient(120deg, #f59e0b, #f97316); }
+  .pkg-ok { color: var(--green); font-weight: 800; }
+
   /* ===== יתרונות ===== */
   .perks { max-width: var(--wrap); margin: 0 auto; padding: 8px 20px 40px; }
   .perks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
@@ -930,6 +941,12 @@
         <ul id="apChanges"></ul>
       </div>
 
+      <!-- תוכנה שנעולה לחבילה (למי שלא רכש) -->
+      <div class="pkg-lock hidden" id="apLock">
+        <div class="pkg-lock-ic">🔒</div>
+        <div class="pkg-lock-txt"><b id="apLockTitle"></b><span>התוכנה הזאת זמינה רק למי שרכש את החבילה.</span></div>
+        <button type="button" class="btn" id="apLockBtn">💳 לרכישת החבילה</button>
+      </div>
       <div class="app-actions">
         <a class="btn dl-link" id="apDownload">⬇ הורדה והתקנה</a>
         <button type="button" class="btn alt" id="apHelp">💬 שאלה? פתחו צ'אט</button>
@@ -959,6 +976,20 @@
   <div class="dl-bar" id="dlBar">
     <div class="dl-info"><b id="dlBarName"></b><small>חינם · בעברית</small></div>
     <a class="btn" id="dlBarBtn" href="#">⬇ הורדה</a>
+  </div>
+
+  <!-- חבילה בתשלום: פרטים ובקשת רכישה -->
+  <div class="overlay hidden" id="pkgOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="pkgTitle">📦 חבילה</h2>
+        <button type="button" class="x-btn" aria-label="סגירה" data-close="pkgOverlay">✕</button>
+      </div>
+      <p class="dev-intro" id="pkgDesc"></p>
+      <div class="panel"><h3>התוכנות בחבילה</h3><ul id="pkgApps"></ul></div>
+      <p class="store-note hidden" id="pkgPay"></p>
+      <div id="pkgBody"></div>
+    </div>
   </div>
 
   <!-- התקנת האתר כאפליקציה -->
@@ -1084,6 +1115,7 @@
         <button type="button" data-atab="approved">מאושרות</button>
         <button type="button" data-atab="reports">🚩 דיווחים <span class="admin-count hidden" id="reportCount"></span></button>
         <button type="button" data-atab="blocked">⛔ חסומים</button>
+        <button type="button" data-atab="pkg">📦 חבילות <span class="admin-count hidden" id="pkgCount"></span></button>
       </div>
       <div id="adminBody"></div>
     </div>
@@ -1894,6 +1926,13 @@
     $("appCount").textContent = shown === 1 ? "תוכנה אחת" : shown + " תוכנות";
   }
   $("appSearch").addEventListener("input", filterCards);
+  // חיפוש שמגיע מבחוץ (למשל מדף השגיאה 404): ?q=מילה
+  (function () {
+    let q = ""; try { q = new URLSearchParams(location.search).get("q") || ""; } catch (e) {}
+    if (!q || IN_ASD) return;
+    $("appSearch").value = q.slice(0, 60); filterCards();
+    setTimeout(() => $("download").scrollIntoView({ behavior: "smooth" }), 300);
+  })();
   $("appFilter").addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
     appFilter = b.dataset.f;
@@ -2089,6 +2128,7 @@
     const n = document.querySelectorAll("#download .card").length;
     $("appCount").textContent = n === 1 ? "תוכנה אחת" : n + " תוכנות";
     $("stApps").textContent = n;
+    if ($("appSearch").value) filterCards(); // גם תוכנות של מפתחים עוברות את החיפוש
     loadCardStats();
   }
   loadDynCards();
@@ -2105,6 +2145,199 @@
     if (url) $("storeDl").href = url;
     $("storeOverlay").classList.remove("hidden");
   };
+
+  /* ================= חבילות בתשלום (למשל BHJ) =================
+     המנהל נועל תוכנות לחבילה. מי שלא רכש רואה "🔒 בחבילה" ובקשת רכישה; מי שרכש מקבל את קישור ההורדה.
+     Firebase:  pkg_apps/<תוכנה> {locked, pkg} – ציבורי | pkg_links/<תוכנה> {url, apk, pkg} – רק לרוכשים
+                packages/<משתמש> {BHJ: true}   – המנהל מאשר | pkg_requests/<משתמש> – בקשות רכישה */
+  // ↓ כאן עורכים את פרטי החבילות: שם, הסבר, מחיר ואיך משלמים ↓
+  const PACKAGES = {
+    BHJ: {
+      name: "חבילת BHJ",
+      desc: "חבילה שפותחת תוכנות מיוחדות שלא זמינות להורדה רגילה. אחרי שהמנהל מאשר את הרכישה – כפתורי ההורדה נפתחים לכם בחשבון.",
+      price: "",   // למשל: "50 ₪ לשנה"
+      pay: ""      // למשל: "תשלום בביט למספר 050-0000000, ובהערה לכתוב את האימייל שלכם"
+    }
+  };
+  // ↑ עד כאן ↑
+  const pkgName = p => (PACKAGES[p] && PACKAGES[p].name) || "חבילת " + p;
+  let LOCKED = {}, MY_PKGS = {}, PKG_LINKS = {}, myPkgReq = null;
+  const hasPkg = p => isAdmin || !!MY_PKGS[p];
+  const appKeyOfPage = () => DYN_ID ? "D_" + DYN_ID : (PAGE || "ASD").toUpperCase();
+
+  async function loadLocks() {
+    try {
+      const s = await db.collection("pkg_apps").get();
+      LOCKED = {}; s.forEach(d => { if (d.data().locked) LOCKED[d.id] = d.data().pkg || "BHJ"; });
+    } catch (e) {}
+    applyLocks();
+  }
+  async function loadMyPkgs(u) {
+    MY_PKGS = {}; PKG_LINKS = {}; myPkgReq = null;
+    if (u) {
+      try { const d = await db.collection("packages").doc(u.uid).get(); if (d.exists) { const x = d.data(); Object.keys(x).forEach(k => { if (x[k] === true) MY_PKGS[k] = true; }); } } catch (e) {}
+      try { const r = await db.collection("pkg_requests").doc(u.uid).get(); if (r.exists) myPkgReq = r.data(); } catch (e) {}
+      if (isAdmin) try { // מספר בקשות רכישה שממתינות – על הלשונית בלוח הניהול
+        const n = (await db.collection("pkg_requests").get()).size;
+        $("pkgCount").textContent = n; $("pkgCount").classList.toggle("hidden", !n);
+      } catch (e) {}
+    }
+    applyLocks();
+  }
+  async function linkFor(key) {
+    if (PKG_LINKS[key]) return PKG_LINKS[key];
+    try { const d = await db.collection("pkg_links").doc(key).get(); if (d.exists) return (PKG_LINKS[key] = d.data()); } catch (e) {}
+    return null;
+  }
+  // קישור ההורדה: שומרים את המקורי, כדי להחזיר אותו אם הנעילה מבוטלת
+  const setHref = (a, url) => { if (a.dataset.orig === undefined) a.dataset.orig = a.getAttribute("href") || ""; if (url) a.href = url; else a.removeAttribute("href"); };
+  const restoreHref = a => { if (a.dataset.orig !== undefined) { if (a.dataset.orig) a.href = a.dataset.orig; delete a.dataset.orig; } };
+
+  function applyLocks() {
+    // כרטיסים בגלריה
+    document.querySelectorAll("#download .card").forEach(card => {
+      const st = card.querySelector(".card-stats[data-app]"); if (!st) return;
+      const key = st.dataset.app, pkg = LOCKED[key];
+      const dls = [...card.querySelectorAll(".card-actions a.btn:not(.alt)")];
+      let lockBtn = card.querySelector(".pkg-btn");
+      card.classList.toggle("pkg-locked", !!pkg);
+      if (!pkg) { dls.forEach(a => { a.classList.remove("pkg-hide"); restoreHref(a); }); if (lockBtn) lockBtn.remove(); return; }
+      if (hasPkg(pkg)) {
+        if (lockBtn) lockBtn.remove();
+        dls.forEach(a => a.classList.remove("pkg-hide"));
+        linkFor(key).then(l => { if (l) dls.forEach(a => setHref(a, a.classList.contains("apk-btn") ? (l.apk || l.url) : l.url)); });
+      } else {
+        dls.forEach(a => { a.classList.add("pkg-hide"); setHref(a, ""); });
+        if (!lockBtn) {
+          lockBtn = document.createElement("button"); lockBtn.type = "button"; lockBtn.className = "btn pkg-btn";
+          lockBtn.onclick = e => { e.stopPropagation(); openPkg(pkg); };
+          card.querySelector(".card-actions").prepend(lockBtn);
+        }
+        lockBtn.textContent = "🔒 זמין ב" + pkgName(pkg);
+      }
+    });
+    // דף התוכנה
+    const key = appKeyOfPage(), pkg = LOCKED[key], lock = !!pkg && !hasPkg(pkg);
+    ["apDownload", "apApk", "apStore"].forEach(id => $(id).classList.toggle("pkg-hide", lock));
+    $("apLock").classList.toggle("hidden", !lock);
+    if (lock) {
+      $("apLockTitle").textContent = "🔒 " + APP.name + " – זמינה ב" + pkgName(pkg);
+      $("apLockBtn").onclick = () => openPkg(pkg);
+      setHref($("apDownload"), ""); setHref($("apApk"), "");
+    } else if (pkg) {
+      linkFor(key).then(l => { if (l) { setHref($("apDownload"), l.url); if (APP.apk) setHref($("apApk"), l.apk || l.url); } });
+    } else { restoreHref($("apDownload")); restoreHref($("apApk")); }
+  }
+
+  // חלון החבילה: מה יש בה, מחיר, ובקשת רכישה
+  function openPkg(pkg) {
+    const P = PACKAGES[pkg] || { name: pkgName(pkg), desc: "" };
+    $("pkgTitle").textContent = "📦 " + P.name + (P.price ? " · " + P.price : "");
+    $("pkgDesc").textContent = P.desc || "";
+    const ul = $("pkgApps"); ul.innerHTML = "";
+    Object.keys(LOCKED).filter(k => LOCKED[k] === pkg).forEach(k => { const li = document.createElement("li"); li.textContent = (ALL_APPS[k] && ALL_APPS[k].name) || k; ul.appendChild(li); });
+    if (!ul.children.length) ul.innerHTML = "<li>עוד אין תוכנות בחבילה</li>";
+    $("pkgPay").textContent = P.pay ? "💳 איך משלמים: " + P.pay : "";
+    $("pkgPay").classList.toggle("hidden", !P.pay);
+    const body = $("pkgBody"); body.innerHTML = "";
+    if (!me) {
+      body.innerHTML = '<button type="button" class="primary-btn">🔑 התחברו כדי לבקש את החבילה</button>';
+      body.firstChild.onclick = () => { $("pkgOverlay").classList.add("hidden"); $("overlay").classList.remove("hidden"); };
+    } else if (hasPkg(pkg)) {
+      body.innerHTML = '<p class="pkg-ok">✔ החבילה פעילה בחשבון שלך – כפתורי ההורדה פתוחים.</p>';
+    } else if (myPkgReq && myPkgReq.pkg === pkg) {
+      body.innerHTML = '<p class="pkg-ok">⏳ הבקשה שלך נשלחה. אחרי שהמנהל יאשר – התוכנות ייפתחו לך כאן אוטומטית.</p>';
+    } else {
+      body.innerHTML = '<div class="field"><label for="pkgNote">הערה למנהל <span class="hint">למשל: שילמתי בביט מהמספר 050-...</span></label>' +
+        '<textarea id="pkgNote" rows="2" maxlength="300"></textarea></div>' +
+        '<button type="button" class="primary-btn" id="pkgSend">💳 שליחת בקשת רכישה</button><p class="msg" id="pkgMsg"></p>';
+      $("pkgSend").onclick = async () => {
+        $("pkgSend").disabled = true;
+        const note = $("pkgNote").value.trim().slice(0, 300);
+        try {
+          await db.collection("pkg_requests").doc(me.uid).set({ uid: me.uid, name: me.displayName || "", email: me.email || "", pkg, note,
+            ts: firebase.firestore.FieldValue.serverTimestamp() });
+          myPkgReq = { pkg };
+          mailEvent("admin", { kind: "pkg", name: me.displayName || "", text: P.name + (note ? "\n" + note : "") });
+          openPkg(pkg);
+        } catch (e) { $("pkgSend").disabled = false; $("pkgMsg").textContent = e.code === "permission-denied" ? "אין הרשאה (צריך לעדכן את הכללים ב-Firebase)" : "השליחה נכשלה, נסו שוב"; }
+      };
+    }
+    $("pkgOverlay").classList.remove("hidden");
+  }
+
+  // לוח ניהול – לשונית "📦 חבילות": בקשות, מי רכש, ואילו תוכנות נעולות
+  async function renderPkgAdmin(body) {
+    const FV = firebase.firestore.FieldValue;
+    const sec = t => { const h = document.createElement("h3"); h.className = "section-title"; h.textContent = t; body.appendChild(h); };
+    const row = (title, sub, btns) => {
+      const r = document.createElement("div"); r.className = "app-row";
+      r.innerHTML = '<div class="info"><b></b><small></small></div><div class="acts"></div>';
+      r.querySelector("b").textContent = title; r.querySelector("small").textContent = sub;
+      btns.forEach(([t, cls, fn]) => { const b = document.createElement("button"); b.type = "button"; b.className = cls; b.textContent = t; b.onclick = fn; r.querySelector(".acts").appendChild(b); });
+      body.appendChild(r);
+    };
+    const fail = e => alert("הפעולה נכשלה: " + (e.code === "permission-denied" ? "צריך לעדכן את הכללים ב-Firebase" : (e.code || e.message)));
+    let reqs, owners;
+    try { [reqs, owners] = await Promise.all([db.collection("pkg_requests").get(), db.collection("packages").get()]); }
+    catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
+    body.innerHTML = "";
+
+    sec("💳 בקשות רכישה (" + reqs.size + ")");
+    if (reqs.empty) body.insertAdjacentHTML("beforeend", '<p class="empty-note">אין בקשות חדשות</p>');
+    reqs.forEach(d => {
+      const x = d.data();
+      row((x.name || "משתמש") + " · " + pkgName(x.pkg), (x.email || "") + (x.note ? " · 📝 " + x.note : ""), [
+        ["✔ אישור", "small-btn ok-btn", async () => {
+          try { const b = db.batch();
+            b.set(db.collection("packages").doc(d.id), { [x.pkg]: true, name: x.name || "", email: x.email || "", at: FV.serverTimestamp() }, { merge: true });
+            b.delete(d.ref); await b.commit(); toast("✔ החבילה אושרה ל-" + (x.name || x.email)); renderAdmin(); } catch (e) { fail(e); } }],
+        ["✖ דחייה", "small-btn alt del-btn", async () => { if (!confirm("לדחות את הבקשה?")) return; try { await d.ref.delete(); renderAdmin(); } catch (e) { fail(e); } }]
+      ]);
+    });
+    $("pkgCount").textContent = reqs.size; $("pkgCount").classList.toggle("hidden", !reqs.size);
+
+    sec("👥 מי רכש");
+    let any = false;
+    owners.forEach(d => {
+      const x = d.data(), pk = Object.keys(PACKAGES).concat(Object.keys(x)).filter((k, i, a) => a.indexOf(k) === i && x[k] === true);
+      if (!pk.length) return; any = true;
+      row(x.name || x.email || d.id, (x.email || "") + " · " + pk.map(pkgName).join(", "),
+        pk.map(p => ["ביטול " + pkgName(p), "small-btn alt del-btn", async () => {
+          if (!confirm("לבטל את " + pkgName(p) + " ל-" + (x.name || x.email) + "?")) return;
+          try { await d.ref.update({ [p]: false }); renderAdmin(); } catch (e) { fail(e); } }]));
+    });
+    if (!any) body.insertAdjacentHTML("beforeend", '<p class="empty-note">עוד אף אחד לא רכש</p>');
+
+    sec("🔒 אילו תוכנות בחבילה");
+    body.insertAdjacentHTML("beforeend", '<p class="hint">טיפ: כשנועלים תוכנה – כדאי לתת קישור הורדה <b>חדש</b>, כי הקישור הישן כבר הופיע באתר ואנשים אולי שמרו אותו.</p>');
+    Object.keys(ALL_APPS).forEach(key => {
+      const a = ALL_APPS[key], pkg = LOCKED[key];
+      row(a.name, pkg ? "🔒 נעולה ב" + pkgName(pkg) : "🔓 פתוחה לכולם", [pkg
+        ? ["🔓 פתיחה לכולם", "small-btn alt", async () => {
+            if (!confirm("לפתוח את \"" + a.name + "\" לכולם?")) return;
+            try { const l = await linkFor(key), b = db.batch();
+              b.delete(db.collection("pkg_apps").doc(key)); b.delete(db.collection("pkg_links").doc(key));
+              if (key.startsWith("D_") && l && l.url) b.update(db.collection("apps").doc(key.slice(2)), { download: l.url }); // מחזירים את הקישור לתוכנת המפתח
+              await b.commit(); delete PKG_LINKS[key]; await loadLocks(); renderAdmin(); } catch (e) { fail(e); } }]
+        : ["🔒 נעילה ל" + pkgName("BHJ"), "small-btn primary", async () => {
+            const url = httpsUrl(prompt("קישור ההורדה שרק רוכשי החבילה יקבלו (https://...):", a.download && a.download !== "#" ? a.download : ""));
+            if (!url) return alert("צריך קישור שמתחיל ב-https://");
+            let apk = "";
+            if (a.apk) apk = httpsUrl(prompt("קישור ההורדה לטלפון (אנדרואיד) לרוכשים:", a.apk)) || "";
+            try { const b = db.batch();
+              b.set(db.collection("pkg_links").doc(key), { url, apk, pkg: "BHJ" });
+              b.set(db.collection("pkg_apps").doc(key), { locked: true, pkg: "BHJ" });
+              if (key.startsWith("D_")) b.update(db.collection("apps").doc(key.slice(2)), { download: "" }); // הקישור הציבורי נמחק
+              await b.commit(); delete PKG_LINKS[key]; await loadLocks(); toast("🔒 " + a.name + " נעולה לחבילה"); renderAdmin(); } catch (e) { fail(e); } }]]);
+    });
+  }
+
+  $("apLockBtn").onclick = () => openPkg("BHJ");
+  auth.onAuthStateChanged(u => loadMyPkgs(u));
+  loadLocks();
+  // כרטיסים של מפתחים נוספים אחרי הטעינה – מחילים עליהם את הנעילה
+  new MutationObserver(() => applyLocks()).observe(document.querySelector("#download .grid"), { childList: true });
 
   // ----- חלון המפתחים -----
   function openDev(e) {
@@ -2258,6 +2491,7 @@
     body.innerHTML = '<p class="empty-note">טוען...</p>';
     if (adminTab === "reports") return renderReports(body);
     if (adminTab === "blocked") return renderBlocked(body);
+    if (adminTab === "pkg") return renderPkgAdmin(body);
     let snap;
     try { snap = await db.collection("apps").where("status", "==", adminTab).get(); }
     catch (e) { body.innerHTML = '<p class="empty-note">שגיאה: ' + esc(e.code) + " (צריך לעדכן את הכללים ב-Firebase)</p>"; return; }
