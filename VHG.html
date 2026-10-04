@@ -206,7 +206,7 @@
     appId: "1:19523576049:web:636bdc6f6d055479060950"
   });
   const auth = firebase.auth(), db = firebase.firestore(), FV = firebase.firestore.FieldValue;
-  const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com", ADMINS = ["yosefdayan2018@gmail.com", "0772292196ai@gmail.com"];
   const MAIL_URL = "https://script.google.com/macros/s/AKfycbwyWvpdgdveIEu4LgWESyDlRqUwlzjWjExKxDYg_NNqYUibUaVu-Brq0h9pCbSYdvTb/exec";
   const NOW = () => FV.serverTimestamp();
   const $ = id => document.getElementById(id);
@@ -246,7 +246,7 @@
   $("lUp").onclick = () => auth.createUserWithEmailAndPassword($("lEmail").value.trim(), $("lPass").value).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
   let stopMine = null, stopPend = null;
   auth.onAuthStateChanged(u => {
-    me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    me = u; isAdmin = !!(u && ADMINS.includes(u.email) && u.emailVerified);
     put($("authBox"), u ? h("button", { type: "button", class: "tb", title: u.email || "", onclick: () => auth.signOut() }, "🚪", h("span", { class: "lbl" }, " יציאה"))
                         : h("button", { type: "button", class: "tb", onclick: () => needLogin("") }, "🔑", h("span", { class: "lbl" }, " התחברות")));
     $("pendBtn").classList.toggle("hidden", !isAdmin);

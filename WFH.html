@@ -670,7 +670,7 @@
     appId: "1:19523576049:web:636bdc6f6d055479060950"
   });
   const auth = firebase.auth(), db = firebase.firestore();
-  const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com", ADMINS = ["yosefdayan2018@gmail.com", "0772292196ai@gmail.com"];
   // שרת המיילים (Apps Script) – אותו שרת של האתר
   const MAIL_URL = "https://script.google.com/macros/s/AKfycbwyWvpdgdveIEu4LgWESyDlRqUwlzjWjExKxDYg_NNqYUibUaVu-Brq0h9pCbSYdvTb/exec";
   // שליחת אירוע לשרת המיילים. מחזיר את התשובה של השרת (או "" אם נכשל)
@@ -822,7 +822,7 @@
   // ===== חשבון =====
   let authReady = false;
   auth.onAuthStateChanged(async u => {
-    authReady = true; me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    authReady = true; me = u; isAdmin = !!(u && ADMINS.includes(u.email) && u.emailVerified);
     if (!registering) { profile = null; profileReady = false; }
     if (u) {
       try { const d = await db.collection("forum_profiles").doc(u.uid).get(); if (d.exists) profile = d.data(); } catch (e) {}

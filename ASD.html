@@ -1349,7 +1349,7 @@
   auth.onAuthStateChanged(user => { updateBar(user); startChat(user); authReady = true; checkHash(); if (onDetailsPage()) { loadAppStats(); renderDemo(); } devAuthChanged(user); });
 
   /* ===== צ'אט: משתמשים כותבים, המנהל רואה ועונה ===== */
-  const ADMIN_EMAIL = "yosefdayan2018@gmail.com"; // המייל של בעל האתר
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com", ADMINS = ["yosefdayan2018@gmail.com", "0772292196ai@gmail.com"]; // המייל של בעל האתר
   // ↓ כתובת שרת המיילים (Apps Script). כל עוד ריק – לא נשלחות התראות במייל
   const MAIL_URL = "https://script.google.com/macros/s/AKfycbwyWvpdgdveIEu4LgWESyDlRqUwlzjWjExKxDYg_NNqYUibUaVu-Brq0h9pCbSYdvTb/exec";
   const db = firebase.firestore();
@@ -1461,7 +1461,7 @@
     me = user;
     $("chatBox").classList.add("hidden");
     if (!user) { $("chatFab").classList.add("hidden"); return; }
-    isAdmin = user.email === ADMIN_EMAIL && user.emailVerified;
+    isAdmin = ADMINS.includes(user.email) && user.emailVerified;
     beat(); beatTimer = setInterval(beat, 40 * 1000);
     $("chatFab").title = isAdmin ? "הודעות מהמשתמשים" : "צ'אט איתנו";
     $("chatFab").classList.remove("hidden");
