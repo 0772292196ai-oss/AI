@@ -3070,6 +3070,26 @@
   $("aiClose").onclick = () => { $("aiBox").classList.add("hidden"); $("aiFab").classList.remove("hidden"); };
   $("aiBig").onclick = () => $("aiBox").classList.toggle("big");
 
+  // תשובה מקומית בלי אינטרנט/שירות – כששירות ה-AI לא זמין
+  function aiLocal(q) {
+    const base = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
+    const link = k => base + (k.startsWith("D_") ? "?app=" + k.slice(2) : k + ".html");
+    const words = q.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter(w => w.length > 1);
+    const hits = Object.entries(ALL_APPS).map(([k, a]) => {
+      const hay = ((a.name || "") + " " + (a.desc || "") + " " + (a.tag || "")).toLowerCase();
+      return [k, a, words.reduce((n, w) => n + (hay.includes(w) ? (String(a.name || "").toLowerCase().includes(w) ? 3 : 1) : 0), 0)];
+    }).filter(x => x[2] > 0).sort((x, y) => y[2] - x[2]).slice(0, 3);
+    const has = re => re.test(q);
+    if (has(/הורד|להוריד|התקנ|להתקין|איך מתקינים/)) return "כדי להוריד: נכנסים לדף התוכנה ולוחצים על כפתור ההורדה הגדול. אחרי ההורדה פותחים את הקובץ ולוחצים \"הבא\" עד הסוף. אם Windows מציג אזהרה כחולה – לוחצים \"מידע נוסף\" ← \"הפעל בכל זאת\"." +
+      (hits.length ? "\n\nאולי חיפשתם: " + hits.map(([k, a]) => a.name + ": " + link(k)).join("\n") : "");
+    if (hits.length) return hits.map(([k, a]) => a.name + " – " + String(a.desc || "").slice(0, 180) + "\n" + link(k)).join("\n\n");
+    if (has(/פורום|קהילה/)) return "לפורום העזרה והתמיכה: " + base + "WFH.html";
+    if (has(/תוסף|תוספים|כרום/)) return "לחנות התוספים לכרום: " + base + "VHG.html";
+    if (has(/פיתוח|לפתח|הזמנ|חבילה|מחיר/)) return "אפשר להזמין תוכנה אישית לפי חבילה (50 / 100 / 500 ₪): " + base + "#order";
+    if (has(/צור קשר|נציג|בעיה|תקלה|לא עובד/)) return "אפשר לכתוב לנו בצ'אט באתר (כפתור 💬) ונחזור אליכם בהקדם.";
+    return "אני כאן כדי לעזור עם התוכנות באתר 🙂 כתבו את שם התוכנה או מה אתם מחפשים (למשל \"אוטובוסים\" או \"איך מתקינים\"). לשאלות אחרות – כתבו לנו בצ'אט 💬";
+  }
+
   let aiBusy = false;
   async function aiAsk() {
     const q = $("aiInput").value.trim();
@@ -3082,16 +3102,24 @@
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 45000);
     try {
-      const res = await fetch(AI_URL, {
-        method: "POST", signal: ctrl.signal,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "openai", messages: [{ role: "system", content: aiSystem() + "\n\nהגולש נמצא עכשיו " +
+      const messages = [{ role: "system", content: aiSystem() + "\n\nהגולש נמצא עכשיו " +
           (PAGE ? "בדף הפרטים של " + APP.name + " – אם השאלה לא מציינת תוכנה, כנראה שהיא על התוכנה הזאת." : "בדף הראשי של האתר.") +
-          (me ? " הגולש מחובר." : " הגולש לא מחובר.") }, ...aiHistory.slice(-10)] })
-      });
-      if (!res.ok) throw new Error(res.status);
-      const j = await res.json();
-      const a = String((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "")
+          (me ? " הגולש מחובר." : " הגולש לא מחובר.") }, ...aiHistory.slice(-10)];
+      let raw = "";
+      // 1) דרך השרת שלנו (Apps Script) – 2) ישירות לשירות – 3) תשובה מקומית מהקטלוג
+      try {
+        const r = await fetch(MAIL_URL, { method: "POST", signal: ctrl.signal, headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ type: "ai", messages }) });
+        if (r.ok) raw = (await r.text()).trim();
+        if (/^(forbidden|bad|error)/i.test(raw) || raw.startsWith("<")) raw = "";
+      } catch (e) {}
+      if (!raw) try {
+        const r = await fetch(AI_URL, { method: "POST", signal: ctrl.signal, headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "openai", messages }) });
+        if (r.ok) { const j = await r.json(); raw = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || ""; }
+      } catch (e) {}
+      if (!raw) raw = aiLocal(q);
+      const a = String(raw)
         .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, "$1: $2") // קישור בסגנון Markdown ← טקסט + כתובת
         .replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#+\s*/gm, "").trim(); // בלי סימני Markdown
       if (!a) throw new Error("empty");
