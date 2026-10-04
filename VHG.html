@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>חנות תוספים לכרום – תוכנה בקליק</title>
+<meta name="description" content="תוספים שימושיים לדפדפן Chrome ו-Edge בעברית – כל תוסף נבדק ומאושר לפני שהוא עולה.">
+<meta name="theme-color" content="#05060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧩%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060c; --bg2: #0a0c18; --paper: #0e1122; --card: #0f1326; --card2: #161b33;
+    --line: rgba(160,170,255,.11); --line2: rgba(160,170,255,.22);
+    --ink: #f5f7ff; --ink2: #c9d0ee; --muted: #8a93b8;
+    --v: #7c5cff; --c: #22d3ee; --gold: #fbbf24; --green: #34d399; --red: #fb7185;
+    --grad: linear-gradient(115deg, #7c5cff 0%, #b15cff 45%, #22d3ee 100%);
+    --cool: linear-gradient(115deg, #22d3ee, #7c5cff);
+    --glass: rgba(255,255,255,.04); --glass2: rgba(255,255,255,.075);
+    --pill: 999px; --r: 24px;
+    --sh: 0 24px 50px -26px rgba(0,0,0,.95); --sh-lg: 0 44px 100px -34px rgba(0,0,0,1);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; padding-top: 100px; font-family: "Assistant", "Heebo", Arial, sans-serif; font-size: 16px; line-height: 1.65; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background: radial-gradient(900px 650px at 88% -10%, rgba(34,211,238,.2), transparent 60%), radial-gradient(800px 600px at 0% 12%, rgba(124,92,255,.24), transparent 60%), linear-gradient(180deg, var(--bg2), var(--bg) 60%); }
+  h1, h2, h3, .logo, .btn { font-family: "Heebo", "Assistant", Arial, sans-serif; }
+  a { color: inherit; } button { font: inherit; cursor: pointer; } img { max-width: 100%; }
+  .hidden { display: none !important; }
+  :focus-visible { outline: 2px solid var(--c); outline-offset: 3px; border-radius: 10px; }
+  .top { position: fixed; top: 14px; right: 14px; left: 14px; z-index: 30; height: 66px; max-width: 1260px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 16px;
+    background: rgba(10,12,26,.7); backdrop-filter: blur(20px) saturate(170%); -webkit-backdrop-filter: blur(20px) saturate(170%); border: 1px solid var(--line2); border-radius: var(--pill); box-shadow: 0 26px 60px -30px #000; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 900; font-size: 1.25rem; letter-spacing: -.4px; margin-inline-end: auto; min-width: 0; }
+  .logo .mk { width: 42px; height: 42px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 1.35rem; background: var(--cool); box-shadow: 0 10px 24px -8px rgba(34,211,238,.9); }
+  .logo b { background: var(--cool); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .logo small { display: block; font-size: .72rem; font-weight: 700; color: var(--muted); }
+  .tb { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--pill); font-weight: 800; font-size: .93rem; color: var(--ink); background: var(--glass); border: 1px solid var(--line2); white-space: nowrap; transition: background .2s, border-color .2s; }
+  .tb:hover { background: var(--glass2); border-color: rgba(124,92,255,.55); }
+  .tb.on, .tb.hot { color: #fff; border-color: transparent; background: var(--grad); box-shadow: 0 10px 26px -10px rgba(124,92,255,1); }
+  .tb .n { background: #e11d48; color: #fff; border-radius: var(--pill); padding: 0 7px; font-size: .75rem; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  .hero { text-align: center; padding: 40px 0 22px; }
+  .hero h1 { margin: 0 0 12px; font-size: clamp(2.3rem, 6vw, 4.2rem); font-weight: 900; letter-spacing: -2px; line-height: 1.05; }
+  .hero h1 span { background: linear-gradient(90deg, #22d3ee, #a78bfa, #f0abfc, #22d3ee); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 8s linear infinite; }
+  @keyframes shine { to { background-position: 300% 0; } }
+  .hero p { margin: 0 auto; max-width: 640px; color: var(--ink2); font-size: 1.15rem; }
+  .trust { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; color: var(--muted); font-weight: 800; font-size: .92rem; }
+  .finder { margin: 26px auto 0; max-width: 760px; display: flex; gap: 8px; padding: 8px; border-radius: var(--pill); border: 1px solid transparent;
+    background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, rgba(34,211,238,.6), rgba(160,170,255,.14) 45%, rgba(124,92,255,.55)) border-box; box-shadow: var(--sh-lg); }
+  .finder input { flex: 1; min-width: 0; font: inherit; font-weight: 700; color: var(--ink); padding: 12px 18px; border-radius: var(--pill); border: 0; background: transparent; }
+  .finder input:focus { outline: none; }
+  .finder select { font: inherit; font-weight: 800; color: var(--ink); padding: 10px 14px; border-radius: var(--pill); border: 1px solid var(--line); background: rgba(0,0,0,.3); }
+  select option { background: var(--paper); color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0 0; }
+  .chip { padding: 8px 16px; border-radius: var(--pill); font-weight: 800; font-size: .92rem; color: var(--ink2); background: var(--glass); border: 1px solid var(--line); transition: all .2s; }
+  .chip:hover { border-color: var(--line2); color: var(--ink); }
+  .chip.on { color: #fff; border-color: transparent; background: var(--grad); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 28px 0 16px; }
+  .bar b { font-size: 1.1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 60px; }
+  .card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px; cursor: pointer; border-radius: var(--r); border: 1px solid transparent;
+    background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, rgba(34,211,238,.45), rgba(160,170,255,.1) 45%, rgba(124,92,255,.45)) border-box;
+    box-shadow: var(--sh); transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+  .card:hover { transform: translateY(-7px); box-shadow: 0 40px 80px -30px rgba(34,211,238,.45); }
+  .chead { display: flex; align-items: center; gap: 14px; }
+  .ico { width: 62px; height: 62px; flex: none; border-radius: 18px; display: grid; place-items: center; font-size: 1.9rem; overflow: hidden; background: var(--grad); box-shadow: 0 12px 26px -12px rgba(124,92,255,1); }
+  .ico img { width: 100%; height: 100%; object-fit: cover; }
+  .chead h3 { margin: 0; font-size: 1.15rem; line-height: 1.3; }
+  .chead small { color: var(--muted); font-weight: 800; }
+  .card p { margin: 0; color: var(--ink2); font-size: .97rem; line-height: 1.6; flex: 1; }
+  .cfoot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .pill { font-size: .78rem; font-weight: 900; padding: 3px 11px; border-radius: var(--pill); background: var(--glass2); color: var(--ink2); }
+  .pill.cat { color: #a5f3fc; background: rgba(34,211,238,.1); border: 1px solid rgba(34,211,238,.25); }
+  .st { position: absolute; top: 14px; left: 14px; font-size: .75rem; font-weight: 900; padding: 3px 10px; border-radius: var(--pill); }
+  .st.pending { background: rgba(251,191,36,.16); color: var(--gold); }
+  .st.approved { background: rgba(52,211,153,.16); color: var(--green); }
+  .st.rejected { background: rgba(251,113,133,.15); color: var(--red); }
+  .adm { display: flex; gap: 8px; margin-top: 4px; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+  .empty .big { font-size: 3.4rem; }
+  .empty h3 { color: var(--ink); margin: 8px 0; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: var(--pill); font-weight: 800; font-size: 1rem; border: 1px solid transparent; text-decoration: none; color: #fff; background: var(--grad); background-size: 200% 100%; box-shadow: 0 14px 30px -14px rgba(124,92,255,1); transition: transform .15s, background-position .35s; cursor: pointer; }
+  .btn:hover { transform: translateY(-2px); background-position: 100% 0; }
+  .btn:active { transform: scale(.97); }
+  .btn.sm { padding: 8px 14px; font-size: .9rem; }
+  .btn.ok { background: linear-gradient(115deg, #16a34a, #34d399); box-shadow: 0 12px 26px -12px rgba(52,211,153,1); }
+  .btn.alt { color: var(--ink); background: var(--glass); border-color: var(--line2); box-shadow: none; }
+  .btn.danger { color: var(--red); background: rgba(251,113,133,.1); border-color: rgba(251,113,133,.35); box-shadow: none; }
+  .btn:disabled { opacity: .6; cursor: default; transform: none; }
+  .overlay { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(3,4,10,.74); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .modal { width: 100%; max-width: 720px; max-height: calc(100vh - 28px); overflow-y: auto; border-radius: 28px; padding: 26px; border: 1px solid transparent;
+    background: linear-gradient(var(--paper), var(--paper)) padding-box, linear-gradient(135deg, rgba(34,211,238,.55), rgba(160,170,255,.12) 45%, rgba(124,92,255,.55)) border-box; box-shadow: var(--sh-lg); animation: pop .25s cubic-bezier(.2,.9,.3,1.2); }
+  .modal.sm { max-width: 430px; }
+  @keyframes pop { from { opacity: 0; transform: scale(.95) translateY(10px); } }
+  .mhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+  .mhead h2 { margin: 0; font-size: 1.4rem; }
+  .x { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--glass); border: 1px solid var(--line); color: var(--muted); }
+  .field { margin-bottom: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  label { display: block; font-weight: 800; margin-bottom: 6px; color: var(--ink2); }
+  .hint { font-weight: 400; color: var(--muted); font-size: .84rem; }
+  input, textarea, select { width: 100%; font: inherit; font-size: 1rem; color: var(--ink); padding: 12px 15px; border: 1px solid var(--line2); border-radius: 16px; background: rgba(0,0,0,.3); }
+  textarea { resize: vertical; min-height: 100px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--v); box-shadow: 0 0 0 4px rgba(124,92,255,.18); }
+  .msg { min-height: 1.3em; margin: 8px 0 0; font-weight: 800; color: var(--red); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .prev { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .prev div { position: relative; width: 110px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line2); }
+  .prev div.icon { width: 70px; }
+  .prev img { width: 100%; height: 100%; object-fit: cover; }
+  .prev button { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: rgba(0,0,0,.7); color: #fff; font-size: .7rem; }
+  .shots { display: flex; gap: 8px; overflow-x: auto; margin: 14px 0; padding-bottom: 4px; }
+  .shots img { height: 180px; border-radius: 14px; border: 1px solid var(--line2); cursor: zoom-in; }
+  .desc { white-space: pre-wrap; color: var(--ink2); line-height: 1.8; }
+  .box { margin-top: 14px; padding: 16px 18px; border-radius: 20px; background: var(--glass); border: 1px solid var(--line); }
+  .box h3 { margin: 0 0 8px; font-size: 1.05rem; }
+  .box ol { margin: 0; padding-inline-start: 22px; color: var(--ink2); line-height: 1.9; }
+  .box code { direction: ltr; unicode-bidi: embed; background: rgba(0,0,0,.35); padding: 1px 7px; border-radius: 6px; font-size: .9em; }
+  .note { margin-top: 14px; padding: 12px 16px; border-radius: 16px; background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.3); color: var(--ink2); }
+  .lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(0,0,0,.94); cursor: zoom-out; }
+  .lightbox img { max-width: 94vw; max-height: 92vh; border-radius: 12px; }
+  .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 60; max-width: calc(100vw - 32px); text-align: center; color: #fff; font-weight: 800; padding: 12px 24px; border-radius: var(--pill); background: linear-gradient(#141833, #141833) padding-box, var(--cool) border-box; border: 1.5px solid transparent; box-shadow: var(--sh-lg); animation: pop .3s ease; }
+  .foot { text-align: center; color: var(--muted); padding: 30px 20px 50px; border-top: 1px solid var(--line); font-size: .9rem; }
+  .foot a { color: var(--ink2); }
+  @media (max-width: 860px) {
+    body { padding-top: 88px; }
+    .top { top: 10px; right: 10px; left: 10px; height: 60px; gap: 6px; padding: 0 6px 0 10px; }
+    .logo small, .tb .lbl { display: none; }
+    .tb { padding: 9px 12px; }
+    .finder { flex-direction: column; border-radius: 26px; }
+    .row2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="#"><span class="mk">🧩</span><span>חנות <b>תוספים</b><small>לכרום ול-Edge · כל תוסף נבדק</small></span></a>
+    <button type="button" class="tb hidden" id="pendBtn">⏳<span class="lbl"> לאישור</span> <span class="n hidden" id="pendN"></span></button>
+    <button type="button" class="tb" id="mineBtn">📋<span class="lbl"> שלי</span></button>
+    <span id="authBox"></span>
+    <button type="button" class="tb hot" id="addBtn">➕<span class="lbl"> שליחת תוסף</span></button>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>תוספים לדפדפן, <span>בעברית</span></h1>
+      <p>תוספים שימושיים לכרום ול-Edge: חוסמי פרסומות, כלים לעברית, פרודוקטיביות ועוד. כל תוסף נבדק ומאושר ידנית לפני שהוא עולה.</p>
+      <div class="trust"><span>✔ נבדק לפני פרסום</span><span>✔ חינם</span><span>✔ הוראות התקנה בעברית</span></div>
+      <div class="finder">
+        <input id="q" type="search" placeholder="🔍 חיפוש תוסף (למשל: פרסומות, תרגום, יוטיוב)" aria-label="חיפוש">
+        <select id="sort" aria-label="מיון"><option value="new">🆕 הכי חדשים</option><option value="dl">🔥 הכי מורדים</option><option value="name">🔤 לפי שם</option></select>
+      </div>
+      <div class="chips" id="cats"></div>
+    </section>
+    <div class="bar"><b id="count">טוען תוספים...</b></div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="foot">🧩 חנות תוספים · חלק מ<a href="./">תוכנה בקליק</a> · תוספים נבדקים לפני פרסום, אבל ההתקנה על אחריות המשתמש. מצאתם בעיה בתוסף? כתבו לנו בצ'אט באתר.</footer>
+
+  <div class="overlay hidden" id="viewOv"><div class="modal" id="viewBody"></div></div>
+  <div class="overlay hidden" id="addOv"><div class="modal">
+    <div class="mhead"><h2 id="addTitle">➕ שליחת תוסף</h2><button type="button" class="x" data-close="addOv" aria-label="סגירה">✕</button></div>
+    <p class="hint" style="margin-top:0">התוסף יופיע בחנות רק אחרי שהמנהל יבדוק ויאשר אותו. עריכה של תוסף מאושר מחזירה אותו לבדיקה.</p>
+    <div class="row2">
+      <div class="field"><label for="fName">שם התוסף</label><input id="fName" maxlength="60"></div>
+      <div class="field"><label for="fVer">גרסה</label><input id="fVer" maxlength="12" placeholder="1.0.0" dir="ltr"></div>
+    </div>
+    <div class="field"><label for="fShort">תיאור קצר <span class="hint">(שורה אחת)</span></label><input id="fShort" maxlength="120"></div>
+    <div class="row2">
+      <div class="field"><label for="fCat">קטגוריה</label><select id="fCat"></select></div>
+      <div class="field"><label for="fDev">שם המפתח</label><input id="fDev" maxlength="40"></div>
+    </div>
+    <div class="field"><label for="fDesc">תיאור מלא</label><textarea id="fDesc" maxlength="3000" placeholder="מה התוסף עושה, איך משתמשים, למי הוא מתאים"></textarea></div>
+    <div class="field"><label for="fUrl">קישור להורדה / התקנה <span class="hint">– קישור לחנות כרום, או לקובץ ZIP (Google Drive, GitHub...)</span></label><input id="fUrl" type="url" dir="ltr" placeholder="https://"></div>
+    <div class="field"><label for="fPriv">פרטיות: איזה מידע התוסף קורא או שולח? <span class="hint">(חובה – יוצג למשתמשים)</span></label><textarea id="fPriv" maxlength="600" style="min-height:70px" placeholder="למשל: התוסף עובד רק באתר X, לא אוסף ולא שולח שום מידע"></textarea></div>
+    <div class="row2">
+      <div class="field"><label>אייקון <span class="hint">(לא חובה)</span></label><input id="fIcon" type="file" accept="image/*"><div class="prev" id="iconPrev"></div></div>
+      <div class="field"><label>צילומי מסך <span class="hint">(עד 3)</span></label><input id="fShots" type="file" accept="image/*" multiple><div class="prev" id="shotPrev"></div></div>
+    </div>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-weight:700"><input type="checkbox" id="fOk" style="width:auto;margin-top:6px"> התוסף שלי או שיש לי רשות לפרסם אותו, ואין בו קוד זדוני או איסוף מידע שלא מופיע בתיאור</label>
+    <div class="actions"><button type="button" class="btn" id="fSave">📨 שליחה לאישור</button><button type="button" class="btn alt" data-close="addOv">ביטול</button></div>
+    <p class="msg" id="fMsg"></p>
+  </div></div>
+  <div class="overlay hidden" id="loginOv"><div class="modal sm">
+    <div class="mhead"><h2>🔑 התחברות</h2><button type="button" class="x" data-close="loginOv" aria-label="סגירה">✕</button></div>
+    <p class="hint" id="loginWhy" style="margin-top:0"></p>
+    <button type="button" class="btn alt" id="gBtn" style="width:100%;background:#fff;color:#1f1f1f">המשך עם Google</button>
+    <p class="hint" style="text-align:center">או עם אימייל וסיסמה (אותו חשבון כמו באתר תוכנה בקליק)</p>
+    <div class="field"><input id="lEmail" type="email" dir="ltr" placeholder="אימייל"></div>
+    <div class="field"><input id="lPass" type="password" dir="ltr" placeholder="סיסמה (6 תווים לפחות)"></div>
+    <div class="actions"><button type="button" class="btn" id="lIn">התחברות</button><button type="button" class="btn alt" id="lUp">הרשמה חדשה</button></div>
+    <p class="msg" id="lMsg"></p>
+  </div></div>
+  <div class="toast hidden" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyAKq6cEtOiw2q__8W8lN-zUaQprSMG1vmw",
+    authDomain: "project-6009216979838534734.firebaseapp.com",
+    projectId: "project-6009216979838534734",
+    appId: "1:135251714538:web:db532e77bb5665b4205293"
+  });
+  const auth = firebase.auth(), db = firebase.firestore(), FV = firebase.firestore.FieldValue;
+  const ADMIN_EMAIL = "yosefdayan2018@gmail.com";
+  const MAIL_URL = "https://script.google.com/macros/s/AKfycbwyWvpdgdveIEu4LgWESyDlRqUwlzjWjExKxDYg_NNqYUibUaVu-Brq0h9pCbSYdvTb/exec";
+  const NOW = () => FV.serverTimestamp();
+  const $ = id => document.getElementById(id);
+  let me = null, isAdmin = false, approved = [], mine = [], pending = [], mode = "all", cat = "";
+  // ↓ הקטגוריות – אפשר לערוך ↓
+  const CATS = ["🚫 חוסמי פרסומות", "⚡ פרודוקטיביות", "🔤 עברית ושפה", "🎬 וידאו ומדיה", "🎨 עיצוב ומראה", "♿ נגישות", "🔒 פרטיות ואבטחה", "🛠 כלים", "📦 אחר"];
+
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    for (const k in attrs || {}) { if (k === "class") el.className = attrs[k]; else if (k.startsWith("on")) el[k] = attrs[k]; else if (attrs[k] != null) el.setAttribute(k, attrs[k]); }
+    kids.flat(Infinity).forEach(c => c != null && c !== false && el.append(c.nodeType ? c : String(c)));
+    return el;
+  };
+  const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
+  function toast(t) { $("toast").textContent = t; $("toast").classList.remove("hidden"); clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").classList.add("hidden"), 2800); }
+  const httpsUrl = s => { try { const u = new URL(String(s || "").trim()); return u.protocol === "https:" ? u.href : ""; } catch (e) { return ""; } };
+  const isStore = u => /chromewebstore\.google\.com|chrome\.google\.com\/webstore|microsoftedge\.microsoft\.com\/addons/i.test(u || "");
+  const ms = t => t && t.toMillis ? t.toMillis() : 0;
+  function mailEvent(type, data) {
+    if (!me) return;
+    me.getIdToken().then(idToken => fetch(MAIL_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(Object.assign({ idToken, type }, data)) })).catch(() => {});
+  }
+
+  document.addEventListener("click", e => { const c = e.target.closest("[data-close]"); if (c) $(c.dataset.close).classList.add("hidden"); if (e.target.classList.contains("overlay")) closeOv(e.target); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { const o = [...document.querySelectorAll(".overlay:not(.hidden)")].pop(); if (o) closeOv(o); } });
+  function closeOv(o) { o.classList.add("hidden"); if (o.id === "viewOv" && location.hash) history.replaceState(null, "", location.pathname); }
+
+  // ===== התחברות =====
+  function needLogin(why) { if (me) return false; $("loginWhy").textContent = why || ""; $("lMsg").textContent = ""; $("loginOv").classList.remove("hidden"); return true; }
+  const authErr = e => $("lMsg").textContent = ({ "auth/invalid-email": "האימייל לא תקין", "auth/weak-password": "הסיסמה צריכה לפחות 6 תווים",
+    "auth/email-already-in-use": "כבר יש חשבון עם האימייל הזה – לחצו \"התחברות\"", "auth/invalid-credential": "אימייל או סיסמה שגויים", "auth/popup-closed-by-user": "",
+    "auth/operation-not-supported-in-this-environment": "ההתחברות עובדת רק כשהדף פתוח מהאתר ברשת (github.io), לא כקובץ מהמחשב",
+    "auth/network-request-failed": "אין חיבור לשרת ההתחברות – ייתכן שהסינון חוסם אותו" })[e.code] || "שגיאה: " + (e.code || e.message);
+  $("gBtn").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  $("lIn").onclick = () => auth.signInWithEmailAndPassword($("lEmail").value.trim(), $("lPass").value).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  $("lUp").onclick = () => auth.createUserWithEmailAndPassword($("lEmail").value.trim(), $("lPass").value).then(() => $("loginOv").classList.add("hidden")).catch(authErr);
+  let stopMine = null, stopPend = null;
+  auth.onAuthStateChanged(u => {
+    me = u; isAdmin = !!(u && u.email === ADMIN_EMAIL && u.emailVerified);
+    put($("authBox"), u ? h("button", { type: "button", class: "tb", title: u.email || "", onclick: () => auth.signOut() }, "🚪", h("span", { class: "lbl" }, " יציאה"))
+                        : h("button", { type: "button", class: "tb", onclick: () => needLogin("") }, "🔑", h("span", { class: "lbl" }, " התחברות")));
+    $("pendBtn").classList.toggle("hidden", !isAdmin);
+    if (stopMine) stopMine(); if (stopPend) stopPend(); stopMine = stopPend = null; mine = []; pending = [];
+    if (u) stopMine = db.collection("vhg_ext").where("uid", "==", u.uid).onSnapshot(s => { mine = docs(s); render(); }, () => {});
+    if (isAdmin) stopPend = db.collection("vhg_ext").where("status", "==", "pending").onSnapshot(s => {
+      pending = docs(s); $("pendN").textContent = pending.length; $("pendN").classList.toggle("hidden", !pending.length); render(); }, () => {});
+    if (!u && mode !== "all") mode = "all";
+    render();
+  });
+  const docs = s => s.docs.map(d => Object.assign({ id: d.id }, d.data({ serverTimestamps: "estimate" })));
+
+  // ===== תוספים מאושרים (בזמן אמת) =====
+  db.collection("vhg_ext").where("status", "==", "approved").onSnapshot(s => { approved = docs(s); render(); openFromHash(); },
+    e => { put($("grid"), h("div", { class: "empty" }, h("div", { class: "big" }, "🔒"), h("h3", {}, "החנות עוד לא הופעלה"),
+      h("p", {}, e.code === "permission-denied" ? "צריך להוסיף את הכללים של \"חנות התוספים\" ב-Firebase." : "שגיאה בטעינה – נסו לרענן."))); $("count").textContent = ""; });
+
+  // ===== סינון ומיון =====
+  put($("cats"), h("button", { type: "button", class: "chip on", "data-c": "", onclick: pickCat }, "הכל"), CATS.map(c => h("button", { type: "button", class: "chip", "data-c": c, onclick: pickCat }, c)));
+  function pickCat(e) { cat = e.currentTarget.dataset.c; document.querySelectorAll("#cats .chip").forEach(b => b.classList.toggle("on", b === e.currentTarget)); render(); }
+  $("q").addEventListener("input", render); $("sort").addEventListener("input", render);
+  $("mineBtn").onclick = () => { if (needLogin("כדי לראות את התוספים ששלחתם צריך להתחבר")) return; mode = mode === "mine" ? "all" : "mine"; render(); };
+  $("pendBtn").onclick = () => { mode = mode === "pend" ? "all" : "pend"; render(); };
+
+  function render() {
+    $("mineBtn").classList.toggle("on", mode === "mine"); $("pendBtn").classList.toggle("on", mode === "pend");
+    let list = mode === "mine" ? mine : mode === "pend" ? pending : approved;
+    const q = $("q").value.trim().toLowerCase();
+    if (q) list = list.filter(x => [x.name, x.short, x.desc, x.dev, x.cat].join(" ").toLowerCase().includes(q));
+    if (cat) list = list.filter(x => x.cat === cat);
+    const s = $("sort").value;
+    list = list.slice().sort(s === "dl" ? (a, b) => (b.dl || 0) - (a.dl || 0) : s === "name" ? (a, b) => (a.name || "").localeCompare(b.name || "", "he") : (a, b) => ms(b.ts) - ms(a.ts));
+    $("count").textContent = (mode === "mine" ? "📋 התוספים ששלחתי · " : mode === "pend" ? "⏳ ממתינים לאישור · " : "") + (list.length === 1 ? "תוסף אחד" : list.length + " תוספים");
+    if (!list.length) return put($("grid"), h("div", { class: "empty" }, h("div", { class: "big" }, mode === "pend" ? "🎉" : "🧩"),
+      h("h3", {}, mode === "pend" ? "אין תוספים שממתינים לאישור" : mode === "mine" ? "עוד לא שלחתם תוסף" : "לא נמצאו תוספים"),
+      mode !== "pend" ? h("button", { type: "button", class: "btn", onclick: () => openAdd() }, "➕ שליחת תוסף") : null));
+    put($("grid"), list.map(cardEl));
+  }
+  const icoEl = x => h("div", { class: "ico" }, x.icon ? h("img", { src: x.icon, alt: "" }) : "🧩");
+  const ST = { pending: "⏳ ממתין לאישור", approved: "✔ מאושר", rejected: "✖ נדחה" };
+  function cardEl(x) {
+    return h("article", { class: "card", onclick: () => openView(x) },
+      mode !== "all" ? h("span", { class: "st " + x.status }, ST[x.status] || x.status) : null,
+      h("div", { class: "chead" }, icoEl(x), h("div", {}, h("h3", {}, x.name), h("small", {}, "🧑‍💻 " + (x.dev || "מפתח") + (x.version ? " · v" + x.version : "")))),
+      h("p", {}, x.short || ""),
+      h("div", { class: "cfoot" }, x.cat ? h("span", { class: "pill cat" }, x.cat) : null, h("span", { class: "pill" }, "⬇ " + (x.dl || 0).toLocaleString("he-IL") + " הורדות")),
+      mode === "pend" ? h("div", { class: "adm" },
+        h("button", { type: "button", class: "btn ok sm", onclick: e => { e.stopPropagation(); approve(x); } }, "✔ אישור"),
+        h("button", { type: "button", class: "btn danger sm", onclick: e => { e.stopPropagation(); reject(x); } }, "✖ דחייה")) : null);
+  }
+
+  // ===== דף תוסף =====
+  function openFromHash() { const id = decodeURIComponent(location.hash.slice(1)); const x = id && approved.find(a => a.id === id); if (x && $("viewOv").classList.contains("hidden")) openView(x); }
+  window.addEventListener("hashchange", openFromHash);
+  async function openView(x) {
+    if (x.status === "approved") history.replaceState(null, "", "#" + x.id);
+    const owner = me && (me.uid === x.uid || isAdmin), url = httpsUrl(x.url), store = isStore(url);
+    const shots = h("div", { class: "shots hidden" });
+    const dl = h("a", { class: "btn", href: url || "#", target: "_blank", rel: "noopener noreferrer", onclick: () => {
+      if (x.status === "approved") db.collection("vhg_ext").doc(x.id).update({ dl: FV.increment(1) }).catch(() => {}); } }, store ? "➕ התקנה מחנות התוספים" : "⬇ הורדת התוסף (ZIP)");
+    put($("viewBody"),
+      h("div", { class: "mhead" }, h("div", { class: "chead" }, icoEl(x), h("div", {}, h("h2", {}, x.name), h("small", { style: "color:var(--muted);font-weight:800" },
+        "🧑‍💻 " + (x.dev || "מפתח") + (x.version ? " · v" + x.version : "") + " · ⬇ " + (x.dl || 0) + " הורדות"))), h("button", { type: "button", class: "x", "aria-label": "סגירה", onclick: () => closeOv($("viewOv")) }, "✕")),
+      x.status !== "approved" ? h("div", { class: "note" }, (ST[x.status] || "") + (x.status === "pending" ? " – התוסף יופיע בחנות אחרי אישור המנהל." : "") + (x.note ? "\nסיבה: " + x.note : "")) : null,
+      x.cat ? h("span", { class: "pill cat" }, x.cat) : null,
+      shots,
+      h("p", { class: "desc" }, x.desc || x.short || ""),
+      x.priv ? h("div", { class: "box" }, h("h3", {}, "🔒 פרטיות"), h("p", { style: "margin:0;color:var(--ink2)" }, x.priv)) : null,
+      h("div", { class: "box" }, h("h3", {}, "🛠 איך מתקינים"), store
+        ? h("ol", {}, h("li", {}, "לוחצים \"התקנה מחנות התוספים\" למטה."), h("li", {}, "בחנות לוחצים \"הוספה ל-Chrome\" (או Edge) ומאשרים."), h("li", {}, "זהו! התוסף מופיע ליד שורת הכתובת (סמל 🧩)."))
+        : h("ol", {}, h("li", {}, "מורידים את קובץ ה-ZIP ולוחצים עליו קליק ימני ← \"חלץ הכל\"."),
+            h("li", {}, "בכרום נכנסים לכתובת ", h("code", {}, "chrome://extensions"), " (ב-Edge: ", h("code", {}, "edge://extensions"), ")."),
+            h("li", {}, "מדליקים \"מצב מפתח\" (Developer mode) למעלה."), h("li", {}, "לוחצים \"טעינת פריט לא ארוז\" ובוחרים את התיקייה שחולצה."),
+            h("li", {}, "לא מוחקים את התיקייה אחרי ההתקנה – כרום טוען ממנה את התוסף."))),
+      h("div", { class: "actions" },
+        url ? dl : h("span", { class: "msg" }, "אין קישור תקין"),
+        x.status === "approved" ? h("button", { type: "button", class: "btn alt", onclick: async () => { const u = location.href.split("#")[0] + "#" + x.id; try { await navigator.clipboard.writeText(u); toast("🔗 הקישור הועתק"); } catch (e) { prompt("העתיקו:", u); } } }, "🔗 העתקת קישור") : null,
+        isAdmin && x.status !== "approved" ? h("button", { type: "button", class: "btn ok", onclick: () => approve(x) }, "✔ אישור ופרסום") : null,
+        isAdmin && x.status !== "rejected" ? h("button", { type: "button", class: "btn danger", onclick: () => reject(x) }, x.status === "approved" ? "⏸ הסרה מהחנות" : "✖ דחייה") : null,
+        owner ? h("button", { type: "button", class: "btn alt", onclick: () => { closeOv($("viewOv")); openAdd(x); } }, "✏️ עריכה") : null,
+        owner ? h("button", { type: "button", class: "btn danger", onclick: () => del(x) }, "🗑 מחיקה") : null),
+      isAdmin && x.status === "pending" ? h("p", { class: "hint" }, "👑 לפני אישור: פתחו את הקישור ובדקו את התוסף (קבצי manifest.json ו-JS) – שאין בו הרשאות או קוד חשודים.") : null);
+    $("viewOv").classList.remove("hidden");
+    try {
+      const s = await db.collection("vhg_shots").doc(x.id).get(), imgs = s.exists ? (s.data().imgs || []) : [];
+      if (imgs.length) { put(shots, imgs.map(src => h("img", { src, alt: "", onclick: () => { const lb = h("div", { class: "lightbox", onclick: () => lb.remove() }, h("img", { src, alt: "" })); document.body.append(lb); } }))); shots.classList.remove("hidden"); }
+    } catch (e) {}
+  }
+  async function approve(x) {
+    try { await db.collection("vhg_ext").doc(x.id).update({ status: "approved", note: "", approvedAt: NOW() }); toast("✔ \"" + x.name + "\" אושר ופורסם"); closeOv($("viewOv")); }
+    catch (e) { toast("האישור נכשל"); }
+  }
+  async function reject(x) {
+    const why = prompt("סיבה (המפתח יראה אותה):", ""); if (why === null) return;
+    try { await db.collection("vhg_ext").doc(x.id).update({ status: "rejected", note: why.trim().slice(0, 300) }); toast("התוסף נדחה"); closeOv($("viewOv")); }
+    catch (e) { toast("הפעולה נכשלה"); }
+  }
+  async function del(x) {
+    if (!confirm("למחוק את \"" + x.name + "\"?")) return;
+    try { const b = db.batch(); b.delete(db.collection("vhg_ext").doc(x.id)); b.delete(db.collection("vhg_shots").doc(x.id)); await b.commit(); closeOv($("viewOv")); toast("🗑 נמחק"); }
+    catch (e) { toast("המחיקה נכשלה"); }
+  }
+
+  // ===== שליחה / עריכה =====
+  CATS.forEach(c => $("fCat").append(h("option", { value: c }, c)));
+  let editing = null, icon = "", shotImgs = [];
+  $("addBtn").onclick = () => openAdd();
+  const shrink = (file, max, q, type) => new Promise((res, rej) => {
+    const img = new Image(), u = URL.createObjectURL(file);
+    img.onload = () => { const s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u); res(c.toDataURL(type || "image/jpeg", q)); };
+    img.onerror = rej; img.src = u;
+  });
+  function drawPrev() {
+    put($("iconPrev"), icon ? h("div", { class: "icon" }, h("img", { src: icon, alt: "" }), h("button", { type: "button", onclick: () => { icon = ""; drawPrev(); } }, "✕")) : null);
+    put($("shotPrev"), shotImgs.map((src, i) => h("div", {}, h("img", { src, alt: "" }), h("button", { type: "button", onclick: () => { shotImgs.splice(i, 1); drawPrev(); } }, "✕"))));
+  }
+  $("fIcon").onchange = async e => { const f = e.target.files[0]; if (f) { try { icon = await shrink(f, 128, .85, "image/png"); } catch (x) {} } e.target.value = ""; drawPrev(); };
+  $("fShots").onchange = async e => {
+    for (const f of [...e.target.files].slice(0, 3 - shotImgs.length)) { try { shotImgs.push(await shrink(f, 1000, .65)); } catch (x) {} }
+    e.target.value = ""; drawPrev();
+  };
+  async function openAdd(x) {
+    if (needLogin("כדי לשלוח תוסף צריך להתחבר")) return;
+    editing = x || null; icon = (x && x.icon) || ""; shotImgs = [];
+    $("addTitle").textContent = x ? "✏️ עריכת תוסף" : "➕ שליחת תוסף";
+    const v = (id, val) => $(id).value = val == null ? "" : val;
+    v("fName", x && x.name); v("fVer", x && x.version); v("fShort", x && x.short); v("fDesc", x && x.desc); v("fUrl", x && x.url); v("fPriv", x && x.priv);
+    v("fDev", (x && x.dev) || me.displayName || ""); $("fCat").value = (x && x.cat) || CATS[CATS.length - 1];
+    $("fOk").checked = false; $("fMsg").textContent = "";
+    drawPrev(); $("addOv").classList.remove("hidden");
+    if (x) try { const s = await db.collection("vhg_shots").doc(x.id).get(); if (s.exists) { shotImgs = (s.data().imgs || []).slice(0, 3); drawPrev(); } } catch (e) {}
+  }
+  $("fSave").onclick = async () => {
+    const msg = t => $("fMsg").textContent = t;
+    const name = $("fName").value.trim(), url = httpsUrl($("fUrl").value), priv = $("fPriv").value.trim();
+    if (name.length < 2) return msg("כתבו שם לתוסף");
+    if ($("fShort").value.trim().length < 5) return msg("כתבו תיאור קצר");
+    if (!url) return msg("קישור ההורדה צריך להתחיל ב-https://");
+    if (priv.length < 5) return msg("כתבו מה התוסף עושה עם מידע (פרטיות)");
+    if (!$("fOk").checked) return msg("צריך לאשר את ההצהרה");
+    $("fSave").disabled = true; msg("");
+    const data = {
+      uid: editing ? editing.uid : me.uid, name: name.slice(0, 60), version: $("fVer").value.trim().slice(0, 12), short: $("fShort").value.trim().slice(0, 120),
+      desc: $("fDesc").value.trim().slice(0, 3000), cat: $("fCat").value, dev: $("fDev").value.trim().slice(0, 40), url, priv: priv.slice(0, 600), icon,
+      status: isAdmin ? (editing ? editing.status : "approved") : "pending", note: ""   // עריכה של מפתח – חוזרת לאישור
+    };
+    try {
+      const ref = editing ? db.collection("vhg_ext").doc(editing.id) : db.collection("vhg_ext").doc();
+      const b = db.batch();
+      if (editing) { data.dl = editing.dl || 0; data.edited = NOW(); b.update(ref, data); } else { data.dl = 0; data.ts = NOW(); b.set(ref, data); }
+      b.set(db.collection("vhg_shots").doc(ref.id), { uid: data.uid, imgs: shotImgs.slice(0, 3) });
+      await b.commit();
+      if (!isAdmin) mailEvent("admin", { kind: "ext", name: data.dev, text: (editing ? "✏️ עריכה: " : "🧩 תוסף חדש: ") + data.name + "\n" + data.short + "\n" + url });
+      $("addOv").classList.add("hidden");
+      toast(isAdmin ? "✔ נשמר" : "📨 נשלח לאישור! תראו אותו ב\"שלי\" עד שיאושר");
+      if (!isAdmin) { mode = "mine"; render(); }
+    } catch (e) {
+      msg(e.code === "permission-denied" ? "אין הרשאה – צריך להוסיף את הכללים של \"חנות התוספים\" ב-Firebase" : /size|exceed|large/i.test(e.message || "") ? "התמונות גדולות מדי – נסו פחות צילומי מסך" : "השליחה נכשלה, נסו שוב");
+    }
+    $("fSave").disabled = false;
+  };
+</script>
+</body>
+</html>
