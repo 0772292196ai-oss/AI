@@ -539,5 +539,46 @@
     addEventListener("online", upd); addEventListener("offline", upd); upd();
     document.querySelectorAll("img:not([loading])").forEach(function (i) { i.loading = "lazy"; });
   })();
+</script><!-- פרסומת קטנה בצד – חרדיטוק -->
+<style>
+  .side-ad{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:40;width:158px;display:block;text-decoration:none;color:#fff;font-family:system-ui,"Segoe UI",Arial,sans-serif;direction:rtl;
+    border-radius:18px;padding:14px 12px 12px;text-align:center;background:linear-gradient(160deg,#ff2e63,#ff7a18 55%,#7c3aed);box-shadow:0 12px 30px -10px rgba(255,46,99,.65);transition:transform .2s,box-shadow .2s;animation:sideAdIn .6s ease .8s backwards}
+  .side-ad:hover{transform:translateY(calc(-50% - 3px));box-shadow:0 18px 40px -10px rgba(255,46,99,.8)}
+  .side-ad .sa-ad{position:absolute;top:6px;right:9px;font-size:10px;font-weight:700;opacity:.8}
+  .side-ad .sa-ico{font-size:30px;line-height:1;display:block;margin:6px 0 4px}
+  .side-ad b{display:block;font-size:19px;font-weight:900}
+  .side-ad small{display:block;font-size:12.5px;line-height:1.35;opacity:.95;margin:4px 0 10px}
+  .side-ad .sa-go{display:block;background:#fff;color:#1a1033;font-weight:900;font-size:13px;padding:7px 0;border-radius:99px}
+  .side-ad .sa-x{position:absolute;top:4px;left:6px;width:22px;height:22px;border:0;border-radius:50%;background:rgba(0,0,0,.28);color:#fff;font-size:12px;line-height:22px;cursor:pointer;padding:0}
+  .side-ad .sa-x:hover{background:rgba(0,0,0,.5)}
+  @keyframes sideAdIn{from{opacity:0;transform:translate(-30px,-50%)}}
+  @media (max-width:900px){
+    .side-ad{width:auto;left:0;padding:9px 10px 9px 12px;border-radius:0 14px 14px 0;top:auto;bottom:96px;transform:none}
+    .side-ad:hover{transform:none}
+    .side-ad .sa-ad,.side-ad small,.side-ad .sa-go{display:none}
+    .side-ad .sa-ico{display:inline;font-size:20px;margin:0 0 0 4px;vertical-align:middle}
+    .side-ad b{display:inline;font-size:14px;vertical-align:middle}
+    .side-ad .sa-x{position:static;margin-right:6px;width:18px;height:18px;line-height:18px;font-size:10px;vertical-align:middle}
+    @keyframes sideAdIn{from{opacity:0;transform:translateX(-30px)}}
+  }
+  @media print{.side-ad{display:none}}
+</style>
+<a class="side-ad" id="sideAd" href="https://0772292196ai-oss.github.io/XRYUBHO/" target="_blank" rel="noopener" aria-label="חרדיטוק – פרסומת">
+  <span class="sa-ad">פרסומת</span>
+  <span class="sa-ico" aria-hidden="true">🎬</span>
+  <b>חרדיטוק</b>
+  <small>סרטונים קצרים לקהל החרדי</small>
+  <span class="sa-go">לכניסה ←</span>
+  <button type="button" class="sa-x" aria-label="סגירת הפרסומת">✕</button>
+</a>
+<script>
+  (function () {
+    var ad = document.getElementById("sideAd");
+    try { if (sessionStorage.getItem("sideAdOff")) ad.remove(); } catch (e) {}
+    ad.querySelector(".sa-x").addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation(); ad.remove();
+      try { sessionStorage.setItem("sideAdOff", "1"); } catch (e2) {}
+    });
+  })();
 </script></body>
 </html>
