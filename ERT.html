@@ -689,7 +689,27 @@
     .hero-stats { grid-template-columns: 1fr 1fr 1fr; }
     .hero-stats b { font-size: 1.5rem; }
   }
-</style>
+  /* ===== באנר חרדיטוק בראש הדף ===== */
+  .promo-ht { display: flex; align-items: center; gap: 16px; margin: 0 auto 34px; max-width: 980px; padding: 14px 16px 14px 22px;
+    border-radius: 22px; text-decoration: none; color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(110deg, #ff2e63 0%, #ff7a18 45%, #7c3aed 100%); background-size: 200% 100%;
+    box-shadow: 0 14px 40px -12px rgba(255,46,99,.6); animation: htFlow 6s ease infinite; transition: transform .2s, box-shadow .2s; }
+  .promo-ht:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -12px rgba(255,46,99,.75); }
+  .promo-ht::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.28) 50%, transparent 70%); transform: translateX(100%); animation: htShine 3.2s ease-in-out infinite; }
+  .promo-ht .ht-ico { flex: none; width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-size: 30px; background: rgba(0,0,0,.22); }
+  .promo-ht .ht-txt { flex: 1; min-width: 0; text-align: start; }
+  .promo-ht .ht-new { display: inline-block; font-size: .72rem; font-weight: 900; background: #fff; color: #ff2e63; padding: 2px 9px; border-radius: 99px; margin-inline-end: 8px; vertical-align: middle; }
+  .promo-ht b { font-size: 1.35rem; font-weight: 900; vertical-align: middle; }
+  .promo-ht small { display: block; margin-top: 3px; font-size: .95rem; opacity: .95; }
+  .promo-ht .ht-go { flex: none; background: #fff; color: #1a1033; font-weight: 900; padding: 12px 20px; border-radius: 99px; white-space: nowrap; position: relative; z-index: 1; }
+  @keyframes htFlow { 50% { background-position: 100% 0; } }
+  @keyframes htShine { 60%, 100% { transform: translateX(-100%); } }
+  @media (max-width: 640px) {
+    .promo-ht { flex-wrap: wrap; justify-content: center; text-align: center; padding: 16px; margin-bottom: 24px; }
+    .promo-ht .ht-txt { text-align: center; flex-basis: 100%; }
+    .promo-ht .ht-go { width: 100%; text-align: center; }
+  }
+  .nav a.nav-ht { color: #ff7a9c; font-weight: 800; }</style>
 </head>
 <body>
   <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
@@ -708,7 +728,7 @@
       <nav class="nav" id="mainNav" aria-label="תפריט ראשי">
         <a href="#top" class="on">בית</a>
         <a href="#download">תוכנות</a>
-        <a href="#" id="navHelp">עזרה וצ'אט</a>
+        <a href="https://0772292196ai-oss.github.io/XRYUBHO/" class="nav-ht" target="_blank" rel="noopener">🎬 חרדיטוק</a>
         <a href="WFH.html" id="navForum">🗣️ פורום עזרה ותמיכה</a>
         <a href="store.html" id="navStore">⚡ החנות למחשב</a>
         <a href="#" id="navOrder" class="order-link">🛠️ הזמנת תוכנה</a>
@@ -761,7 +781,11 @@
   </div>
 
   <section class="hero home-only" id="top">
-    <div class="hero-grid">
+<a class="promo-ht" href="https://0772292196ai-oss.github.io/XRYUBHO/" target="_blank" rel="noopener" id="promoHT">
+<span class="ht-ico" aria-hidden="true">🎬</span>
+<span class="ht-txt"><span class="ht-new">חדש!</span><b>חרדיטוק</b><small>סרטונים קצרים לקהל החרדי – נקי, כשר ומהנה. כנסו עכשיו!</small></span>
+<span class="ht-go">לכניסה ←</span>
+</a>    <div class="hero-grid">
       <div class="hero-text">
         <div class="hero-kicker">עוזר AI שעונה על כל שאלה</div>
         <h1>תוכנות למחשב,<br><span>בקליק אחד</span></h1>
@@ -2696,7 +2720,8 @@
 
   /* ----- דיווחים וחסימות ----- */
   const REASONS = { virus: "🦠 וירוס / תוכנה זדונית", content: "🚫 תוכן לא ראוי", fake: "🎭 מטעה",
-                    broken: "🔧 לא עובדת / קישור שבור", copyright: "©️ זכויות יוצרים", other: "❓ אחר" };
+                    broken: "🔧 לא עובדת / קישור שבור", copyright: "©️ זכויות יוצרים", other: "❓ אחר",
+                    ext: "🧩 תוסף", listing: "🏠 מודעת דירה", user: "🗣️ משתמש בפורום" };
   const fmtDate = ts => ts && ts.toDate ? ts.toDate().toLocaleString("he-IL", { day: "numeric", month: "numeric", year: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
 
   // כפתור הדיווח בדף התוכנה
@@ -2741,11 +2766,11 @@
     if (snap.empty) { body.innerHTML = '<p class="empty-note">אין דיווחים פתוחים 🎉</p>'; return; }
     body.innerHTML = "";
     snap.forEach(doc => {
-      const d = doc.data(), dyn = !!d.appId;
+      const d = doc.data(), side = ["VHG", "EGH", "WFH"].includes(d.appKey), dyn = !!d.appId && !side;
       const r = document.createElement("div");
       r.className = "review rep";
       r.innerHTML = '<h3></h3><small class="hint who"></small><p class="t"></p><div class="acts">' +
-        '<button type="button" class="small-btn alt" data-v>👁 לדף התוכנה</button>' +
+        '<button type="button" class="small-btn alt" data-v>👁 לצפייה</button>' +
         '<button type="button" class="small-btn alt" data-x>✔ הדיווח לא נכון – סגירה</button>' +
         (dyn ? '<button type="button" class="small-btn alt del-btn" data-d>🗑 מחיקת התוכנה</button>' +
                '<button type="button" class="small-btn block-btn" data-b>⛔ מחיקה וחסימת המפתח</button>' : "") +
@@ -2753,7 +2778,7 @@
       r.querySelector("h3").textContent = (REASONS[d.reason] || d.reason) + " · " + d.appName;
       r.querySelector(".who").textContent = "דווח על ידי " + (d.reporterName || "") + " " + (d.reporterEmail || "") + " · " + fmtDate(d.createdAt);
       r.querySelector(".t").textContent = d.text;
-      r.querySelector("[data-v]").onclick = () => window.open(dyn ? "./?app=" + d.appId : "./" + (d.appKey || "ASD") + ".html", "_blank");
+      r.querySelector("[data-v]").onclick = () => window.open(dyn ? "./?app=" + d.appId : "./" + (d.appKey || "ASD") + ".html" + (side && d.appId ? "#" + d.appId : ""), "_blank");
       const close = async () => { await db.collection("reports").doc(doc.id).delete(); renderAdmin(); };
       r.querySelector("[data-x]").onclick = () => close().catch(e => alert(e.code));
       if (dyn) {
@@ -2962,7 +2987,7 @@
     ["מי אתה / מי פיתח אותך / מה אתה",
      "אני העוזר החכם של האתר 'תוכנה בקליק'. אני עונה על שאלות על האתר ועל התוכנות שבו. האתר והתוכנות נבנו על ידי צוות תוכנה בקליק."],
     ["איך פותחים צ'אט עם הצוות",
-     "1. לוחצים 'התחברות' (או 'הרשמה' אם אין חשבון) בפס העליון מצד שמאל. 2. מתחברים עם 'המשך עם Google', או עם אימייל וסיסמה. 3. אחרי ההתחברות מופיע עיגול כחול עם 💬 בפינה השמאלית התחתונה – לוחצים עליו. 4. כותבים הודעה ולוחצים 'שליחה' (או Enter). אפשר לפתוח את הצ'אט גם מ'עזרה וצ'אט' בתפריט העליון, או מהכפתור 'שאלה? פתחו צ'אט' בכרטיס של כל תוכנה. הצוות עונה בהקדם, ומקבלים התראה במייל כשיש תשובה."],
+     "1. לוחצים 'התחברות' (או 'הרשמה' אם אין חשבון) בפס העליון מצד שמאל. 2. מתחברים עם 'המשך עם Google', או עם אימייל וסיסמה. 3. אחרי ההתחברות מופיע עיגול כחול עם 💬 בפינה השמאלית התחתונה – לוחצים עליו. 4. כותבים הודעה ולוחצים 'שליחה' (או Enter). אפשר לפתוח את הצ'אט גם מהכפתור 'שאלה? פתחו צ'אט' בכרטיס של כל תוכנה. הצוות עונה בהקדם, ומקבלים התראה במייל כשיש תשובה."],
     ["איך נרשמים / מתחברים",
      "לוחצים 'הרשמה' בפס העליון. אפשר 'המשך עם Google' (הכי מהיר), או למלא שם, אימייל וסיסמה (לפחות 6 תווים) וללחוץ 'הרשמה'. אם יש סינון (נטפרי, נתיב, רימון) וההתחברות עם Google לא עובדת – להשתמש באימייל וסיסמה."],
     ["איך שולחים קובץ או תמונה בצ'אט",
@@ -3266,7 +3291,7 @@
       document.getElementById("authMsg").textContent = "כדי לפתוח צ'אט צריך להתחבר קודם";
     } else if (!fab.classList.contains("hidden")) fab.click();
   }
-  document.getElementById("navHelp").onclick = openHelp;
+  { const nh = document.getElementById("navHelp"); if (nh) nh.onclick = openHelp; }
   document.getElementById("cardHelp").onclick = openHelp;
   document.getElementById("cardHelp2").onclick = openHelp;
   document.getElementById("cardHelp3").onclick = openHelp;

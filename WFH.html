@@ -2282,5 +2282,20 @@
     e.preventDefault(); s.focus();
   });
 </script>
-</body>
+<!-- פס "אין חיבור" + פחות אנימציות למי שביקש -->
+<style>
+  .net-bar{position:fixed;inset:auto 0 0 0;z-index:9999;background:#e5484d;color:#fff;text-align:center;font:700 14px/1.4 system-ui,sans-serif;padding:9px 12px;transform:translateY(110%);transition:transform .3s}
+  .net-bar.on{transform:none}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+<div class="net-bar" id="netBar" role="status" aria-live="polite">📡 אין חיבור לאינטרנט – חלק מהדברים לא יעבדו עד שהחיבור יחזור</div>
+<script>
+  (function () {
+    var b = document.getElementById("netBar"), t;
+    function upd() { clearTimeout(t); if (!navigator.onLine) { b.textContent = "📡 אין חיבור לאינטרנט – חלק מהדברים לא יעבדו עד שהחיבור יחזור"; b.style.background = "#e5484d"; b.classList.add("on"); }
+      else if (b.classList.contains("on")) { b.textContent = "✅ החיבור חזר"; b.style.background = "#22a06b"; t = setTimeout(function () { b.classList.remove("on"); }, 2500); } }
+    addEventListener("online", upd); addEventListener("offline", upd); upd();
+    document.querySelectorAll("img:not([loading])").forEach(function (i) { i.loading = "lazy"; });
+  })();
+</script></body>
 </html>

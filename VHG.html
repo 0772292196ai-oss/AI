@@ -324,6 +324,7 @@
       h("div", { class: "actions" },
         url ? dl : h("span", { class: "msg" }, "אין קישור תקין"),
         x.status === "approved" ? h("button", { type: "button", class: "btn alt", onclick: async () => { const u = location.href.split("#")[0] + "#" + x.id; try { await navigator.clipboard.writeText(u); toast("🔗 הקישור הועתק"); } catch (e) { prompt("העתיקו:", u); } } }, "🔗 העתקת קישור") : null,
+        x.status === "approved" && !owner ? h("button", { type: "button", class: "btn alt", onclick: () => report(x.id, x.name) }, "🚩 דיווח") : null,
         isAdmin && x.status !== "approved" ? h("button", { type: "button", class: "btn ok", onclick: () => approve(x) }, "✔ אישור ופרסום") : null,
         isAdmin && x.status !== "rejected" ? h("button", { type: "button", class: "btn danger", onclick: () => reject(x) }, x.status === "approved" ? "⏸ הסרה מהחנות" : "✖ דחייה") : null,
         owner ? h("button", { type: "button", class: "btn alt", onclick: () => { closeOv($("viewOv")); openAdd(x); } }, "✏️ עריכה") : null,
@@ -334,6 +335,16 @@
       const s = await db.collection("vhg_shots").doc(x.id).get(), imgs = s.exists ? (s.data().imgs || []) : [];
       if (imgs.length) { put(shots, imgs.map(src => h("img", { src, alt: "", onclick: () => { const lb = h("div", { class: "lightbox", onclick: () => lb.remove() }, h("img", { src, alt: "" })); document.body.append(lb); } }))); shots.classList.remove("hidden"); }
     } catch (e) {}
+  }
+  async function report(id, name) {
+    if (needLogin("כדי לדווח צריך להתחבר")) return;
+    const why = prompt("מה הבעיה בתוסף \"" + name + "\"? (למשל: לא עובד, חשוד, מבקש הרשאות מוזרות)", "");
+    if (!why || !why.trim()) return;
+    try {
+      await db.collection("reports").add({ appKey: "VHG", appId: id, appName: "תוסף: " + name, reason: "ext", text: ("דיווח על תוסף: " + name + "\n" + why.trim()).slice(0, 1000),
+        reporter: me.uid, reporterName: me.displayName || "", reporterEmail: me.email || "", createdAt: NOW() });
+      toast("✔ הדיווח נשלח למנהל – תודה"); mailEvent("admin", { kind: "report", name: me.displayName || "", text: "על התוסף: " + name + "\n" + why.trim() });
+    } catch (e) { toast("השליחה נכשלה"); }
   }
   async function approve(x) {
     try { await db.collection("vhg_ext").doc(x.id).update({ status: "approved", note: "", approvedAt: NOW() }); toast("✔ \"" + x.name + "\" אושר ופורסם"); closeOv($("viewOv")); }
@@ -411,5 +422,20 @@
     $("fSave").disabled = false;
   };
 </script>
-</body>
+<!-- פס "אין חיבור" + פחות אנימציות למי שביקש -->
+<style>
+  .net-bar{position:fixed;inset:auto 0 0 0;z-index:9999;background:#e5484d;color:#fff;text-align:center;font:700 14px/1.4 system-ui,sans-serif;padding:9px 12px;transform:translateY(110%);transition:transform .3s}
+  .net-bar.on{transform:none}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+<div class="net-bar" id="netBar" role="status" aria-live="polite">📡 אין חיבור לאינטרנט – חלק מהדברים לא יעבדו עד שהחיבור יחזור</div>
+<script>
+  (function () {
+    var b = document.getElementById("netBar"), t;
+    function upd() { clearTimeout(t); if (!navigator.onLine) { b.textContent = "📡 אין חיבור לאינטרנט – חלק מהדברים לא יעבדו עד שהחיבור יחזור"; b.style.background = "#e5484d"; b.classList.add("on"); }
+      else if (b.classList.contains("on")) { b.textContent = "✅ החיבור חזר"; b.style.background = "#22a06b"; t = setTimeout(function () { b.classList.remove("on"); }, 2500); } }
+    addEventListener("online", upd); addEventListener("offline", upd); upd();
+    document.querySelectorAll("img:not([loading])").forEach(function (i) { i.loading = "lazy"; });
+  })();
+</script></body>
 </html>
