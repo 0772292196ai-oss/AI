@@ -689,7 +689,68 @@
     .hero-stats { grid-template-columns: 1fr 1fr 1fr; }
     .hero-stats b { font-size: 1.5rem; }
   }
-</style>
+  /* ===== ליטוש עיצוב v7 ===== */
+  ::selection { background: rgba(124,92,255,.45); color: #fff; }
+  html { scrollbar-color: #7c5cff transparent; scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #7c5cff, #22d3ee); border-radius: 99px; border: 2px solid var(--bg); }
+  :focus-visible { outline: 3px solid #22d3ee; outline-offset: 3px; border-radius: 10px; }
+
+  /* כותרות אזורים – קו מתחת וכיתוב זוהר */
+  .sec-head h2, .steps h2, .faq h2 { background: linear-gradient(100deg, var(--ink) 0%, var(--ink) 40%, #b9a8ff 50%, var(--ink) 60%, var(--ink) 100%); background-size: 250% 100%;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: v7shine 7s ease-in-out infinite; }
+  .sec-head h2::after, .steps h2::after, .faq h2::after { content: ""; display: block; width: 64px; height: 4px; margin: 14px auto 0; border-radius: 99px; background: linear-gradient(90deg, #7c5cff, #22d3ee); box-shadow: 0 0 18px rgba(34,211,238,.6); }
+  @keyframes v7shine { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+
+  /* כרטיסי תוכנות – זום עדין לתמונה + מסגרת זוהרת */
+  .card img { transition: transform .6s cubic-bezier(.2,.8,.2,1), filter .4s; }
+  .card:hover img { transform: scale(1.06); filter: saturate(1.15); }
+  .card::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; padding: 1px;
+    background: linear-gradient(140deg, rgba(124,92,255,.0), rgba(124,92,255,.0)); transition: background .4s;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .card:hover::after { background: linear-gradient(140deg, #7c5cff, #22d3ee 50%, #ff5fa2); }
+
+  /* קיצורי דרך – האייקון קופץ */
+  .qa .qa-ic { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+  .qa:hover .qa-ic { transform: rotate(-8deg) scale(1.12); }
+  .qa .qa-go { transition: transform .3s; }
+  .qa:hover .qa-go { transform: translateX(-6px); }
+
+  /* חבילה פופולרית – מסגרת מסתובבת */
+  .plan.hot { border-color: rgba(124,92,255,.6); animation: v7glow 3s ease-in-out infinite; }
+  @keyframes v7glow { 50% { box-shadow: var(--sh-lg), 0 0 46px -6px rgba(34,211,238,.55); border-color: rgba(34,211,238,.6); } }
+  .plan .plan-ic { transition: transform .4s cubic-bezier(.3,1.6,.5,1); }
+  .plan:hover .plan-ic { transform: translateY(-6px) scale(1.15); }
+
+  /* שלבים – מספר עם הילה פועמת */
+  .step .n { position: relative; }
+  .step .n::after { content: ""; position: absolute; inset: -6px; border-radius: inherit; border: 2px solid rgba(124,92,255,.5); animation: v7pulse 2.6s ease-out infinite; }
+  .step:nth-child(2) .n::after { animation-delay: .5s; } .step:nth-child(3) .n::after { animation-delay: 1s; }
+  @keyframes v7pulse { 0% { opacity: .9; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.35); } }
+
+  /* כפתורים – הבזק אור במעבר עכבר */
+  .btn, .primary-btn, .cta-main { position: relative; overflow: hidden; }
+  .btn::after, .primary-btn::after, .cta-main::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent); transform: skewX(-20deg); transition: left .6s ease; }
+  .btn:hover::after, .primary-btn:hover::after, .cta-main:hover::after { left: 130%; }
+
+  /* שאלות נפוצות – תשובה נפתחת בעדינות */
+  .faq-item[open] > *:not(summary) { animation: v7open .35s ease; }
+  @keyframes v7open { from { opacity: 0; transform: translateY(-6px); } }
+  .faq-item summary:hover { color: #b9a8ff; }
+
+  /* פוטר – קו צבעוני עליון */
+  footer { position: relative; }
+  footer::before { content: ""; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, #7c5cff, #22d3ee, transparent); }
+
+  /* ערכת בהירה – התאמות */
+  :root[data-theme="light"] .sec-head h2, :root[data-theme="light"] .steps h2, :root[data-theme="light"] .faq h2 { background-image: linear-gradient(100deg, var(--ink) 0%, var(--ink) 40%, #7c5cff 50%, var(--ink) 60%, var(--ink) 100%); }
+  :root[data-theme="light"] ::-webkit-scrollbar-thumb { border-color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sec-head h2, .steps h2, .faq h2, .plan.hot, .step .n::after { animation: none !important; }
+  }</style>
 </head>
 <body>
   <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
