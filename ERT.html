@@ -777,6 +777,7 @@
         <a href="#" id="navAdmin" class="hidden">🛡️ ניהול <span class="admin-count hidden" id="adminCount"></span></a>
       </nav>
       <div class="auth">
+        <button type="button" class="theme-btn tour-help" id="tourBtn" title="סרטון הדרכה – איך משתמשים באתר" aria-label="סרטון הדרכה">?</button>
         <button type="button" class="theme-btn" id="themeBtn" title="מצב בהיר / כהה" aria-label="החלפת ערכת נושא">🌙</button>
         <span class="live-pill hidden" id="livePill" title="כמה אנשים באתר עכשיו"><i></i><b id="liveNum"></b><span class="lbl"> מחוברים עכשיו</span></span>
         <span class="who hidden" id="who"></span>
@@ -3609,5 +3610,187 @@
       try { sessionStorage.setItem("sideAdOff", "1"); } catch (e2) {}
     });
   })();
-</script></body>
+</script><!-- ===== סרטון הדרכה (כפתור ?) ===== -->
+<style>
+  .tour-help { font-weight: 900; font-size: 1.15rem; }
+  .tour-ov { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px; background: rgba(3,4,10,.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .tour-ov.hidden { display: none; }
+  .tour { width: min(860px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; background: #0b0e1c; border: 1px solid rgba(160,170,255,.22); box-shadow: 0 40px 120px -30px rgba(124,92,255,.7); color: #eef0ff; direction: rtl; }
+  .tour-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgba(160,170,255,.12); }
+  .tour-top b { flex: 1; font-size: 1.05rem; }
+  .tour-top .t-step { color: #9aa3c7; font-size: .9rem; font-weight: 700; }
+  .tour-ibtn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(160,170,255,.22); background: rgba(255,255,255,.05); color: #eef0ff; font-size: 1rem; cursor: pointer; display: grid; place-items: center; }
+  .tour-ibtn:hover { background: rgba(124,92,255,.25); }
+  .tour-screen { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: radial-gradient(800px 400px at 80% 0%, rgba(124,92,255,.35), transparent 60%), radial-gradient(600px 300px at 0% 100%, rgba(34,211,238,.25), transparent 60%), #070915; }
+  .tour-scene { position: absolute; inset: 0; display: grid; place-items: center; padding: 4% 6%; animation: tScene .6s ease both; }
+  @keyframes tScene { from { opacity: 0; transform: scale(.96); } }
+  .tour-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 24px 14px; background: linear-gradient(transparent, rgba(0,0,0,.85)); text-align: center; font-size: clamp(.95rem, 2.3vw, 1.25rem); font-weight: 800; line-height: 1.5; text-shadow: 0 2px 8px #000; min-height: 3.2em; }
+  .tour-bar { display: flex; gap: 4px; padding: 10px 16px 0; }
+  .tour-bar i { flex: 1; height: 5px; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; cursor: pointer; }
+  .tour-bar i span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7c5cff, #22d3ee); }
+  .tour-bar i.done span { width: 100%; }
+  .tour-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px 16px; flex-wrap: wrap; }
+  .tour-ctrl .tour-play { width: 54px; height: 54px; font-size: 1.3rem; background: linear-gradient(135deg, #7c5cff, #22d3ee); border: 0; color: #fff; }
+  .tour-ctrl .t-skip { margin-inline-start: auto; background: none; border: 0; color: #9aa3c7; font-weight: 800; cursor: pointer; font-size: .95rem; }
+  .tour-ctrl .t-skip:hover { color: #fff; }
+  /* "המסך" המדומה בתוך הסרטון */
+  .m-win { width: 100%; max-width: 620px; border-radius: 16px; background: #10142a; border: 1px solid rgba(160,170,255,.2); box-shadow: 0 20px 60px -20px #000; overflow: hidden; }
+  .m-bar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #0c1022; border-bottom: 1px solid rgba(160,170,255,.12); font-size: .8rem; color: #9aa3c7; }
+  .m-bar i { width: 9px; height: 9px; border-radius: 50%; background: #ff5f57; } .m-bar i:nth-child(2) { background: #febc2e; } .m-bar i:nth-child(3) { background: #28c840; }
+  .m-body { padding: 16px; display: grid; gap: 10px; }
+  .m-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(160,170,255,.1); font-weight: 800; font-size: .92rem; }
+  .m-row .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 1.1rem; background: linear-gradient(135deg, #7c5cff, #22d3ee); flex: none; }
+  .m-row small { display: block; color: #9aa3c7; font-weight: 600; font-size: .75rem; }
+  .m-btn { display: inline-block; padding: 9px 16px; border-radius: 99px; font-weight: 900; font-size: .85rem; color: #fff; background: linear-gradient(135deg, #7c5cff, #a855f7); white-space: nowrap; }
+  .m-btn.alt { background: rgba(255,255,255,.08); border: 1px solid rgba(160,170,255,.25); }
+  .m-btn.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .m-input { padding: 10px 14px; border-radius: 99px; background: rgba(255,255,255,.06); border: 1px solid rgba(160,170,255,.2); color: #cfd4f5; font-size: .9rem; }
+  .m-type::after { content: "|"; animation: tBlink 1s steps(1) infinite; margin-inline-start: 2px; }
+  @keyframes tBlink { 50% { opacity: 0; } }
+  .m-big { text-align: center; }
+  .m-big .emo { font-size: clamp(3rem, 9vw, 5.5rem); display: block; animation: tFloat 3s ease-in-out infinite; }
+  .m-big h2 { margin: 8px 0 4px; font-size: clamp(1.5rem, 4.5vw, 2.6rem); font-weight: 900; background: linear-gradient(90deg, #fff, #b9a8ff, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .m-big p { margin: 0; color: #9aa3c7; font-weight: 700; }
+  @keyframes tFloat { 50% { transform: translateY(-10px); } }
+  .m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .m-card { border-radius: 12px; padding: 12px 8px; text-align: center; background: rgba(255,255,255,.05); border: 1px solid rgba(160,170,255,.12); font-weight: 900; font-size: .85rem; }
+  .m-card .p { display: block; font-size: 1.4rem; color: #b9a8ff; margin-top: 4px; }
+  .m-warn { border-radius: 12px; padding: 12px; background: #1d4ed8; color: #fff; font-size: .82rem; font-weight: 700; }
+  .m-warn b { display: block; font-size: 1rem; margin-bottom: 4px; }
+  .m-bubble { max-width: 75%; padding: 9px 13px; border-radius: 14px; font-size: .85rem; font-weight: 700; opacity: 0; animation: tPop .4s ease forwards; }
+  .m-bubble.me { justify-self: start; background: linear-gradient(135deg, #ff5fa2, #a855f7); }
+  .m-bubble.them { justify-self: end; background: rgba(255,255,255,.08); }
+  @keyframes tPop { from { opacity: 0; transform: translateY(8px) scale(.95); } to { opacity: 1; transform: none; } }
+  .m-hl { animation: tHl 1.6s ease-in-out infinite; animation-delay: 1.6s; }
+  @keyframes tHl { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0); } 50% { box-shadow: 0 0 0 5px rgba(34,211,238,.55); } }
+  /* סמן העכבר המדומה */
+  .m-cursor { position: absolute; z-index: 5; width: 26px; height: 26px; pointer-events: none; left: var(--x0); top: var(--y0); animation: tMove 1.4s cubic-bezier(.5,0,.2,1) .5s forwards, tClick .3s ease 2s; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
+  .m-cursor::before { content: ""; position: absolute; inset: 0; background: #fff; clip-path: polygon(0 0, 0 78%, 22% 60%, 38% 95%, 52% 88%, 37% 55%, 66% 55%); }
+  .m-cursor::after { content: ""; position: absolute; left: -12px; top: -12px; width: 24px; height: 24px; border-radius: 50%; border: 3px solid #22d3ee; opacity: 0; animation: tRing .6s ease 2s; }
+  @keyframes tMove { to { left: var(--x1); top: var(--y1); } }
+  @keyframes tClick { 50% { transform: scale(.8); } }
+  @keyframes tRing { 0% { opacity: 1; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.8); } }
+  @media (max-width: 600px) {
+    .tour-screen { aspect-ratio: 4 / 5; }
+    .m-grid { grid-template-columns: 1fr; }
+    .tour-ctrl .t-skip { margin: 0; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .tour-scene, .m-big .emo, .m-cursor, .m-hl { animation: none !important; } .m-cursor { left: var(--x1); top: var(--y1); } .m-bubble { opacity: 1; animation: none; } }
+</style>
+<div class="tour-ov hidden" id="tourOv" role="dialog" aria-modal="true" aria-label="סרטון הדרכה">
+  <div class="tour">
+    <div class="tour-top">
+      <span style="font-size:1.3rem">🎬</span><b>סרטון הדרכה – איך משתמשים באתר</b>
+      <span class="t-step" id="tourStep"></span>
+      <button type="button" class="tour-ibtn" id="tourSound" title="הקראה בקול" aria-label="הקראה בקול">🔇</button>
+      <button type="button" class="tour-ibtn" id="tourClose" aria-label="סגירה">✕</button>
+    </div>
+    <div class="tour-screen" id="tourScreen"></div>
+    <div class="tour-bar" id="tourBar"></div>
+    <div class="tour-ctrl">
+      <button type="button" class="tour-ibtn" id="tourPrev" aria-label="הקודם">⏵</button>
+      <button type="button" class="tour-ibtn tour-play" id="tourPlay" aria-label="הפעלה / השהיה">⏸</button>
+      <button type="button" class="tour-ibtn" id="tourNext" aria-label="הבא">⏴</button>
+      <button type="button" class="t-skip" id="tourDo">לנסות בעצמי ←</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const W = (title, body) => '<div class="m-win"><div class="m-bar"><i></i><i></i><i></i><span style="margin-inline-start:8px">' + title + '</span></div><div class="m-body">' + body + '</div></div>';
+  const CUR = (x0, y0, x1, y1) => '<span class="m-cursor" style="--x0:' + x0 + ';--y0:' + y0 + ';--x1:' + x1 + ';--y1:' + y1 + '"></span>';
+  const row = (ic, t, s, btn) => '<div class="m-row"><span class="ic">' + ic + '</span><span style="flex:1">' + t + '<small>' + s + '</small></span>' + (btn || "") + '</div>';
+  const SCENES = [
+    { cap: "ברוכים הבאים ל\"תוכנה בקליק\"! 👋 בסרטון הקצר הזה נראה לכם איך משתמשים באתר.",
+      html: '<div class="m-big"><span class="emo">🖥️</span><h2>תוכנה בקליק</h2><p>תוכנות בעברית למחשב – בחינם, בלחיצה אחת</p></div>' },
+    { cap: "1️⃣ מחפשים תוכנה: כותבים בתיבת החיפוש, או בוחרים קטגוריה – \"בלי אינטרנט\", \"גם לטלפון\" ועוד.",
+      html: W("תוכנה בקליק – כל התוכנות", '<div class="m-input m-type">🔍 אוטובוסים</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="m-btn">הכל</span><span class="m-btn alt">📶 בלי אינטרנט</span><span class="m-btn alt">📱 גם לטלפון</span><span class="m-btn alt">✨ חדש</span></div>' + row("🚌", "תוכנת אוטובוסים", "קווים ותחנות – גם בלי אינטרנט") ) + CUR("80%", "85%", "62%", "34%") },
+    { cap: "2️⃣ לוחצים \"הורדה והתקנה\" – הקובץ יורד למחשב. פותחים אותו ולוחצים \"הבא\" עד הסוף.",
+      html: W("תוכנת אוטובוסים", row("🚌", "תוכנת אוטובוסים", "גרסה 1.0.4 · חינם · Windows 10/11") + '<div style="display:flex;gap:8px;justify-content:center"><span class="m-btn m-hl">⬇ הורדה והתקנה</span><span class="m-btn alt">פרטים נוספים</span></div>') + CUR("15%", "20%", "52%", "60%") },
+    { cap: "⚠️ אם מופיע מסך כחול של Windows – לוחצים \"מידע נוסף\" ואז \"הפעל בכל זאת\". זה רגיל לתוכנות חדשות.",
+      html: '<div class="m-warn" style="max-width:460px;width:100%"><b>Windows protected your PC</b>Microsoft Defender SmartScreen prevented an unrecognized app from starting.<div style="margin:10px 0;text-decoration:underline" class="m-hl">מידע נוסף (More info)</div><div style="text-align:left"><span class="m-btn alt" style="color:#fff">הפעל בכל זאת (Run anyway)</span></div></div>' + CUR("85%", "15%", "45%", "58%") },
+    { cap: "3️⃣ \"החנות למחשב\" – תוכנה אחת שמתקינה ומסירה את כל התוכנות שלנו בלחיצה. הכי נוח!",
+      html: W("⚡ החנות למחשב", row("🚌", "תוכנת אוטובוסים", "מותקנת ✓", '<span class="m-btn alt">🗑 הסרה</span>') + row("🎙️", "קולית", "הקראה והקלדה קולית", '<span class="m-btn green m-hl">⚡ התקנה</span>') + row("📒", "ספר טלפונים", "8,000+ מספרים", '<span class="m-btn green">⚡ התקנה</span>')) + CUR("50%", "15%", "22%", "52%") },
+    { cap: "4️⃣ יש שאלה? לוחצים על \"שאלו את העוזר\" 🤖 בפינה – הוא עונה מיד, 24/7.",
+      html: W("🤖 עוזר חכם", '<div class="m-bubble me" style="animation-delay:.4s">איך מתקינים את קולית?</div><div class="m-bubble them" style="animation-delay:1.4s">פשוט! לוחצים "הורדה והתקנה", פותחים את הקובץ ולוחצים "הבא" 🙂</div><div class="m-bubble me" style="animation-delay:2.6s">תודה! 🙏</div>') },
+    { cap: "5️⃣ רוצים לדבר עם בן אדם? מתחברים, ולוחצים על העיגול 💬 – הצוות עונה, ומקבלים מייל כשיש תשובה.",
+      html: W("💬 צ'אט עם הצוות", '<div class="m-bubble me" style="animation-delay:.4s">שלום, התוכנה לא נפתחת לי</div><div class="m-bubble them" style="animation-delay:1.6s">היי! איזו גרסת Windows יש לך? נעזור מיד 💪</div>') + CUR("50%", "20%", "8%", "86%") },
+    { cap: "6️⃣ בפורום העזרה אפשר לשאול את הקהילה, לעזור לאחרים ולצבור מוניטין.",
+      html: W("🗣️ פורום עזרה ותמיכה", row("💡", "איך מעבירים אנשי קשר מהטלפון?", "12 תגובות · נפתר ✓") + row("🙏", "בקשת עזרה בהתקנה", "3 תגובות") + row("🎁", "תרומות ועזרה הדדית", "קטגוריה חדשה")) },
+    { cap: "7️⃣ צריכים תוכנה משלכם? בוחרים חבילה – 50, 100 או 500 ₪ – ואנחנו בונים אותה בשבילכם.",
+      html: W("🛠️ הזמנת תוכנה", '<div class="m-grid"><div class="m-card">🌱 בסיסית<span class="p">50 ₪</span></div><div class="m-card m-hl">🚀 מתקדמת<span class="p">100 ₪</span></div><div class="m-card">💎 פרימיום<span class="p">500 ₪</span></div></div>') + CUR("80%", "85%", "50%", "48%") },
+    { cap: "8️⃣ מפתחים? אפשר להעלות גם את התוכנות שלכם לאתר – דרך \"למפתחים\" בתפריט העליון.",
+      html: W("🧑‍💻 למפתחים", '<div class="m-input">שם התוכנה: <span class="m-type">המחשבון שלי</span></div><div class="m-input">קישור להורדה: https://…</div><div style="text-align:center"><span class="m-btn m-hl">📤 שליחה לאישור</span></div>') },
+    { cap: "זהו! 🎉 עכשיו אתם יודעים הכל. אפשר לפתוח את ההדרכה שוב בכל רגע – בכפתור ❓ למעלה.",
+      html: '<div class="m-big"><span class="emo">🎉</span><h2>בהצלחה!</h2><p>לחצו "לנסות בעצמי" כדי להתחיל</p></div>' }
+  ];
+  const DUR = 6500;
+  const $t = id => document.getElementById(id);
+  const ov = $t("tourOv"), screen = $t("tourScreen"), bar = $t("tourBar");
+  let i = 0, playing = true, timer = null, t0 = 0, left = DUR, raf = 0, sound = false;
+  try { sound = localStorage.getItem("tourSound") === "1"; } catch (e) {}
+  bar.innerHTML = SCENES.map(() => "<i><span></span></i>").join("");
+  [...bar.children].forEach((el, k) => el.onclick = () => go(k));
+
+  function say(text) {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    if (!sound) return;
+    const u = new SpeechSynthesisUtterance(text.replace(/[\u{1F000}-\u{1FFFF}☀-➿️⃣]/gu, ""));
+    u.lang = "he-IL"; u.rate = 1.05;
+    const v = speechSynthesis.getVoices().find(v => /^he|^iw/i.test(v.lang)); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }
+  function paintBar(frac) {
+    [...bar.children].forEach((el, k) => { el.classList.toggle("done", k < i); el.firstChild.style.width = k === i ? Math.min(100, frac * 100) + "%" : ""; });
+  }
+  function tick() {
+    const frac = 1 - (left - (performance.now() - t0)) / DUR;
+    paintBar(frac);
+    if (playing) raf = requestAnimationFrame(tick);
+  }
+  function startTimer() {
+    clearTimeout(timer); cancelAnimationFrame(raf);
+    if (!playing) return;
+    t0 = performance.now();
+    timer = setTimeout(() => { if (i < SCENES.length - 1) go(i + 1); else { playing = false; $t("tourPlay").textContent = "↻"; paintBar(1); } }, left);
+    raf = requestAnimationFrame(tick);
+  }
+  function go(k) {
+    i = Math.max(0, Math.min(SCENES.length - 1, k)); left = DUR;
+    const s = SCENES[i];
+    screen.innerHTML = '<div class="tour-scene">' + s.html + '</div><div class="tour-cap">' + s.cap + '</div>';
+    $t("tourStep").textContent = (i + 1) + " / " + SCENES.length;
+    if (!playing) { playing = true; $t("tourPlay").textContent = "⏸"; }
+    paintBar(0); say(s.cap); startTimer();
+  }
+  function pause() {
+    if (!playing) { if ($t("tourPlay").textContent === "↻") return go(0); playing = true; $t("tourPlay").textContent = "⏸"; startTimer(); screen.querySelectorAll("*").forEach(e => e.style.animationPlayState = ""); if (sound) speechSynthesis.resume(); return; }
+    playing = false; $t("tourPlay").textContent = "▶"; clearTimeout(timer); cancelAnimationFrame(raf);
+    left = Math.max(0, left - (performance.now() - t0));
+    screen.querySelectorAll("*").forEach(e => e.style.animationPlayState = "paused");
+    if ("speechSynthesis" in window) speechSynthesis.pause();
+  }
+  function open() { ov.classList.remove("hidden"); $t("tourSound").textContent = sound ? "🔊" : "🔇"; playing = true; $t("tourPlay").textContent = "⏸"; go(0); $t("tourPlay").focus(); }
+  function close() { ov.classList.add("hidden"); clearTimeout(timer); cancelAnimationFrame(raf); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
+  window.openTour = open;
+  $t("tourPlay").onclick = pause;
+  $t("tourNext").onclick = () => go(i + 1);
+  $t("tourPrev").onclick = () => go(i - 1);
+  $t("tourClose").onclick = close;
+  $t("tourDo").onclick = () => { close(); const d = document.getElementById("download"); if (d) d.scrollIntoView({ behavior: "smooth" }); };
+  $t("tourSound").onclick = () => { sound = !sound; $t("tourSound").textContent = sound ? "🔊" : "🔇"; try { localStorage.setItem("tourSound", sound ? "1" : "0"); } catch (e) {} say(SCENES[i].cap); };
+  ov.addEventListener("click", e => { if (e.target === ov) close(); });
+  document.addEventListener("keydown", e => {
+    if (ov.classList.contains("hidden")) return;
+    if (e.key === "Escape") close();
+    else if (e.key === " ") { e.preventDefault(); pause(); }
+    else if (e.key === "ArrowLeft") go(i + 1);
+    else if (e.key === "ArrowRight") go(i - 1);
+  });
+  const b = document.getElementById("tourBtn"); if (b) b.onclick = open;
+  if (/[?&]tour\b/.test(location.search) || location.hash === "#tour") setTimeout(open, 600);
+})();
+</script>
+</body>
 </html>
