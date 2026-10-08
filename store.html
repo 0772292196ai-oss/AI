@@ -3610,186 +3610,529 @@
       try { sessionStorage.setItem("sideAdOff", "1"); } catch (e2) {}
     });
   })();
-</script><!-- ===== סרטון הדרכה (כפתור ?) ===== -->
+</script><!-- ===== מרכז ההדרכה – סרטון נפרד לכל נושא (כפתורי ?) ===== -->
 <style>
   .tour-help { font-weight: 900; font-size: 1.15rem; }
-  .tour-ov { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px; background: rgba(3,4,10,.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-  .tour-ov.hidden { display: none; }
-  .tour { width: min(860px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; background: #0b0e1c; border: 1px solid rgba(160,170,255,.22); box-shadow: 0 40px 120px -30px rgba(124,92,255,.7); color: #eef0ff; direction: rtl; }
-  .tour-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgba(160,170,255,.12); }
-  .tour-top b { flex: 1; font-size: 1.05rem; }
-  .tour-top .t-step { color: #9aa3c7; font-size: .9rem; font-weight: 700; }
-  .tour-ibtn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(160,170,255,.22); background: rgba(255,255,255,.05); color: #eef0ff; font-size: 1rem; cursor: pointer; display: grid; place-items: center; }
-  .tour-ibtn:hover { background: rgba(124,92,255,.25); }
-  .tour-screen { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: radial-gradient(800px 400px at 80% 0%, rgba(124,92,255,.35), transparent 60%), radial-gradient(600px 300px at 0% 100%, rgba(34,211,238,.25), transparent 60%), #070915; }
-  .tour-scene { position: absolute; inset: 0; display: grid; place-items: center; padding: 4% 6%; animation: tScene .6s ease both; }
-  @keyframes tScene { from { opacity: 0; transform: scale(.96); } }
-  .tour-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 24px 14px; background: linear-gradient(transparent, rgba(0,0,0,.85)); text-align: center; font-size: clamp(.95rem, 2.3vw, 1.25rem); font-weight: 800; line-height: 1.5; text-shadow: 0 2px 8px #000; min-height: 3.2em; }
-  .tour-bar { display: flex; gap: 4px; padding: 10px 16px 0; }
-  .tour-bar i { flex: 1; height: 5px; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; cursor: pointer; }
-  .tour-bar i span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7c5cff, #22d3ee); }
-  .tour-bar i.done span { width: 100%; }
-  .tour-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px 16px; flex-wrap: wrap; }
-  .tour-ctrl .tour-play { width: 54px; height: 54px; font-size: 1.3rem; background: linear-gradient(135deg, #7c5cff, #22d3ee); border: 0; color: #fff; }
-  .tour-ctrl .t-skip { margin-inline-start: auto; background: none; border: 0; color: #9aa3c7; font-weight: 800; cursor: pointer; font-size: .95rem; }
-  .tour-ctrl .t-skip:hover { color: #fff; }
-  /* "המסך" המדומה בתוך הסרטון */
-  .m-win { width: 100%; max-width: 620px; border-radius: 16px; background: #10142a; border: 1px solid rgba(160,170,255,.2); box-shadow: 0 20px 60px -20px #000; overflow: hidden; }
-  .m-bar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #0c1022; border-bottom: 1px solid rgba(160,170,255,.12); font-size: .8rem; color: #9aa3c7; }
-  .m-bar i { width: 9px; height: 9px; border-radius: 50%; background: #ff5f57; } .m-bar i:nth-child(2) { background: #febc2e; } .m-bar i:nth-child(3) { background: #28c840; }
-  .m-body { padding: 16px; display: grid; gap: 10px; }
-  .m-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(160,170,255,.1); font-weight: 800; font-size: .92rem; }
-  .m-row .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 1.1rem; background: linear-gradient(135deg, #7c5cff, #22d3ee); flex: none; }
-  .m-row small { display: block; color: #9aa3c7; font-weight: 600; font-size: .75rem; }
-  .m-btn { display: inline-block; padding: 9px 16px; border-radius: 99px; font-weight: 900; font-size: .85rem; color: #fff; background: linear-gradient(135deg, #7c5cff, #a855f7); white-space: nowrap; }
-  .m-btn.alt { background: rgba(255,255,255,.08); border: 1px solid rgba(160,170,255,.25); }
-  .m-btn.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
-  .m-input { padding: 10px 14px; border-radius: 99px; background: rgba(255,255,255,.06); border: 1px solid rgba(160,170,255,.2); color: #cfd4f5; font-size: .9rem; }
-  .m-type::after { content: "|"; animation: tBlink 1s steps(1) infinite; margin-inline-start: 2px; }
-  @keyframes tBlink { 50% { opacity: 0; } }
-  .m-big { text-align: center; }
-  .m-big .emo { font-size: clamp(3rem, 9vw, 5.5rem); display: block; animation: tFloat 3s ease-in-out infinite; }
-  .m-big h2 { margin: 8px 0 4px; font-size: clamp(1.5rem, 4.5vw, 2.6rem); font-weight: 900; background: linear-gradient(90deg, #fff, #b9a8ff, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .m-big p { margin: 0; color: #9aa3c7; font-weight: 700; }
-  @keyframes tFloat { 50% { transform: translateY(-10px); } }
-  .m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .m-card { border-radius: 12px; padding: 12px 8px; text-align: center; background: rgba(255,255,255,.05); border: 1px solid rgba(160,170,255,.12); font-weight: 900; font-size: .85rem; }
-  .m-card .p { display: block; font-size: 1.4rem; color: #b9a8ff; margin-top: 4px; }
-  .m-warn { border-radius: 12px; padding: 12px; background: #1d4ed8; color: #fff; font-size: .82rem; font-weight: 700; }
-  .m-warn b { display: block; font-size: 1rem; margin-bottom: 4px; }
-  .m-bubble { max-width: 75%; padding: 9px 13px; border-radius: 14px; font-size: .85rem; font-weight: 700; opacity: 0; animation: tPop .4s ease forwards; }
-  .m-bubble.me { justify-self: start; background: linear-gradient(135deg, #ff5fa2, #a855f7); }
-  .m-bubble.them { justify-self: end; background: rgba(255,255,255,.08); }
-  @keyframes tPop { from { opacity: 0; transform: translateY(8px) scale(.95); } to { opacity: 1; transform: none; } }
-  .m-hl { animation: tHl 1.6s ease-in-out infinite; animation-delay: 1.6s; }
-  @keyframes tHl { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0); } 50% { box-shadow: 0 0 0 5px rgba(34,211,238,.55); } }
-  /* סמן העכבר המדומה */
-  .m-cursor { position: absolute; z-index: 5; width: 26px; height: 26px; pointer-events: none; left: var(--x0); top: var(--y0); animation: tMove 1.4s cubic-bezier(.5,0,.2,1) .5s forwards, tClick .3s ease 2s; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
-  .m-cursor::before { content: ""; position: absolute; inset: 0; background: #fff; clip-path: polygon(0 0, 0 78%, 22% 60%, 38% 95%, 52% 88%, 37% 55%, 66% 55%); }
-  .m-cursor::after { content: ""; position: absolute; left: -12px; top: -12px; width: 24px; height: 24px; border-radius: 50%; border: 3px solid #22d3ee; opacity: 0; animation: tRing .6s ease 2s; }
-  @keyframes tMove { to { left: var(--x1); top: var(--y1); } }
-  @keyframes tClick { 50% { transform: scale(.8); } }
-  @keyframes tRing { 0% { opacity: 1; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.8); } }
-  @media (max-width: 600px) {
-    .tour-screen { aspect-ratio: 4 / 5; }
-    .m-grid { grid-template-columns: 1fr; }
-    .tour-ctrl .t-skip { margin: 0; width: 100%; }
+  /* כפתורי ? ליד כל אזור */
+  .tut-chip { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 7px 8px 7px 14px; border-radius: 99px; border: 1px solid var(--line2); background: var(--glass); color: var(--ink); font: inherit; font-weight: 800; font-size: .92rem; cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s; }
+  .tut-chip b { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #7c5cff, #22d3ee); font-size: .85rem; }
+  .tut-chip:hover { transform: translateY(-2px); border-color: #7c5cff; box-shadow: 0 10px 24px -12px rgba(124,92,255,.9); }
+  .tut-q { width: 30px; height: 30px; flex: none; border-radius: 50%; border: 0; cursor: pointer; display: inline-grid; place-items: center; font-weight: 900; font-size: .95rem; color: #fff; background: linear-gradient(135deg, #7c5cff, #22d3ee); box-shadow: 0 6px 16px -6px rgba(124,92,255,.9); }
+  .tut-q:hover { transform: scale(1.1); }
+  .tut-q.abs { position: absolute; top: -12px; left: -12px; z-index: 3; }
+  .modal-head .tut-q { margin-inline-start: auto; margin-inline-end: 10px; }
+  .chat-head .tut-q { width: 26px; height: 26px; font-size: .8rem; background: rgba(255,255,255,.22); box-shadow: none; }
+
+  /* החלון */
+  .tut-ov { position: fixed; inset: 0; z-index: 9000; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-items: center; padding: 14px; background: rgba(3,4,10,.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .tut-ov.hidden { display: none; }
+  .tut { width: min(1000px, 100%); min-width: 0; max-width: 100%; max-height: calc(100vh - 28px); display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; background: var(--paper, #0e1122); border: 1px solid var(--line2, rgba(160,170,255,.22)); box-shadow: 0 40px 120px -30px rgba(124,92,255,.7); color: var(--ink, #eef0ff); direction: rtl; }
+  .tut-top { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line, rgba(160,170,255,.12)); }
+  .tut-top b { flex: 1; font-size: 1.05rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tut-top .t-step { color: var(--muted, #9aa3c7); font-size: .9rem; font-weight: 700; white-space: nowrap; }
+  .tut-ib { width: 38px; height: 38px; flex: none; border-radius: 50%; border: 1px solid var(--line2, rgba(160,170,255,.22)); background: var(--glass, rgba(255,255,255,.05)); color: inherit; font-size: 1rem; cursor: pointer; display: grid; place-items: center; }
+  .tut-ib:hover { background: rgba(124,92,255,.25); }
+  .tut-back { border: 0; background: none; color: #a5b4fc; font: inherit; font-weight: 800; cursor: pointer; white-space: nowrap; }
+  /* ספריית הסרטונים */
+  .tut-lib { padding: 18px; overflow-y: auto; }
+  .tut-lib p.lead { margin: 0 0 14px; color: var(--muted, #9aa3c7); font-weight: 700; }
+  .tut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+  .tut-card { position: relative; text-align: start; display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 18px; cursor: pointer; color: inherit; font: inherit; border: 1px solid var(--line, rgba(160,170,255,.12)); background: linear-gradient(180deg, var(--glass2, rgba(255,255,255,.06)), var(--glass, rgba(255,255,255,.03))); transition: transform .2s, border-color .2s, box-shadow .2s; }
+  .tut-card:hover { transform: translateY(-4px); border-color: #7c5cff; box-shadow: 0 18px 40px -20px rgba(124,92,255,.9); }
+  .tut-card .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 1.5rem; background: linear-gradient(135deg, var(--c1, #7c5cff), var(--c2, #22d3ee)); }
+  .tut-card b { font-size: 1.05rem; }
+  .tut-card small { color: var(--muted, #9aa3c7); font-weight: 600; line-height: 1.45; }
+  .tut-card .len { position: absolute; top: 14px; left: 14px; font-size: .75rem; font-weight: 800; padding: 3px 9px; border-radius: 99px; background: rgba(0,0,0,.35); color: #fff; }
+  .tut-card .play { position: absolute; bottom: 14px; left: 14px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #7c5cff, #22d3ee); font-size: .9rem; }
+  /* הנגן */
+  .tut-player { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .tut-player, .tut-screen, .tut-top, .tut-ctrl, .tut-bar { max-width: 100%; }
+  .tut-screen { position: relative; aspect-ratio: 16 / 9; max-height: calc(100vh - 230px); overflow: hidden; background: var(--bg, #05060c); }
+  .tut-browser { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .tut-url { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #1b1f33; border-bottom: 1px solid rgba(255,255,255,.08); font: 600 12px/1 system-ui, sans-serif; color: #b8bfe0; direction: ltr; }
+  .tut-url i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; } .tut-url i:nth-child(2) { background: #febc2e; } .tut-url i:nth-child(3) { background: #28c840; }
+  .tut-url span { flex: 1; min-width: 0; margin-left: 10px; padding: 5px 12px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .tut-page { position: relative; flex: 1; overflow: hidden; background: radial-gradient(900px 500px at 85% -10%, rgba(124,92,255,.22), transparent 60%), radial-gradient(700px 400px at 0% 110%, rgba(34,211,238,.14), transparent 60%), var(--bg, #05060c); }
+  .tut-scale { position: absolute; top: 0; right: 0; transform-origin: top right; padding: 28px; box-sizing: border-box; }
+  .tut-scene { animation: tutIn .5s ease both; }
+  @keyframes tutIn { from { opacity: 0; transform: translateY(14px); } }
+  /* כל העתק של האתר – בלי מיקום קבוע ובלי לחיצות אמיתיות */
+  .tut-stage * { pointer-events: none !important; }
+  .tut-stage .topbar, .tut-stage .chat-box, .tut-stage .ai-fab, .tut-stage .chat-fab, .tut-stage .modal { position: relative !important; inset: auto !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; transform: none; margin: 0 auto; }
+  .tut-stage .topbar { max-width: none; }
+  .tut-stage .chat-box { width: 440px !important; height: 520px !important; }
+  .tut-stage .modal { max-height: none !important; overflow: visible !important; }
+  .tut-stage .hidden.tut-show, .tut-stage .tut-show { display: revert !important; }
+  .tut-stage .reveal { opacity: 1 !important; transform: none !important; }
+  .tut-stage .ai-fab, .tut-stage .chat-fab { opacity: 1 !important; visibility: visible !important; display: inline-flex !important; animation: none !important; filter: none !important; }
+  .tut-stage .chat-fab { display: inline-block !important; }
+  .tut-hl { outline: 3px solid #22d3ee !important; outline-offset: 4px; box-shadow: 0 0 0 9px rgba(34,211,238,.18) !important; border-radius: 14px; transition: outline-color .3s; }
+  .tut-press { transform: scale(.94) !important; transition: transform .12s !important; }
+  .tut-focus { border-color: #7c5cff !important; box-shadow: 0 0 0 4px rgba(124,92,255,.3) !important; }
+  .tut-cursor { position: absolute; z-index: 20; width: 28px; height: 28px; left: 0; top: 0; pointer-events: none; filter: drop-shadow(0 3px 5px rgba(0,0,0,.7)); transition: opacity .3s; }
+  .tut-cursor::before { content: ""; position: absolute; inset: 0; background: #fff; clip-path: polygon(0 0, 0 78%, 22% 60%, 38% 95%, 52% 88%, 37% 55%, 66% 55%); }
+  .tut-ring { position: absolute; z-index: 19; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 3px solid #22d3ee; pointer-events: none; animation: tutRing .55s ease-out forwards; }
+  @keyframes tutRing { from { transform: scale(.25); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+  .tut-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 25; padding: 30px 22px 14px; background: linear-gradient(transparent, rgba(0,0,0,.88) 45%); text-align: center; color: #fff; font-size: clamp(.95rem, 2.1vw, 1.2rem); font-weight: 800; line-height: 1.5; text-shadow: 0 2px 8px #000; }
+  .tut-bar { display: flex; gap: 4px; padding: 10px 16px 0; direction: rtl; }
+  .tut-bar i { flex: 1; height: 5px; border-radius: 99px; background: rgba(160,170,255,.18); overflow: hidden; cursor: pointer; }
+  .tut-bar i span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7c5cff, #22d3ee); }
+  .tut-bar i.done span { width: 100%; }
+  .tut-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px 14px; }
+  .tut-ctrl .tut-play { width: 54px; height: 54px; font-size: 1.3rem; background: linear-gradient(135deg, #7c5cff, #22d3ee); border: 0; color: #fff; }
+  .tut-ctrl .t-next-vid { position: absolute; left: 16px; border: 0; background: none; color: var(--muted, #9aa3c7); font: inherit; font-weight: 800; cursor: pointer; }
+  .tut-ctrl { position: relative; }
+  /* מסכים שלא באתר (Windows, החנות למחשב, הפורום) */
+  .w-win { width: 780px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #f3f3f3; color: #1f1f1f; font: 19px/1.5 "Segoe UI", system-ui, sans-serif; box-shadow: 0 30px 70px -20px #000; direction: rtl; text-align: right; }
+  .w-win .w-tt { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #fff; border-bottom: 1px solid #ddd; font-size: 15px; }
+  .w-win .w-tt span { flex: 1; } .w-win .w-tt em { font-style: normal; color: #666; letter-spacing: 8px; }
+  .w-win .w-bd { padding: 22px; }
+  .w-blue { width: 820px; margin: 0 auto; background: #0063b1; color: #fff; padding: 40px 46px; font: 20px/1.55 "Segoe UI", system-ui, sans-serif; direction: ltr; text-align: left; box-shadow: 0 30px 70px -20px #000; }
+  .w-blue h3 { margin: 0 0 14px; font-size: 36px; font-weight: 300; }
+  .w-blue .more { text-decoration: underline; display: inline-block; margin: 6px 0 22px; }
+  .w-blue .row { display: flex; justify-content: flex-end; gap: 10px; }
+  .w-btn { display: inline-block; padding: 7px 22px; border: 2px solid rgba(255,255,255,.75); color: #fff; font-weight: 600; }
+  .w-btn.light { background: #fff; color: #1f1f1f; border-color: #ccc; }
+  .w-btn.pri { background: #0067c0; color: #fff; border-color: #0067c0; border-radius: 4px; }
+  .w-prog { height: 8px; border-radius: 99px; background: #ddd; overflow: hidden; margin: 14px 0; }
+  .w-prog i { display: block; height: 100%; width: 0; background: #0067c0; transition: width 2.2s linear; }
+  .w-desk { width: 860px; height: 440px; margin: 0 auto; border-radius: 10px; position: relative; background: linear-gradient(135deg, #1e3a8a, #0ea5e9 60%, #22d3ee); box-shadow: 0 30px 70px -20px #000; overflow: hidden; }
+  .w-desk .w-icon { position: absolute; width: 110px; text-align: center; color: #fff; font: 600 15px/1.3 "Segoe UI", system-ui, sans-serif; text-shadow: 0 1px 3px #000; }
+  .w-desk .w-icon span { display: block; font-size: 52px; margin-bottom: 4px; }
+  .w-desk .w-task { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: rgba(20,20,30,.85); }
+  .s-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid #e3e3e3; margin-bottom: 8px; }
+  .s-row .ic { width: 50px; height: 50px; border-radius: 12px; display: grid; place-items: center; font-size: 26px; background: linear-gradient(135deg, #7c5cff, #22d3ee); }
+  .s-row b { flex: 1; } .s-row small { display: block; color: #666; font-weight: 400; }
+  .s-btn { padding: 6px 14px; border-radius: 6px; font-weight: 700; color: #fff; background: #16a34a; white-space: nowrap; }
+  .s-btn.red { background: #dc2626; } .s-btn.gray { background: #9ca3af; }
+  .f-wrap { width: 760px; margin: 0 auto; }
+  .f-cat { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--line, rgba(160,170,255,.12)); background: linear-gradient(180deg, var(--glass2, rgba(255,255,255,.06)), var(--glass, rgba(255,255,255,.03))); }
+  .f-cat .ic { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; font-size: 1.4rem; background: linear-gradient(135deg, var(--c1, #7c5cff), var(--c2, #22d3ee)); }
+  .f-cat b { display: block; } .f-cat small { color: var(--muted, #9aa3c7); }
+  .f-cat .n { margin-inline-start: auto; text-align: center; color: var(--muted, #9aa3c7); font-weight: 800; font-size: .85rem; }
+  .f-cat .n b { color: var(--ink, #fff); font-size: 1.1rem; }
+  .tut-note { max-width: 640px; margin: 0 auto; text-align: center; }
+  .tut-note .big { font-size: 74px; display: block; animation: tutFloat 3s ease-in-out infinite; }
+  .tut-note h2 { margin: 10px 0 8px; font-size: 40px; font-weight: 900; }
+  .tut-note p { margin: 0; font-size: 20px; color: var(--muted, #9aa3c7); font-weight: 700; line-height: 1.6; }
+  @keyframes tutFloat { 50% { transform: translateY(-10px); } }
+  @media (max-width: 640px) {
+    .tut-screen { aspect-ratio: 3 / 4; }
+    .tut-ctrl .t-next-vid { position: static; }
+    .tut-ctrl { flex-wrap: wrap; }
   }
-  @media (prefers-reduced-motion: reduce) { .tour-scene, .m-big .emo, .m-cursor, .m-hl { animation: none !important; } .m-cursor { left: var(--x1); top: var(--y1); } .m-bubble { opacity: 1; animation: none; } }
 </style>
-<div class="tour-ov hidden" id="tourOv" role="dialog" aria-modal="true" aria-label="סרטון הדרכה">
-  <div class="tour">
-    <div class="tour-top">
-      <span style="font-size:1.3rem">🎬</span><b>סרטון הדרכה – איך משתמשים באתר</b>
-      <span class="t-step" id="tourStep"></span>
-      <button type="button" class="tour-ibtn" id="tourSound" title="הקראה בקול" aria-label="הקראה בקול">🔇</button>
-      <button type="button" class="tour-ibtn" id="tourClose" aria-label="סגירה">✕</button>
+<div class="tut-ov hidden" id="tutOv" role="dialog" aria-modal="true" aria-label="סרטוני הדרכה">
+  <div class="tut">
+    <div class="tut-top">
+      <button type="button" class="tut-back hidden" id="tutBack">→ כל הסרטונים</button>
+      <b id="tutTitle">🎬 מרכז ההדרכה</b>
+      <span class="t-step" id="tutStep"></span>
+      <button type="button" class="tut-ib" id="tutSound" title="הקראה בקול" aria-label="הקראה בקול">🔇</button>
+      <button type="button" class="tut-ib" id="tutClose" aria-label="סגירה">✕</button>
     </div>
-    <div class="tour-screen" id="tourScreen"></div>
-    <div class="tour-bar" id="tourBar"></div>
-    <div class="tour-ctrl">
-      <button type="button" class="tour-ibtn" id="tourPrev" aria-label="הקודם">⏵</button>
-      <button type="button" class="tour-ibtn tour-play" id="tourPlay" aria-label="הפעלה / השהיה">⏸</button>
-      <button type="button" class="tour-ibtn" id="tourNext" aria-label="הבא">⏴</button>
-      <button type="button" class="t-skip" id="tourDo">לנסות בעצמי ←</button>
+    <div class="tut-lib" id="tutLib">
+      <p class="lead">בחרו נושא – וצפו בסרטון קצר שמראה בדיוק איך עושים את זה באתר 👇</p>
+      <div class="tut-grid" id="tutGrid"></div>
+    </div>
+    <div class="tut-player hidden" id="tutPlayer">
+      <div class="tut-screen" id="tutScreen">
+        <div class="tut-browser">
+          <div class="tut-url"><i></i><i></i><i></i><span id="tutUrl"></span></div>
+          <div class="tut-page" id="tutPage"><div class="tut-scale tut-stage" id="tutStage"></div></div>
+        </div>
+        <span class="tut-cursor" id="tutCursor"></span>
+        <div class="tut-cap" id="tutCap"></div>
+      </div>
+      <div class="tut-bar" id="tutBar"></div>
+      <div class="tut-ctrl">
+        <button type="button" class="tut-ib" id="tutPrev" aria-label="הקודם">⏵</button>
+        <button type="button" class="tut-ib tut-play" id="tutPlay" aria-label="הפעלה / השהיה">⏸</button>
+        <button type="button" class="tut-ib" id="tutNext" aria-label="הבא">⏴</button>
+        <button type="button" class="t-next-vid" id="tutNextVid"></button>
+      </div>
     </div>
   </div>
 </div>
 <script>
 (function () {
-  const W = (title, body) => '<div class="m-win"><div class="m-bar"><i></i><i></i><i></i><span style="margin-inline-start:8px">' + title + '</span></div><div class="m-body">' + body + '</div></div>';
-  const CUR = (x0, y0, x1, y1) => '<span class="m-cursor" style="--x0:' + x0 + ';--y0:' + y0 + ';--x1:' + x1 + ';--y1:' + y1 + '"></span>';
-  const row = (ic, t, s, btn) => '<div class="m-row"><span class="ic">' + ic + '</span><span style="flex:1">' + t + '<small>' + s + '</small></span>' + (btn || "") + '</div>';
-  const SCENES = [
-    { cap: "ברוכים הבאים ל\"תוכנה בקליק\"! 👋 בסרטון הקצר הזה נראה לכם איך משתמשים באתר.",
-      html: '<div class="m-big"><span class="emo">🖥️</span><h2>תוכנה בקליק</h2><p>תוכנות בעברית למחשב – בחינם, בלחיצה אחת</p></div>' },
-    { cap: "1️⃣ מחפשים תוכנה: כותבים בתיבת החיפוש, או בוחרים קטגוריה – \"בלי אינטרנט\", \"גם לטלפון\" ועוד.",
-      html: W("תוכנה בקליק – כל התוכנות", '<div class="m-input m-type">🔍 אוטובוסים</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="m-btn">הכל</span><span class="m-btn alt">📶 בלי אינטרנט</span><span class="m-btn alt">📱 גם לטלפון</span><span class="m-btn alt">✨ חדש</span></div>' + row("🚌", "תוכנת אוטובוסים", "קווים ותחנות – גם בלי אינטרנט") ) + CUR("80%", "85%", "62%", "34%") },
-    { cap: "2️⃣ לוחצים \"הורדה והתקנה\" – הקובץ יורד למחשב. פותחים אותו ולוחצים \"הבא\" עד הסוף.",
-      html: W("תוכנת אוטובוסים", row("🚌", "תוכנת אוטובוסים", "גרסה 1.0.4 · חינם · Windows 10/11") + '<div style="display:flex;gap:8px;justify-content:center"><span class="m-btn m-hl">⬇ הורדה והתקנה</span><span class="m-btn alt">פרטים נוספים</span></div>') + CUR("15%", "20%", "52%", "60%") },
-    { cap: "⚠️ אם מופיע מסך כחול של Windows – לוחצים \"מידע נוסף\" ואז \"הפעל בכל זאת\". זה רגיל לתוכנות חדשות.",
-      html: '<div class="m-warn" style="max-width:460px;width:100%"><b>Windows protected your PC</b>Microsoft Defender SmartScreen prevented an unrecognized app from starting.<div style="margin:10px 0;text-decoration:underline" class="m-hl">מידע נוסף (More info)</div><div style="text-align:left"><span class="m-btn alt" style="color:#fff">הפעל בכל זאת (Run anyway)</span></div></div>' + CUR("85%", "15%", "45%", "58%") },
-    { cap: "3️⃣ \"החנות למחשב\" – תוכנה אחת שמתקינה ומסירה את כל התוכנות שלנו בלחיצה. הכי נוח!",
-      html: W("⚡ החנות למחשב", row("🚌", "תוכנת אוטובוסים", "מותקנת ✓", '<span class="m-btn alt">🗑 הסרה</span>') + row("🎙️", "קולית", "הקראה והקלדה קולית", '<span class="m-btn green m-hl">⚡ התקנה</span>') + row("📒", "ספר טלפונים", "8,000+ מספרים", '<span class="m-btn green">⚡ התקנה</span>')) + CUR("50%", "15%", "22%", "52%") },
-    { cap: "4️⃣ יש שאלה? לוחצים על \"שאלו את העוזר\" 🤖 בפינה – הוא עונה מיד, 24/7.",
-      html: W("🤖 עוזר חכם", '<div class="m-bubble me" style="animation-delay:.4s">איך מתקינים את קולית?</div><div class="m-bubble them" style="animation-delay:1.4s">פשוט! לוחצים "הורדה והתקנה", פותחים את הקובץ ולוחצים "הבא" 🙂</div><div class="m-bubble me" style="animation-delay:2.6s">תודה! 🙏</div>') },
-    { cap: "5️⃣ רוצים לדבר עם בן אדם? מתחברים, ולוחצים על העיגול 💬 – הצוות עונה, ומקבלים מייל כשיש תשובה.",
-      html: W("💬 צ'אט עם הצוות", '<div class="m-bubble me" style="animation-delay:.4s">שלום, התוכנה לא נפתחת לי</div><div class="m-bubble them" style="animation-delay:1.6s">היי! איזו גרסת Windows יש לך? נעזור מיד 💪</div>') + CUR("50%", "20%", "8%", "86%") },
-    { cap: "6️⃣ בפורום העזרה אפשר לשאול את הקהילה, לעזור לאחרים ולצבור מוניטין.",
-      html: W("🗣️ פורום עזרה ותמיכה", row("💡", "איך מעבירים אנשי קשר מהטלפון?", "12 תגובות · נפתר ✓") + row("🙏", "בקשת עזרה בהתקנה", "3 תגובות") + row("🎁", "תרומות ועזרה הדדית", "קטגוריה חדשה")) },
-    { cap: "7️⃣ צריכים תוכנה משלכם? בוחרים חבילה – 50, 100 או 500 ₪ – ואנחנו בונים אותה בשבילכם.",
-      html: W("🛠️ הזמנת תוכנה", '<div class="m-grid"><div class="m-card">🌱 בסיסית<span class="p">50 ₪</span></div><div class="m-card m-hl">🚀 מתקדמת<span class="p">100 ₪</span></div><div class="m-card">💎 פרימיום<span class="p">500 ₪</span></div></div>') + CUR("80%", "85%", "50%", "48%") },
-    { cap: "8️⃣ מפתחים? אפשר להעלות גם את התוכנות שלכם לאתר – דרך \"למפתחים\" בתפריט העליון.",
-      html: W("🧑‍💻 למפתחים", '<div class="m-input">שם התוכנה: <span class="m-type">המחשבון שלי</span></div><div class="m-input">קישור להורדה: https://…</div><div style="text-align:center"><span class="m-btn m-hl">📤 שליחה לאישור</span></div>') },
-    { cap: "זהו! 🎉 עכשיו אתם יודעים הכל. אפשר לפתוח את ההדרכה שוב בכל רגע – בכפתור ❓ למעלה.",
-      html: '<div class="m-big"><span class="emo">🎉</span><h2>בהצלחה!</h2><p>לחצו "לנסות בעצמי" כדי להתחיל</p></div>' }
-  ];
-  const DUR = 6500;
-  const $t = id => document.getElementById(id);
-  const ov = $t("tourOv"), screen = $t("tourScreen"), bar = $t("tourBar");
-  let i = 0, playing = true, timer = null, t0 = 0, left = DUR, raf = 0, sound = false;
-  try { sound = localStorage.getItem("tourSound") === "1"; } catch (e) {}
-  bar.innerHTML = SCENES.map(() => "<i><span></span></i>").join("");
-  [...bar.children].forEach((el, k) => el.onclick = () => go(k));
+  const $ = id => document.getElementById(id);
+  const SITE = location.origin + location.pathname.replace(/[^/]*$/, "");
+  const ov = $("tutOv"), stage = $("tutStage"), page = $("tutPage"), cur = $("tutCursor"), screen = $("tutScreen");
 
+  // ---------- בניית "המסך" מתוך האתר האמיתי ----------
+  // מעתיק אלמנט אמיתי מהדף (כך הסרטון תמיד נראה בדיוק כמו האתר)
+  function real(sel, opts) {
+    opts = opts || {};
+    const src = typeof sel === "string" ? document.querySelector(sel) : sel;
+    if (!src) return el("div");
+    const c = src.cloneNode(true);
+    const all = [c, ...c.querySelectorAll("*")];
+    all.forEach(n => {
+      if (n.id) { n.setAttribute("data-t", n.id); n.removeAttribute("id"); }
+      [...n.attributes].forEach(a => { if (/^on/i.test(a.name)) n.removeAttribute(a.name); });
+      if (n.tagName === "IMG") n.loading = "eager";
+      if (n.tagName === "A") n.removeAttribute("href");
+    });
+    c.querySelectorAll(".tut-q, .tut-chip").forEach(n => n.remove());
+    c.classList.remove("hidden"); c.style.opacity = ""; c.style.visibility = "";
+    (opts.show || []).forEach(s => c.querySelectorAll(s).forEach(n => n.classList.remove("hidden")));
+    (opts.hide || []).forEach(s => c.querySelectorAll(s).forEach(n => n.remove()));
+    if (opts.w) c.style.width = opts.w + "px";
+    return c;
+  }
+  function el(tag, attrs, html) { const n = document.createElement(tag); if (attrs) Object.entries(attrs).forEach(([k, v]) => k === "style" ? n.style.cssText = v : n.setAttribute(k, v)); if (html != null) n.innerHTML = html; return n; }
+  const box = (w, ...kids) => { const b = el("div", { style: "width:" + w + "px;margin:0 auto", "data-w": Math.max(560, w + 160) }); kids.forEach(k => k && b.append(k)); return b; };
+  const T = s => stage.querySelector(s);
+  function bubble(who, text) { const b = el("div", { class: "bubble " + who, style: "animation:tutIn .35s ease both" }); b.textContent = text; return b; }
+  function textOf(s) { return (s || "").replace(/\s+/g, " ").trim(); }
+  function byText(sel, txt) { return [...stage.querySelectorAll(sel)].find(n => textOf(n.textContent).includes(txt)); }
+  function smartscreen() {
+    return el("div", { class: "w-blue" }, '<h3>Windows protected your PC</h3>Microsoft Defender SmartScreen prevented an unrecognized app from starting. Running this app might put your PC at risk.<br><span class="more" data-k="more">More info</span><div data-k="extra" style="display:none;margin-bottom:18px">App: <b>setup.exe</b><br>Publisher: Unknown publisher</div><div class="row"><span class="w-btn" data-k="run" style="display:none">Run anyway</span><span class="w-btn light">Don\'t run</span></div>');
+  }
+
+  // ---------- כלי האנימציה ----------
+  let token = 0, paused = false, gateWait = null;
+  const ABORT = {};
+  function check(t) { if (t !== token) throw ABORT; }
+  async function gate(t) { check(t); while (paused) { await new Promise(r => gateWait = r); check(t); } }
+  async function wait(t, ms) {
+    let left = ms;
+    while (left > 0) { await gate(t); const step = Math.min(left, 100); await new Promise(r => setTimeout(r, step)); left -= step; }
+    check(t);
+  }
+  let cx = 0, cy = 0;
+  function center(n) {
+    const r = n.getBoundingClientRect(), s = screen.getBoundingClientRect();
+    return [r.left - s.left + Math.min(r.width / 2, 60) + (r.width > 120 ? r.width / 2 - 60 : 0), r.top - s.top + r.height / 2];
+  }
+  function placeCursor(x, y) { cx = x; cy = y; cur.style.transform = "translate(" + x + "px," + y + "px)"; }
+  async function move(t, n, ms) {
+    await gate(t); if (!n) return;
+    stage.querySelectorAll(".tut-hl").forEach(x => x.classList.remove("tut-hl"));
+    n.classList.add("tut-hl");
+    const [x, y] = center(n), x0 = cx, y0 = cy, d = ms || 900, st = performance.now();
+    await new Promise(res => {
+      (function f(now) {
+        if (paused) { requestAnimationFrame(f); return; }
+        const k = Math.min(1, (now - st) / d), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        placeCursor(x0 + (x - x0) * e, y0 + (y - y0) * e);
+        k < 1 ? requestAnimationFrame(f) : res();
+      })(st);
+    });
+    check(t);
+  }
+  async function click(t, n, after) {
+    if (!n) return;
+    await move(t, n);
+    await wait(t, 250);
+    const ring = el("span", { class: "tut-ring", style: "left:" + cx + "px;top:" + cy + "px" }); screen.append(ring); setTimeout(() => ring.remove(), 600);
+    n.classList.add("tut-press"); await wait(t, 160); n.classList.remove("tut-press");
+    n.classList.remove("tut-hl");
+    if (after) after(n);
+    await wait(t, 450);
+  }
+  async function type(t, n, text) {
+    if (!n) return;
+    await click(t, n);
+    n.classList.add("tut-focus");
+    const isField = "value" in n && n.tagName !== "BUTTON";
+    for (let i = 1; i <= text.length; i++) { await wait(t, 55); if (isField) n.value = text.slice(0, i); else n.textContent = text.slice(0, i); }
+    await wait(t, 300); n.classList.remove("tut-focus");
+  }
+  function scene(url, ...nodes) {
+    $("tutUrl").textContent = url;
+    stage.innerHTML = ""; stage.style.transform = "";
+    const wrap = el("div", { class: "tut-scene" }); nodes.forEach(n => n && wrap.append(n)); stage.append(wrap);
+    fit();
+    stage.querySelectorAll("img").forEach(i => i.complete || i.addEventListener("load", fit, { once: true }));
+  }
+  let W = 1180;
+  function fit() {
+    const first = stage.querySelector(".tut-scene > [data-w]"); W = first ? +first.dataset.w : 1180;
+    const pw = page.clientWidth, ph = page.clientHeight - ($("tutCap").offsetHeight || 0) * .85;
+    stage.style.width = W + "px"; stage.style.transform = "none";
+    if (stage.scrollWidth > W + 2) { W = stage.scrollWidth + 20; stage.style.width = W + "px"; }
+    const h = stage.scrollHeight, s = Math.min(pw / W, ph / Math.max(h, 1));
+    stage.style.transform = "scale(" + s + ")";
+    const left = (pw - W * s) / 2; stage.style.right = Math.max(0, left) + "px";
+    stage.style.top = Math.max(0, (ph - h * s) / 2) + "px";
+  }
+  addEventListener("resize", () => { if (!ov.classList.contains("hidden")) fit(); });
+
+  // ---------- הסרטונים ----------
+  const PLANS_HTML = () => {
+    const p = document.querySelector("#planGrid");
+    return p ? real(p) : el("div");
+  };
+  const VIDEOS = [
+    { id: "tour", icon: "🧭", c1: "#7c5cff", c2: "#22d3ee", title: "סיור באתר", desc: "מה יש באתר ואיפה כל דבר נמצא",
+      steps: [
+        { cap: "ברוכים הבאים ל\"תוכנה בקליק\"! 👋 תוכנות בעברית למחשב – בחינם. בואו נראה מה יש כאן.",
+          run: async t => { scene(SITE, box(1100, real("#top .hero-text"))); await wait(t, 1200); await move(t, byText(".cta-main", "לכל התוכנות")); await wait(t, 1500); } },
+        { cap: "בפס העליון: התוכנות, הפורום, החנות למחשב, הזמנת תוכנה ואזור המפתחים.",
+          run: async t => { scene(SITE, real("header.topbar")); await wait(t, 500);
+            for (const s of ["תוכנות", "פורום", "החנות", "הזמנת", "למפתחים"]) { await move(t, byText(".nav a", s), 650); await wait(t, 350); } } },
+        { cap: "וכאן – הכפתור ❓ שפותח את סרטוני ההדרכה, ו🌙 להחלפה בין מצב כהה לבהיר.",
+          run: async t => { scene(SITE, real("header.topbar")); await wait(t, 400); await move(t, T("[data-t=tourBtn]")); await wait(t, 900); await move(t, T("[data-t=themeBtn]")); await wait(t, 900); await move(t, T("[data-t=openReg]")); await wait(t, 700); } },
+        { cap: "קיצורי דרך: לחיצה אחת – ואתם במקום הנכון.",
+          run: async t => { scene(SITE, real("#quick .quick-grid")); await wait(t, 400); for (const q of stage.querySelectorAll(".qa")) { await move(t, q, 500); await wait(t, 250); } } },
+        { cap: "ובכל רגע אפשר לשאול את העוזר החכם 🤖 – בכפתור בפינת המסך.",
+          run: async t => { scene(SITE, box(400, real("#aiFab"))); await click(t, T(".ai-fab")); await wait(t, 900); } }
+      ] },
+    { id: "download", icon: "⬇", c1: "#5b7cff", c2: "#7c3aed", title: "הורדה והתקנה של תוכנה", desc: "מורידים, פותחים, ומה עושים כש-Windows מזהיר",
+      steps: [
+        { cap: "נכנסים ל\"להוריד תוכנה\" – או גוללים ל\"כל התוכנות\".",
+          run: async t => { scene(SITE, real("#quick .quick-grid")); await click(t, byText(".qa", "להוריד תוכנה")); } },
+        { cap: "בוחרים תוכנה ולוחצים \"⬇ הורדה והתקנה\".",
+          run: async t => { scene(SITE + "#download", real("#download .grid")); await wait(t, 500); await click(t, T(".card .card-actions > .btn")); } },
+        { cap: "הקובץ יורד למחשב – בדרך כלל לתיקיית \"הורדות\". פותחים אותו.",
+          run: async t => { const m = real("#dlOverlay .modal"); const ol = m.querySelector("[data-t=dlSteps]");
+            if (ol) ol.innerHTML = "<li>הקובץ יורד – בדרך כלל לתיקיית <b>\"הורדות\"</b>.</li><li>פותחים את הקובץ שירד.</li><li>אם מופיע חלון כחול – לוחצים <b>\"מידע נוסף\"</b> ← <b>\"הפעל בכל זאת\"</b>.</li><li>לוחצים <b>\"הבא\"</b> עד הסוף – וזהו!</li>";
+            scene(SITE + "#download", m); await wait(t, 1800); await click(t, T("[data-t=dlOk]")); } },
+        { cap: "חלון כחול של Windows? זה רגיל לתוכנות חדשות: לוחצים \"מידע נוסף\" (More info)…",
+          run: async t => { scene("Windows", smartscreen()); await wait(t, 700); await click(t, T("[data-k=more]"), () => { T("[data-k=extra]").style.display = ""; T("[data-k=run]").style.display = ""; }); await wait(t, 500); } },
+        { cap: "…ואז \"הפעל בכל זאת\" (Run anyway).",
+          run: async t => { scene("Windows", smartscreen()); T("[data-k=extra]").style.display = ""; T("[data-k=run]").style.display = ""; await wait(t, 500); await click(t, T("[data-k=run]")); } },
+        { cap: "נפתחת ההתקנה: לוחצים \"הבא\" עד הסוף.",
+          run: async t => { const w = el("div", { class: "w-win" }, '<div class="w-tt">🖥️<span>התקנה – תוכנת אוטובוסים</span><em>— ▢ ✕</em></div><div class="w-bd"><b style="font-size:18px">ברוכים הבאים להתקנה</b><p data-k="txt">התוכנה תותקן במחשב שלכם.</p><div class="w-prog"><i data-k="p"></i></div><div style="text-align:left"><span class="w-btn pri" data-k="next">הבא ›</span></div></div>');
+            scene("Windows", w); await wait(t, 600);
+            await click(t, T("[data-k=next]"), () => { T("[data-k=txt]").textContent = "מתקין…"; T("[data-k=p]").style.width = "100%"; });
+            await wait(t, 2300); T("[data-k=txt]").textContent = "ההתקנה הסתיימה ✔"; T("[data-k=next]").textContent = "סיום"; await click(t, T("[data-k=next]")); } },
+        { cap: "זהו! 🎉 התוכנה מופיעה בשולחן העבודה ובתפריט \"התחל\".",
+          run: async t => { scene("Windows", el("div", { class: "w-desk" }, '<div class="w-icon" style="top:24px;right:24px"><span>🗑️</span>סל מיחזור</div><div class="w-icon" data-k="ic" style="top:130px;right:24px;animation:tutIn .6s ease both"><span>🚌</span>תוכנת אוטובוסים</div><div class="w-task"></div>')); await wait(t, 600); await click(t, T("[data-k=ic]")); await wait(t, 600); } }
+      ] },
+    { id: "search", icon: "🔍", c1: "#06b6d4", c2: "#5b7cff", title: "חיפוש וסינון תוכנות", desc: "מוצאים מהר את התוכנה שמתאימה לכם",
+      steps: [
+        { cap: "כותבים בתיבת החיפוש – והרשימה מתעדכנת תוך כדי הקלדה.",
+          run: async t => { scene(SITE + "#download", real("#download .bar"), real("#appFilter"), real("#download .grid"));
+            await type(t, T("[data-t=appSearch]"), "אוטובוס");
+            stage.querySelectorAll(".card").forEach(c => { if (!textOf(c.textContent).includes("אוטובוס")) c.style.display = "none"; }); fit();
+            const cnt = T("[data-t=appCount]"); if (cnt) cnt.textContent = "1 תוכנות"; await wait(t, 1200); } },
+        { cap: "או מסננים בכפתורים: 📶 בלי אינטרנט, 📱 גם לטלפון, ✨ חדש.",
+          run: async t => { scene(SITE + "#download", real("#download .bar"), real("#appFilter"), real("#download .grid"));
+            const chip = byText("[data-t=appFilter] button", "גם לטלפון");
+            await click(t, chip, () => { stage.querySelectorAll("[data-t=appFilter] button").forEach(b => b.classList.toggle("on", b === chip));
+              stage.querySelectorAll(".card").forEach(c => { if (!/android/.test(c.dataset.tags || "")) c.style.display = "none"; }); fit(); });
+            await wait(t, 1200); } },
+        { cap: "ובתפריט המיון: הכי מורדות, לפי שם, או מומלץ.",
+          run: async t => { scene(SITE + "#download", real("#download .bar"), real("#appFilter"), real("#download .grid"));
+            const s = T("[data-t=appSort]"); await click(t, s, () => { s.value = "dl"; }); await wait(t, 1200); } },
+        { cap: "טיפ: בכל מקום באתר אפשר ללחוץ על המקש / כדי לקפוץ ישר לחיפוש ⌨️",
+          run: async t => { scene(SITE + "#download", real("#download .bar")); await move(t, T("[data-t=appSearch]")); await wait(t, 1800); } }
+      ] },
+    { id: "store", icon: "⚡", c1: "#a855f7", c2: "#d946ef", title: "החנות למחשב", desc: "תוכנה אחת שמתקינה ומסירה הכל בלחיצה",
+      steps: [
+        { cap: "בתפריט העליון לוחצים \"⚡ החנות למחשב\".",
+          run: async t => { scene(SITE, real("header.topbar")); await click(t, byText(".nav a", "החנות")); } },
+        { cap: "מורידים את החנות – קובץ אחד קטן, בלי התקנה.",
+          run: async t => { scene(SITE + "store.html", real("#storePage .store-hero")); await wait(t, 600); await click(t, T(".store-download")); } },
+        { cap: "פותחים את \"תוכנה בקליק.exe\". אם Windows מזהיר – \"מידע נוסף\" ← \"הפעל בכל זאת\".",
+          run: async t => { scene("Windows", smartscreen()); await click(t, T("[data-k=more]"), () => { T("[data-k=extra]").style.display = ""; T("[data-k=run]").style.display = ""; }); await click(t, T("[data-k=run]")); } },
+        { cap: "בחנות רואים את כל התוכנות – לוחצים \"⬇ התקנה\" וזה מותקן לבד.",
+          run: async t => { const w = el("div", { class: "w-win" }, '<div class="w-tt">⚡<span>תוכנה בקליק – החנות</span><em>— ▢ ✕</em></div><div class="w-bd">' +
+              '<div class="s-row"><span class="ic">🚌</span><b>תוכנת אוטובוסים<small>קווים ותחנות – גם בלי אינטרנט</small></b><span class="s-btn" data-k="i1">⬇ התקנה</span></div>' +
+              '<div class="s-row"><span class="ic">🎙️</span><b>קולית<small>הקראה והקלדה קולית</small></b><span class="s-btn" data-k="i2">⬇ התקנה</span></div>' +
+              '<div class="s-row"><span class="ic">📒</span><b>ספר טלפונים<small>8,000+ מספרים</small></b><span class="s-btn" data-k="i3">⬇ התקנה</span></div></div>');
+            scene("תוכנה בקליק.exe", w); await wait(t, 500);
+            await click(t, T("[data-k=i2]"), n => { n.textContent = "מתקין…"; n.classList.add("gray"); });
+            await wait(t, 1500); const n = T("[data-k=i2]"); n.textContent = "✔ מותקן"; n.classList.remove("gray"); await wait(t, 900); } },
+        { cap: "ובלשונית \"מותקנות\" – מסירים תוכנה בלחיצה על 🗑.",
+          run: async t => { const w = el("div", { class: "w-win" }, '<div class="w-tt">⚡<span>תוכנה בקליק – תוכנות מותקנות</span><em>— ▢ ✕</em></div><div class="w-bd">' +
+              '<div class="s-row" data-k="r1"><span class="ic">🎙️</span><b>קולית<small>מותקנת</small></b><span class="s-btn red" data-k="d1">🗑 הסרה</span></div>' +
+              '<div class="s-row"><span class="ic">🌐</span><b>Google Chrome<small>מותקנת</small></b><span class="s-btn red">🗑 הסרה</span></div></div>');
+            scene("תוכנה בקליק.exe", w); await wait(t, 500); await click(t, T("[data-k=d1]"), () => { T("[data-k=r1]").style.opacity = ".3"; }); await wait(t, 800); } },
+        { cap: "זה כל הסוד: כל התוכנות במקום אחד, התקנה והסרה בלחיצה ⚡",
+          run: async t => { scene(SITE + "store.html", real("#storePage .store-features")); for (const s of stage.querySelectorAll(".step")) { await move(t, s, 600); await wait(t, 400); } } }
+      ] },
+    { id: "ai", icon: "🤖", c1: "#ec4899", c2: "#a855f7", title: "העוזר החכם", desc: "שואלים כל שאלה – ומקבלים תשובה מיד",
+      steps: [
+        { cap: "לוחצים על \"שאלו את העוזר\" בפינת המסך.",
+          run: async t => { scene(SITE, box(400, real("#aiFab"))); await wait(t, 300); await click(t, T(".ai-fab")); } },
+        { cap: "כותבים שאלה בעברית – למשל איך מתקינים תוכנה – ולוחצים \"שליחה\".",
+          run: async t => { const b = real("#aiBox"); const m = b.querySelector("[data-t=aiMsgs]"); m.innerHTML = ""; m.append(bubble("them", "שלום! 👋 אני העוזר החכם של תוכנה בקליק. אפשר לשאול אותי על התוכנות באתר."));
+            scene(SITE, b); await type(t, T("[data-t=aiInput]"), "איך מתקינים את קולית?");
+            await click(t, T("[data-t=aiSend]"), () => { m.append(bubble("me", "איך מתקינים את קולית?")); T("[data-t=aiInput]").value = ""; m.append(bubble("them ai-typing", "חושב...")); });
+            await wait(t, 1300); const w = m.querySelector(".ai-typing"); if (w) { w.classList.remove("ai-typing"); w.textContent = "פשוט! 🙂\n1. לוחצים \"הורדה והתקנה\" בכרטיס של קולית.\n2. פותחים את הקובץ שירד.\n3. לוחצים \"הבא\" עד הסוף."; }
+            await wait(t, 2200); } },
+        { cap: "רוצים מסך גדול? לוחצים ⛶. העוזר זמין 24/7 – גם בלי להתחבר.",
+          run: async t => { const b = real("#aiBox"); const m = b.querySelector("[data-t=aiMsgs]"); m.innerHTML = ""; m.append(bubble("them", "אפשר לשאול אותי כל דבר על התוכנות 🙂"));
+            scene(SITE, b); await click(t, T("[data-t=aiBig]")); await wait(t, 700); await move(t, T("[data-t=aiClose]")); await wait(t, 900); } },
+        { cap: "חשוב: העוזר הוא מחשב ויכול לטעות. בשאלות חשובות – פתחו צ'אט עם הצוות 💬",
+          run: async t => { const b = real("#aiBox"); b.querySelector("[data-t=aiMsgs]").innerHTML = ""; scene(SITE, b); await move(t, T(".ai-note")); await wait(t, 2000); } }
+      ] },
+    { id: "account", icon: "🔑", c1: "#22c55e", c2: "#06b6d4", title: "הרשמה והתחברות", desc: "פותחים חשבון בחינם – עם Google או אימייל",
+      steps: [
+        { cap: "בפס העליון לוחצים \"הרשמה\" (ואם כבר יש חשבון – \"התחברות\").",
+          run: async t => { scene(SITE, real("header.topbar")); await click(t, T("[data-t=openReg]")); } },
+        { cap: "הכי פשוט: \"המשך עם Google\" – לחיצה אחת ואתם בפנים.",
+          run: async t => { scene(SITE, real("#overlay .modal")); await wait(t, 400); await click(t, T("[data-t=googleBtn]")); await wait(t, 600); } },
+        { cap: "או עם אימייל: בוחרים \"הרשמה\", ממלאים שם, אימייל וסיסמה.",
+          run: async t => { scene(SITE, real("#overlay .modal")); const reg = T("[data-t=tabReg]");
+            await click(t, reg, () => { T("[data-t=tabLogin]").classList.remove("on"); reg.classList.add("on"); T("[data-t=nameField]").classList.remove("hidden"); T("[data-t=authSubmit]").textContent = "הרשמה"; fit(); });
+            await type(t, T("[data-t=regName]"), "ישראל"); await type(t, T("[data-t=authEmail]"), "israel@gmail.com"); await type(t, T("[data-t=authPass]"), "••••••••");
+            await click(t, T("[data-t=authSubmit]")); } },
+        { cap: "זהו! אחרי ההתחברות אפשר לפתוח צ'אט, להזמין תוכנה, לדרג ולהעלות תוכנות.",
+          run: async t => { scene(SITE, el("div", { class: "tut-note" }, '<span class="big">✅</span><h2>נכנסתם!</h2><p>השם שלכם מופיע בפס העליון,<br>ובפינה מופיע העיגול 💬 לצ\'אט עם הצוות.</p>')); await wait(t, 2500); } }
+      ] },
+    { id: "chat", icon: "💬", c1: "#5b7cff", c2: "#22d3ee", title: "צ'אט עם הצוות", desc: "מדברים עם בן אדם אמיתי – ומקבלים תשובה במייל",
+      steps: [
+        { cap: "אחרי שמתחברים, מופיע בפינה העיגול 💬 – לוחצים עליו.",
+          run: async t => { scene(SITE, box(300, real("#chatFab"))); await click(t, T(".chat-fab")); } },
+        { cap: "כותבים מה צריך ולוחצים \"שליחה\" (או Enter).",
+          run: async t => { const b = real("#chatBox"); const m = b.querySelector("[data-t=chatMsgs]"); m.innerHTML = "";
+            scene(SITE, b); await type(t, T("[data-t=chatInput]"), "שלום, התוכנה לא נפתחת לי");
+            await click(t, T("[data-t=chatSendBtn]"), () => { const x = bubble("me", "שלום, התוכנה לא נפתחת לי"); x.innerHTML += '<time>12:30<span class="tick read">✓✓</span></time>'; m.append(x); T("[data-t=chatInput]").value = ""; });
+            await wait(t, 1300); const r = bubble("them", "היי! 👋 איזו גרסת Windows יש לך? נעזור מיד 💪"); r.innerHTML += "<time>12:31</time>"; m.append(r); await wait(t, 1800); } },
+        { cap: "אפשר גם לשלוח צילום מסך או קובץ – בלחיצה על 📎.",
+          run: async t => { const b = real("#chatBox"); const m = b.querySelector("[data-t=chatMsgs]"); m.innerHTML = ""; scene(SITE, b);
+            await click(t, T("[data-t=chatAttach]"), () => { const x = el("div", { class: "bubble me", style: "animation:tutIn .35s ease both" }, '<span class="file">🖼️ <span>צילום-מסך.png<small>240KB</small></span></span><time>12:32<span class="tick">✓</span></time>'); m.append(x); });
+            await wait(t, 1800); } },
+        { cap: "כשהצוות עונה – מקבלים התראה במייל 📧. וגם בכל כרטיס תוכנה יש כפתור 💬 לשאלה על אותה תוכנה.",
+          run: async t => { scene(SITE + "#download", box(380, real("#busCard"))); await click(t, T(".card-sub .icon")); await wait(t, 900); } }
+      ] },
+    { id: "order", icon: "🛠️", c1: "#f59e0b", c2: "#f97316", title: "הזמנת תוכנה אישית", desc: "בוחרים חבילה – ואנחנו בונים לכם תוכנה",
+      steps: [
+        { cap: "גוללים ל\"צריכים תוכנה משלכם?\" ובוחרים חבילה: 50, 100 או 500 ₪.",
+          run: async t => { scene(SITE + "#plans", PLANS_HTML()); await wait(t, 400); for (const p of stage.querySelectorAll(".plan")) { await move(t, p, 550); await wait(t, 300); } await click(t, stage.querySelector(".plan.hot button, .plan.hot .primary-btn, .plan.hot a") || stage.querySelector(".plan button")); } },
+        { cap: "בטופס כותבים מה התוכנה צריכה לעשות – כמה שיותר פרטים.",
+          run: async t => { const m = real("#orderOverlay .modal"); const body = m.querySelector("[data-t=orderBody]");
+            const PL = (typeof PLANS !== "undefined" && PLANS) || {};
+            body.innerHTML = '<div class="field"><label>בחרו חבילה</label><div class="plan-pick">' + (Object.keys(PL).length ? Object.keys(PL).map((k, i) => '<button type="button" class="' + (i === 1 ? "on" : "") + '">' + PL[k].icon + " " + PL[k].name + " · " + PL[k].price + " ₪</button>").join("") : '<button class="on">🚀 חבילה מתקדמת · 100 ₪</button>') + '</div></div>' +
+              '<div class="field"><label>שם התוכנה / במה מדובר</label><input data-k="ti" placeholder="למשל: תוכנה לניהול רשימת לקוחות"></div>' +
+              '<div class="field"><label>מה התוכנה צריכה לעשות?</label><textarea data-k="de" rows="4"></textarea></div>' +
+              '<button type="button" class="primary-btn" data-k="go">📨 שליחת ההזמנה</button>';
+            scene(SITE + "#order", m); await type(t, T("[data-k=ti]"), "ניהול לקוחות לחנות"); await type(t, T("[data-k=de]"), "רשימת לקוחות עם טלפון, חיפוש והדפסה");
+            await click(t, T("[data-k=go]")); } },
+        { cap: "אחרי שאנחנו מאשרים את ההזמנה – משלמים ומסמנים \"שילמתי\". אנחנו בונים, ושולחים קישור להורדה 🎉",
+          run: async t => { const how = document.querySelector("#plans .plans-how"); scene(SITE + "#order", how ? box(1000, real(how)) : null,
+              el("div", { class: "tut-note", style: "margin-top:24px" }, '<span class="big">📨 → ✔ → 💳 → 🛠️ → 🎉</span><p>שולחים הזמנה · מאשרים לכם · משלמים · בונים · מקבלים קישור</p>'));
+            await wait(t, 3000); } }
+      ] },
+    { id: "forum", icon: "🗣️", c1: "#10b981", c2: "#22d3ee", title: "פורום עזרה ותמיכה", desc: "שואלים את הקהילה, עוזרים לאחרים, צוברים מוניטין",
+      steps: [
+        { cap: "לוחצים \"כניסה לפורום עזרה ותמיכה\".",
+          run: async t => { scene(SITE, real("#community .community-box")); await click(t, T(".cta-main")); } },
+        { cap: "בוחרים קטגוריה – שאלות, התקנת תוכנות, עזרה הדדית, תרומות ועוד.",
+          run: async t => { const f = el("div", { class: "f-wrap" },
+              [["💡", "שאלות ותשובות", "כל שאלה על התוכנות", "#7c5cff", "#22d3ee", 128], ["💿", "התקנת תוכנות", "עזרה בהתקנה ובהגדרות", "#f59e0b", "#f97316", 64], ["🤝", "עזרה הדדית", "עוזרים אחד לשני", "#10b981", "#22d3ee", 41], ["🎁", "תרומות", "מוסרים ומבקשים", "#ec4899", "#a855f7", 17]]
+              .map(([i, n, d, a, b, c]) => '<div class="f-cat" style="--c1:' + a + ';--c2:' + b + '"><span class="ic">' + i + '</span><span><b>' + n + '</b><small>' + d + '</small></span><span class="n"><b>' + c + '</b><br>נושאים</span></div>').join(""));
+            scene(SITE + "WFH.html", f); await wait(t, 400); await click(t, stage.querySelectorAll(".f-cat")[1]); } },
+        { cap: "פותחים נושא חדש: כותרת, שאלה – ו\"פרסום\". אפשר גם להגיב, לעשות 👍 ולעקוב.",
+          run: async t => { const f = el("div", { class: "modal", style: "max-width:640px" }, '<div class="modal-head"><h2>✏️ נושא חדש</h2></div><div class="field"><label>כותרת</label><input data-k="ti"></div><div class="field"><label>תוכן</label><textarea data-k="tx" rows="4"></textarea></div><button type="button" class="primary-btn" data-k="go">📤 פרסום</button>');
+            scene(SITE + "WFH.html", f); await type(t, T("[data-k=ti]"), "איך מתקינים בלי אינטרנט?"); await type(t, T("[data-k=tx]"), "ניסיתי ולא הצלחתי, אשמח לעזרה 🙏"); await click(t, T("[data-k=go]")); } },
+        { cap: "בהתחלה פוסטים ממתינים לאישור. מגיעים ל-20 מוניטין (מלייקים) – ומתפרסמים מיד ⭐",
+          run: async t => { scene(SITE + "WFH.html", el("div", { class: "tut-note" }, '<span class="big">⭐ 20</span><h2>מוניטין</h2><p>כל 👍 על תשובה שלכם = +1 מוניטין.<br>ב-10 אפשר לעשות לייק, ב-20 מתפרסמים בלי המתנה.</p>')); await wait(t, 2600); } }
+      ] },
+    { id: "dev", icon: "🧑‍💻", c1: "#0ea5e9", c2: "#5b7cff", title: "העלאת תוכנה (למפתחים)", desc: "מפרסמים את התוכנה שלכם באתר",
+      steps: [
+        { cap: "פיתחתם תוכנה? לוחצים \"להעלות תוכנה\" (או \"למפתחים\" בתפריט).",
+          run: async t => { scene(SITE, real("#quick .quick-grid")); await click(t, byText(".qa", "להעלות תוכנה")); } },
+        { cap: "נרשמים פעם אחת כמפתח: שם המפתח, ואישור התנאים.",
+          run: async t => { const m = real("#devOverlay .modal"); m.querySelector("[data-t=devBody]").innerHTML =
+              '<p class="dev-intro">פיתחתם תוכנה ל-Windows? העלו אותה ל<b>תוכנה בקליק</b> ותגיעו לגולשים שלנו.</p><div class="field"><label>שם המפתח / הסטודיו</label><input data-k="n"></div><label class="check"><input type="checkbox" data-k="c"> אני מתחייב/ת להעלות רק תוכנות שפיתחתי או שמותר לי להפיץ.</label><button type="button" class="primary-btn" data-k="go">🧑‍💻 הרשמה כמפתח</button>';
+            scene(SITE + "#dev", m); await type(t, T("[data-k=n]"), "הסטודיו שלי"); await click(t, T("[data-k=c]"), n => n.checked = true); await click(t, T("[data-k=go]")); } },
+        { cap: "ממלאים את פרטי התוכנה: שם, תיאור, קישור להורדה ותמונה – ושולחים לאישור.",
+          run: async t => { const m = real("#devOverlay .modal"); m.querySelector("[data-t=devBody]").innerHTML =
+              '<div class="field"><label>שם התוכנה</label><input data-k="n"></div><div class="field"><label>תיאור קצר</label><textarea data-k="d" rows="3"></textarea></div><div class="field"><label>קישור להורדה</label><input data-k="u" dir="ltr"></div><button type="button" class="primary-btn" data-k="go">📤 שליחה לאישור</button>';
+            scene(SITE + "#dev", m); await type(t, T("[data-k=n]"), "המחשבון שלי"); await type(t, T("[data-k=d]"), "מחשבון פשוט בעברית"); await type(t, T("[data-k=u]"), "https://drive.google.com/…"); await click(t, T("[data-k=go]")); } },
+        { cap: "הצוות בודק את התוכנה, ואחרי אישור היא מופיעה באתר ובחנות למחשב 🎉",
+          run: async t => { scene(SITE, el("div", { class: "tut-note" }, '<span class="big">⏳ → ✔</span><h2>ממתין לאישור</h2><p>אחרי הבדיקה התוכנה מתפרסמת,<br>ומקבלים מייל כשהיא באוויר.</p>')); await wait(t, 2600); } }
+      ] }
+  ];
+
+  // ---------- הנגן ----------
+  let vid = null, si = 0, sound = false;
+  try { sound = localStorage.getItem("tourSound") === "1"; } catch (e) {}
   function say(text) {
     if (!("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
-    if (!sound) return;
+    speechSynthesis.cancel(); if (!sound) return;
     const u = new SpeechSynthesisUtterance(text.replace(/[\u{1F000}-\u{1FFFF}☀-➿️⃣]/gu, ""));
-    u.lang = "he-IL"; u.rate = 1.05;
-    const v = speechSynthesis.getVoices().find(v => /^he|^iw/i.test(v.lang)); if (v) u.voice = v;
-    speechSynthesis.speak(u);
+    u.lang = "he-IL"; const v = speechSynthesis.getVoices().find(v => /^(he|iw)/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u);
   }
-  function paintBar(frac) {
-    [...bar.children].forEach((el, k) => { el.classList.toggle("done", k < i); el.firstChild.style.width = k === i ? Math.min(100, frac * 100) + "%" : ""; });
+  function paintBar(frac) { [...$("tutBar").children].forEach((b, k) => { b.classList.toggle("done", k < si); b.firstChild.style.width = k === si ? Math.round(frac * 100) + "%" : ""; }); }
+  async function runStep(k) {
+    const t = ++token; paused = false; if (gateWait) gateWait(); $("tutPlay").textContent = "⏸";
+    si = k; const s = vid.steps[k];
+    $("tutCap").textContent = s.cap; $("tutStep").textContent = (k + 1) + " / " + vid.steps.length; say(s.cap);
+    paintBar(0);
+    const st = performance.now(), est = Math.max(4500, s.cap.length * 70);
+    let pausedAt = 0, pausedTotal = 0;
+    (function f() { if (t !== token) return; if (paused) { if (!pausedAt) pausedAt = performance.now(); } else { if (pausedAt) { pausedTotal += performance.now() - pausedAt; pausedAt = 0; } paintBar(Math.min(.97, (performance.now() - st - pausedTotal) / est)); } requestAnimationFrame(f); })();
+    try {
+      placeCursor(page.clientWidth * .5, page.clientHeight * .75 + 30);
+      await s.run(t);
+      const spent = performance.now() - st - pausedTotal; if (spent < est) await wait(t, est - spent);
+      await wait(t, 700);
+    } catch (e) { if (e === ABORT) return; console.warn(e); }
+    if (t !== token) return;
+    paintBar(1);
+    if (k < vid.steps.length - 1) runStep(k + 1);
+    else { $("tutPlay").textContent = "↻"; paused = true; $("tutCap").textContent = "✔ סוף הסרטון. " + (nextVid() ? "הסרטון הבא: " + nextVid().title : ""); }
   }
-  function tick() {
-    const frac = 1 - (left - (performance.now() - t0)) / DUR;
-    paintBar(frac);
-    if (playing) raf = requestAnimationFrame(tick);
+  function nextVid() { const i = VIDEOS.indexOf(vid); return VIDEOS[i + 1] || null; }
+  function play(id) {
+    vid = VIDEOS.find(v => v.id === id) || VIDEOS[0];
+    $("tutLib").classList.add("hidden"); $("tutPlayer").classList.remove("hidden"); $("tutBack").classList.remove("hidden");
+    $("tutTitle").textContent = vid.icon + " " + vid.title;
+    $("tutBar").innerHTML = vid.steps.map(() => "<i><span></span></i>").join("");
+    [...$("tutBar").children].forEach((b, k) => b.onclick = () => runStep(k));
+    const n = nextVid(); $("tutNextVid").textContent = n ? "הסרטון הבא: " + n.title + " ←" : ""; $("tutNextVid").onclick = () => n && play(n.id);
+    ov.classList.remove("hidden"); const t0 = token; setTimeout(() => { if (token === t0) runStep(0); }, 30);
   }
-  function startTimer() {
-    clearTimeout(timer); cancelAnimationFrame(raf);
-    if (!playing) return;
-    t0 = performance.now();
-    timer = setTimeout(() => { if (i < SCENES.length - 1) go(i + 1); else { playing = false; $t("tourPlay").textContent = "↻"; paintBar(1); } }, left);
-    raf = requestAnimationFrame(tick);
+  function library() {
+    token++; paused = true; if ("speechSynthesis" in window) speechSynthesis.cancel();
+    $("tutLib").classList.remove("hidden"); $("tutPlayer").classList.add("hidden"); $("tutBack").classList.add("hidden");
+    $("tutTitle").textContent = "🎬 מרכז ההדרכה"; $("tutStep").textContent = VIDEOS.length + " סרטונים";
+    ov.classList.remove("hidden");
   }
-  function go(k) {
-    i = Math.max(0, Math.min(SCENES.length - 1, k)); left = DUR;
-    const s = SCENES[i];
-    screen.innerHTML = '<div class="tour-scene">' + s.html + '</div><div class="tour-cap">' + s.cap + '</div>';
-    $t("tourStep").textContent = (i + 1) + " / " + SCENES.length;
-    if (!playing) { playing = true; $t("tourPlay").textContent = "⏸"; }
-    paintBar(0); say(s.cap); startTimer();
+  $("tutGrid").innerHTML = VIDEOS.map(v => '<button type="button" class="tut-card" data-v="' + v.id + '" style="--c1:' + v.c1 + ';--c2:' + v.c2 + '"><span class="len">' + v.steps.length + ' שלבים</span><span class="ic">' + v.icon + '</span><b>' + v.title + '</b><small>' + v.desc + '</small><span class="play">▶</span></button>').join("");
+  $("tutGrid").onclick = e => { const c = e.target.closest("[data-v]"); if (c) play(c.dataset.v); };
+  function close() { token++; paused = true; ov.classList.add("hidden"); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
+  function togglePause() {
+    if ($("tutPlay").textContent === "↻") return runStep(0);
+    paused = !paused; $("tutPlay").textContent = paused ? "▶" : "⏸";
+    if (!paused && gateWait) gateWait();
+    if ("speechSynthesis" in window) paused ? speechSynthesis.pause() : speechSynthesis.resume();
   }
-  function pause() {
-    if (!playing) { if ($t("tourPlay").textContent === "↻") return go(0); playing = true; $t("tourPlay").textContent = "⏸"; startTimer(); screen.querySelectorAll("*").forEach(e => e.style.animationPlayState = ""); if (sound) speechSynthesis.resume(); return; }
-    playing = false; $t("tourPlay").textContent = "▶"; clearTimeout(timer); cancelAnimationFrame(raf);
-    left = Math.max(0, left - (performance.now() - t0));
-    screen.querySelectorAll("*").forEach(e => e.style.animationPlayState = "paused");
-    if ("speechSynthesis" in window) speechSynthesis.pause();
-  }
-  function open() { ov.classList.remove("hidden"); $t("tourSound").textContent = sound ? "🔊" : "🔇"; playing = true; $t("tourPlay").textContent = "⏸"; go(0); $t("tourPlay").focus(); }
-  function close() { ov.classList.add("hidden"); clearTimeout(timer); cancelAnimationFrame(raf); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
-  window.openTour = open;
-  $t("tourPlay").onclick = pause;
-  $t("tourNext").onclick = () => go(i + 1);
-  $t("tourPrev").onclick = () => go(i - 1);
-  $t("tourClose").onclick = close;
-  $t("tourDo").onclick = () => { close(); const d = document.getElementById("download"); if (d) d.scrollIntoView({ behavior: "smooth" }); };
-  $t("tourSound").onclick = () => { sound = !sound; $t("tourSound").textContent = sound ? "🔊" : "🔇"; try { localStorage.setItem("tourSound", sound ? "1" : "0"); } catch (e) {} say(SCENES[i].cap); };
+  $("tutPlay").onclick = togglePause;
+  $("tutNext").onclick = () => vid && runStep(Math.min(vid.steps.length - 1, si + 1));
+  $("tutPrev").onclick = () => vid && runStep(Math.max(0, si - 1));
+  $("tutBack").onclick = library;
+  $("tutClose").onclick = close;
+  $("tutSound").textContent = sound ? "🔊" : "🔇";
+  $("tutSound").onclick = () => { sound = !sound; $("tutSound").textContent = sound ? "🔊" : "🔇"; try { localStorage.setItem("tourSound", sound ? "1" : "0"); } catch (e) {} if (vid && !$("tutPlayer").classList.contains("hidden")) say(vid.steps[si].cap); };
   ov.addEventListener("click", e => { if (e.target === ov) close(); });
   document.addEventListener("keydown", e => {
     if (ov.classList.contains("hidden")) return;
-    if (e.key === "Escape") close();
-    else if (e.key === " ") { e.preventDefault(); pause(); }
-    else if (e.key === "ArrowLeft") go(i + 1);
-    else if (e.key === "ArrowRight") go(i - 1);
-  });
-  const b = document.getElementById("tourBtn"); if (b) b.onclick = open;
-  if (/[?&]tour\b/.test(location.search) || location.hash === "#tour") setTimeout(open, 600);
+    if (e.key === "Escape") { e.stopPropagation(); close(); }
+    else if ($("tutPlayer").classList.contains("hidden")) return;
+    else if (e.key === " ") { e.preventDefault(); togglePause(); }
+    else if (e.key === "ArrowLeft") $("tutNext").click();
+    else if (e.key === "ArrowRight") $("tutPrev").click();
+  }, true);
+  window.openTour = id => id ? play(id) : library();
+
+  // ---------- כפתורי ? בכל האתר ----------
+  const q = (id, cls, label) => { const b = el("button", { type: "button", class: cls || "tut-q", title: "סרטון הדרכה: " + (VIDEOS.find(v => v.id === id) || {}).title, "aria-label": "סרטון הדרכה" }, label || "?"); b.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); play(id); }); return b; };
+  const chip = (id, text) => q(id, "tut-chip", text + " <b>?</b>");
+  function add(sel, node, where) { const n = document.querySelector(sel); if (!n) return; if (where === "before") n.before(node); else if (where === "first") n.prepend(node); else n.append(node); }
+  const tb = $("tourBtn"); if (tb) tb.onclick = () => library();
+  add("#quick .sec-head", chip("tour", "▶ סיור באתר"));
+  add("#download .sec-head", chip("download", "▶ איך מורידים ומתקינים?"));
+  add("#appFilter", q("search"));
+  add("#steps .sec-head", chip("download", "▶ צפו בסרטון"));
+  add("#plans .sec-head", chip("order", "▶ איך מזמינים?"));
+  add("#community .community-cta", chip("forum", "▶ איך משתמשים בפורום?"));
+  add("#faq .sec-head", chip("tour", "▶ כל סרטוני ההדרכה"));
+  add("#storePage .store-hero", chip("store", "▶ סרטון: איך משתמשים בחנות?"));
+  add("#appPage .app-top > div:last-child", chip("download", "▶ איך מורידים ומתקינים?"));
+  add("#aiBox .head-btns", q("ai"), "first");
+  add("#chatBox .head-btns", q("chat"), "first");
+  ["orderOverlay:order", "devOverlay:dev"].forEach(p => { const [o, id] = p.split(":"); const h = document.querySelector("#" + o + " .modal-head .x-btn"); if (h) h.before(q(id)); });
+  const auth = document.querySelector("#overlay .modal"); if (auth) { auth.style.position = "relative"; const b = q("account"); b.classList.add("abs"); auth.prepend(b); }
+  const fb = document.querySelector("#faq .sec-head .tut-chip"); if (fb) fb.onclick = e => { e.preventDefault(); library(); };
+  if (/[?&]tour\b/.test(location.search) || location.hash === "#tour") setTimeout(() => library(), 600);
 })();
 </script>
 </body>
