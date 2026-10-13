@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat – תוכנה בקליק</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--tx:#e2e8f0;--mut:#94a3b8;--ac:#5b7cff;--ok:#10b981;--bad:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--tx);padding:16px}
+.wrap{max-width:560px;margin:0 auto}
+h1{text-align:center;margin:10px 0 4px}
+.sub{text-align:center;color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border-radius:14px;padding:20px;margin-bottom:16px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:var(--tx);font-size:16px;margin-bottom:10px}
+button{width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(90deg,#5b7cff,#7c3aed);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:8px}
+button.sec{background:#334155}
+.msg{padding:10px;border-radius:10px;margin-top:8px;display:none}
+.msg.ok{display:block;background:#064e3b}.msg.err{display:block;background:#7f1d1d}
+.hid{display:none}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:8px;border-bottom:1px solid #334155;text-align:right}
+.badge{font-size:12px;padding:2px 8px;border-radius:99px}
+.y{background:#064e3b}.n{background:#7f1d1d}
+a{color:#93c5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📬 Chat – הודעות במייל</h1>
+  <p class="sub">הירשמו לקבוצה וקבלו הודעה במייל על כל דבר חדש באתר</p>
+
+  <div class="card" id="signup">
+    <input id="name" placeholder="שם">
+    <input id="email" type="email" placeholder="מייל">
+    <input id="pass" type="password" placeholder="סיסמה (6 תווים לפחות)">
+    <button id="btnUp">הרשמה לקבוצה</button>
+    <button class="sec" id="btnIn">כבר נרשמתי – כניסה</button>
+    <div class="msg" id="m1"></div>
+  </div>
+
+  <div class="card hid" id="verify">
+    <p>📧 שלחנו מייל אימות אל <b id="vMail"></b>.<br>לחצו על הקישור במייל (בדקו גם בספאם), ואז לחצו כאן:</p>
+    <button id="btnChk">אימתתי ✔</button>
+    <button class="sec" id="btnRe">שלחו לי שוב</button>
+    <button class="sec" id="btnOut1">יציאה</button>
+    <div class="msg" id="m2"></div>
+  </div>
+
+  <div class="card hid" id="member">
+    <p>✅ את/ה רשום/ה לקבוצה! תקבל/י מייל על כל דבר חדש.</p>
+    <button class="sec" id="btnLeave">ביטול הרשמה</button>
+    <button class="sec" id="btnOut2">יציאה</button>
+  </div>
+
+  <div class="card hid" id="admin">
+    <h3>👑 מי נרשם (<span id="cnt">0</span>)</h3>
+    <button id="btnCopy">העתק את כל המיילים המאומתים</button>
+    <table><thead><tr><th>שם</th><th>מייל</th><th>אומת</th><th>תאריך</th></tr></thead><tbody id="list"></tbody></table>
+  </div>
+
+  <p style="text-align:center"><a href="index.html">← חזרה לאתר</a></p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyBF_ZbrbKMmETKqHMEwwlbSbRvNiAnstRg",
+  authDomain: "project-5589517796997635552.firebaseapp.com",
+  projectId: "project-5589517796997635552",
+  appId: "1:19523576049:web:636bdc6f6d055479060950"
+});
+const auth = firebase.auth(), db = firebase.firestore();
+const ADMINS = ["yosefdayan2018@gmail.com", "0772292196ai@gmail.com"];
+const $ = id => document.getElementById(id);
+const ERR = {
+  "auth/email-already-in-use": "המייל כבר רשום – לחצו 'כניסה'",
+  "auth/invalid-email": "מייל לא תקין",
+  "auth/weak-password": "סיסמה קצרה מדי",
+  "auth/invalid-credential": "מייל או סיסמה שגויים",
+  "auth/wrong-password": "סיסמה שגויה",
+  "auth/user-not-found": "המייל לא רשום",
+  "auth/too-many-requests": "יותר מדי ניסיונות, נסו שוב בעוד כמה דקות"
+};
+function say(el, t, ok) { const m = $(el); m.textContent = t; m.className = "msg " + (ok ? "ok" : "err"); }
+function fail(el) { return e => say(el, ERR[e.code] || e.message, false); }
+function show(...ids) { ["signup","verify","member"].forEach(i => $(i).classList.toggle("hid", !ids.includes(i))); }
+
+$("btnUp").onclick = async () => {
+  const name = $("name").value.trim(), email = $("email").value.trim(), pass = $("pass").value;
+  if (!name) return say("m1", "כתבו שם", false);
+  try {
+    const c = await auth.createUserWithEmailAndPassword(email, pass);
+    await c.user.updateProfile({ displayName: name.slice(0, 40) });
+    await c.user.sendEmailVerification();
+  } catch (e) { fail("m1")(e); }
+};
+$("btnIn").onclick = () => auth.signInWithEmailAndPassword($("email").value.trim(), $("pass").value).catch(fail("m1"));
+$("btnRe").onclick = () => auth.currentUser.sendEmailVerification().then(() => say("m2", "נשלח שוב ✔", true)).catch(fail("m2"));
+$("btnChk").onclick = async () => {
+  await auth.currentUser.reload();
+  await auth.currentUser.getIdToken(true);
+  if (auth.currentUser.emailVerified) render(auth.currentUser); else say("m2", "עוד לא אומת – לחצו על הקישור במייל", false);
+};
+$("btnOut1").onclick = $("btnOut2").onclick = () => auth.signOut();
+$("btnLeave").onclick = async () => {
+  if (!confirm("לבטל את ההרשמה?")) return;
+  await db.collection("chat_subs").doc(auth.currentUser.uid).delete();
+  await auth.signOut();
+};
+$("btnCopy").onclick = () => {
+  const mails = [...document.querySelectorAll("#list tr[data-v='1']")].map(r => r.dataset.mail).join(", ");
+  navigator.clipboard.writeText(mails).then(() => alert("הועתק! הדביקו בשדה 'עותק מוסתר' (BCC) במייל"));
+};
+
+async function render(u) {
+  if (!u) { show("signup"); $("admin").classList.add("hid"); return; }
+  if (!u.emailVerified) { $("vMail").textContent = u.email; show("verify"); return; }
+  await db.collection("chat_subs").doc(u.uid).set({
+    name: u.displayName || "", email: u.email, verified: true,
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true });
+  show("member");
+  if (ADMINS.includes(u.email)) loadAdmin();
+}
+
+function loadAdmin() {
+  $("admin").classList.remove("hid");
+  db.collection("chat_subs").orderBy("ts", "desc").onSnapshot(s => {
+    $("cnt").textContent = s.size;
+    $("list").innerHTML = "";
+    s.forEach(d => {
+      const x = d.data(), tr = document.createElement("tr");
+      tr.dataset.mail = x.email; tr.dataset.v = x.verified ? "1" : "0";
+      [x.name, x.email].forEach(t => { const td = document.createElement("td"); td.textContent = t || ""; tr.appendChild(td); });
+      const v = document.createElement("td"); v.innerHTML = x.verified ? '<span class="badge y">כן</span>' : '<span class="badge n">לא</span>'; tr.appendChild(v);
+      const t = document.createElement("td"); t.textContent = x.ts ? x.ts.toDate().toLocaleDateString("he-IL") : ""; tr.appendChild(t);
+      $("list").appendChild(tr);
+    });
+  });
+}
+
+auth.onAuthStateChanged(render);
+</script>
+</body>
+</html>
